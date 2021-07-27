@@ -1,23 +1,68 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+
+import finacedashboard from "../pages/Dashboard/index.vue";
+
+import regsiterPatinet from "../pages/patients/regsiter.vue";
+import patinetList from "../pages/patients/patinetList.vue";
+import appointments from "../pages/patients/appointments.vue";
+import opd from "../pages/patients/opd.vue";
+import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
+import medicine from "../pages/Inventory/Pharmacy/medicine.vue";
+import servicesCategory from "../pages/MedicalService/servicesCategory.vue";
+import medicalServices from "../pages/MedicalService/medicalServices.vue";
+import departments from "../pages/Organizatioins/departments.vue";
+import servicesBill from "../pages/Finance/servicesBill.vue";
+import bloodBank from "../pages/Inventory/BloodBank/bloodBank.vue";
+import staff from "../pages/Organizatioins/staffs/index.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home,
+    path: "/regsiterPatinet",
+    name: "regsiterPatinet",
+    component: regsiterPatinet,
+  },
+  { path: "/patinets", name: "patinets", component: patinetList },
+  { path: "/appointments", name: "appointments", component: appointments },
+  { path: "/opd", name: "opd", component: opd },
+  { path: "/pharmacy", name: "pharmacy", component: pharmacy },
+  { path: "/medicine", name: "medicine", component: medicine },
+  {
+    path: "/servicesCategory",
+    name: "servicesCategory",
+    component: servicesCategory,
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/medicalServices",
+    name: "medicalServices",
+    component: medicalServices,
+  },
+  {
+    path: "/departments",
+    name: "departments",
+    component: departments,
+  },
+  {
+    path: "/servicesBill",
+    name: "servicesBill",
+    component: servicesBill,
+  },
+  {
+    path: "/bloodBank",
+    name: "bloodBank",
+    component: bloodBank,
+  },
+  {
+    path: "/staff",
+    name: "staff",
+    component: staff,
+  },
+  {
+    path: "/finance/dashboard",
+    name: "finacedashboard",
+    component: finacedashboard,
   },
 ];
 

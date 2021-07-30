@@ -9,15 +9,21 @@ const menusData = [
     allowedRoles: ["admin", "cutting-department"],
     links: [
       {
-        title: "Appointments",
-        route: "appointments",
-        icon: "appointments",
-        allowedRoles: ["admin", "cutting-department"],
-      },
-      {
         title: "Patients",
         route: "patinets",
         icon: "patinets",
+        allowedRoles: ["admin", "cutting-department"],
+      },
+      {
+        title: "Casher",
+        route: "casher",
+        icon: "casher",
+        allowedRoles: ["admin", "cutting-department"],
+      },
+      {
+        title: "Nurse",
+        route: "nurse",
+        icon: "nurse",
         allowedRoles: ["admin", "cutting-department"],
       },
       {
@@ -27,9 +33,9 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
-        title: "IPD",
-        route: "ipd",
-        icon: "ipd",
+        title: "Appointments",
+        route: "appointments",
+        icon: "appointments",
         allowedRoles: ["admin", "cutting-department"],
       },
     ],
@@ -51,21 +57,9 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
-        title: "Blood Bank",
-        route: "bloodBank",
-        icon: "bloodBank",
-        allowedRoles: ["admin", "cutting-department"],
-      },
-      {
-        title: "Wards",
-        route: "wards",
-        icon: "wards",
-        allowedRoles: ["admin", "cutting-department"],
-      },
-      {
-        title: "Beds",
-        route: "beds",
-        icon: "beds",
+        title: "Store",
+        route: "store",
+        icon: "store",
         allowedRoles: ["admin", "cutting-department"],
       },
     ],
@@ -81,9 +75,21 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
-        title: "Radiology",
-        route: "radiology",
-        icon: "radiology",
+        title: "Labratory Admin",
+        route: "labratoryAdmin",
+        icon: "labratoryAdmin",
+        allowedRoles: ["admin", "cutting-department"],
+      },
+      {
+        title: "Imaging",
+        route: "imaging",
+        icon: "imaging",
+        allowedRoles: ["admin", "cutting-department"],
+      },
+      {
+        title: "Imaging Admin",
+        route: "imagingAdmin",
+        icon: "imagingAdmin",
         allowedRoles: ["admin", "cutting-department"],
       },
       {

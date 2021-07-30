@@ -82,7 +82,6 @@
                       <v-col cols="12">
                         <v-select
                           v-model="editedItem.marriageStatus"
-                          :hint="` ${editedItem.marriageStatus.name}`"
                           :items="marriagestatusoptions"
                           :item-text="'name'"
                           label="Select Married Status"
@@ -100,7 +99,7 @@
                           outlined
                           counter="10"
                           label="Height"
-                          hint="Patient height. e.g 10FT (Mandatory)"
+                          hint="Patient height. e.g 170cm (Mandatory)"
                           :rules="[rules.required]"
                         ></v-text-field>
                       </v-col>
@@ -113,6 +112,20 @@
                           hint="Patient weight. e.g 10Kg (Mandatory)"
                           :rules="[rules.required]"
                         ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select
+                          v-model="editedItem.patientType"
+                          hint="Patient type is mandatory"
+                          :items="patientTypeoptions"
+                          :item-text="'name'"
+                          label="Select Patinet Type"
+                          :rules="[rules.required]"
+                          name="editedItem.patientType"
+                          outlined
+                          single-line
+                        >
+                        </v-select>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -254,6 +267,12 @@
                         >
                       </v-list-item>
                       <v-list-item>
+                        <strong>
+                          Type :
+                          {{ editedItem.patientType }}</strong
+                        >
+                      </v-list-item>
+                      <v-list-item>
                         <strong>Height: {{ editedItem.height }}</strong>
                       </v-list-item>
                       <v-list-item>
@@ -332,6 +351,7 @@ export default {
       symptoms: "",
       note: "",
       marriageStatus: "",
+      patientType: "",
     },
     defaultItem: {
       name: "",
@@ -349,6 +369,7 @@ export default {
       symptoms: "",
       note: "",
       marriageStatus: 0,
+      patientType: 1,
     },
     rules: {
       required: (value) => !!value || "Required.",
@@ -370,6 +391,11 @@ export default {
       { name: "Seperated", value: 3 },
       { name: "Widowed", value: 4 },
       { name: "Unspecified", value: 0 },
+    ],
+    patientTypeoptions: [
+      { name: "Regular", value: 1 },
+      { name: "Credit", value: 2 },
+      { name: "Instatnt", value: 3 },
     ],
     bloodgroupoptions: [
       { name: "A+", value: 1 },

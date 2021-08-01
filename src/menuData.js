@@ -155,6 +155,12 @@ const menusData = [
     icon: "reports",
   },
   {
+    title: "Chat",
+    allowedRoles: ["admin", "cutting-department"],
+    route: "chat",
+    icon: "chat",
+  },
+  {
     title: "Setting",
     allowedRoles: ["admin", "cutting-department"],
     route: "setting",

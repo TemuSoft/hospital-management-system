@@ -20,6 +20,7 @@ import nurse from "../pages/nurse/index.vue";
 import labratory from "../pages/labratory/index.vue";
 import labratoryReport from "../pages/labratory/labratoryReport.vue";
 import registerStaff from "../pages/Organizatioins/staffs/registerStaff.vue";
+import chat from "../pages/chat/index.vue";
 
 Vue.use(VueRouter);
 
@@ -93,6 +94,11 @@ const routes = [
     path: "/registerStaff",
     name: "registerStaff",
     component: registerStaff,
+  },
+  {
+    path: "/chat",
+    name: "chat",
+    component: chat,
   },
 ];
 

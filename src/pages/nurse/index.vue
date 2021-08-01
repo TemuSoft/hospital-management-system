@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Payment Page</h3>
+    <h3>Nurse Page</h3>
     <v-data-table :items="dalaList" :headers="headers"> </v-data-table>
   </div>
 </template>
@@ -13,9 +13,8 @@ export default {
       headers: [
         { text: "Card No", value: "cardNo" },
         { text: "Name", value: "name" },
-        { text: "Reason", value: "reason" },
-        { text: "Price", value: "price" },
-        { text: "Payed", value: "price" },
+        { text: "Type", value: "type" },
+        { text: "Status", value: "status" },
         { text: "Action", value: "action" },
       ],
     };

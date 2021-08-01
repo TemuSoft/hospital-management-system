@@ -5,7 +5,7 @@ import finacedashboard from "../pages/Dashboard/index.vue";
 
 import regsiterPatinet from "../pages/patients/regsiter.vue";
 import patinetList from "../pages/patients/patinetList.vue";
-import appointments from "../pages/patients/appointments.vue";
+import appointments from "../pages/Appointment/index.vue";
 import opd from "../pages/patients/opd.vue";
 import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
 import medicine from "../pages/Inventory/Pharmacy/medicine.vue";
@@ -15,6 +15,9 @@ import departments from "../pages/Organizatioins/departments.vue";
 import servicesBill from "../pages/Finance/servicesBill.vue";
 import bloodBank from "../pages/Inventory/BloodBank/bloodBank.vue";
 import staff from "../pages/Organizatioins/staffs/index.vue";
+import casher from "../pages/casher/index.vue";
+import nurse from "../pages/nurse/index.vue";
+import labratory from "../pages/labratory/laboratoryHead/index.vue";
 
 Vue.use(VueRouter);
 
@@ -63,6 +66,21 @@ const routes = [
     path: "/finance/dashboard",
     name: "finacedashboard",
     component: finacedashboard,
+  },
+  {
+    path: "/casher",
+    name: "casher",
+    component: casher,
+  },
+  {
+    path: "/nurse",
+    name: "nurse",
+    component: nurse,
+  },
+  {
+    path: "/labratory",
+    name: "labratory",
+    component: labratory,
   },
 ];
 

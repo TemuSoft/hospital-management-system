@@ -15,7 +15,7 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
-        title: "Casher",
+        title: "Payment",
         route: "casher",
         icon: "casher",
         allowedRoles: ["admin", "cutting-department"],

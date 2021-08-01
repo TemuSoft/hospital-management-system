@@ -17,7 +17,9 @@ import bloodBank from "../pages/Inventory/BloodBank/bloodBank.vue";
 import staff from "../pages/Organizatioins/staffs/index.vue";
 import casher from "../pages/casher/index.vue";
 import nurse from "../pages/nurse/index.vue";
-import labratory from "../pages/labratory/laboratoryHead/index.vue";
+import labratory from "../pages/labratory/index.vue";
+import labratoryReport from "../pages/labratory/labratoryReport.vue";
+import registerStaff from "../pages/Organizatioins/staffs/registerStaff.vue";
 
 Vue.use(VueRouter);
 
@@ -81,6 +83,16 @@ const routes = [
     path: "/labratory",
     name: "labratory",
     component: labratory,
+  },
+  {
+    path: "/labratory/labratoryReport",
+    name: "labratoryReport",
+    component: labratoryReport,
+  },
+  {
+    path: "/registerStaff",
+    name: "registerStaff",
+    component: registerStaff,
   },
 ];
 

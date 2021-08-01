@@ -5,6 +5,10 @@
       <v-layout>
         <v-spacer></v-spacer>
         <v-btn small @click="registerLabDialog = true">Add New</v-btn>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <v-btn small @click="$router.push({ name: 'labratoryReport' })">
+          Labratory Report
+        </v-btn>
       </v-layout>
       <br />
 
@@ -107,4 +111,3 @@ export default {
   margin-top: 2%;
 }
 </style>
->

@@ -27,7 +27,7 @@
           :items="statusType"
         ></v-autocomplete>
         <v-spacer></v-spacer>
-        <v-btn small>Add New</v-btn>
+        <v-btn small @click="registerAppoDialog = true">Add New</v-btn>
       </v-layout>
       <br />
 
@@ -37,6 +37,87 @@
         :headers="headers"
       ></v-data-table>
     </v-card>
+
+    <v-dialog v-model="registerAppoDialog" persistent width="700px">
+      <v-card>
+        <v-toolbar color="green" dark>Register New Appointment </v-toolbar>
+        <br />
+        <v-card-text>
+          <v-layout>
+            <v-flex xs12 sm6>
+              <v-autocomplete
+                outlined
+                dense
+                :items="positionList"
+                label="Patient"
+                v-model="item.patient"
+              ></v-autocomplete>
+            </v-flex>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <v-flex xs12 sm6>
+              <v-autocomplete
+                outlined
+                dense
+                :items="positionList"
+                label="Department"
+                v-model="item.department"
+              ></v-autocomplete>
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex xs12 sm6>
+              <v-text-field
+                label="Date"
+                dense
+                outlined
+                v-model="item.date"
+              ></v-text-field>
+            </v-flex>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <v-flex xs12 sm6>
+              <v-text-field
+                label="Time"
+                type="time"
+                dense
+                outlined
+                v-model="item.time"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex xs12 sm6>
+              <v-autocomplete
+                outlined
+                dense
+                :items="positionList"
+                label="Doctor"
+                v-model="item.doctor"
+              ></v-autocomplete>
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex xs12 sm12>
+              <v-text-field
+                label="Reason / Description"
+                dense
+                outlined
+                v-model="item.description"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-spacer></v-spacer>
+            <v-btn small @click="registerAppoDialog = false">Cancel</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn small @click="save()">Save</v-btn>
+          </v-layout>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -44,8 +125,10 @@
 export default {
   components: {},
   data: () => ({
+    registerAppoDialog: false,
     search: "",
     dataList: [],
+    item: [],
     assignedType: ["Assigned", "Not Assigned"],
     statusType: ["Active", "Not Active"],
     headers: [

@@ -75,21 +75,9 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
-        title: "Labratory Admin",
-        route: "labratoryAdmin",
-        icon: "labratoryAdmin",
-        allowedRoles: ["admin", "cutting-department"],
-      },
-      {
         title: "Imaging",
         route: "imaging",
         icon: "imaging",
-        allowedRoles: ["admin", "cutting-department"],
-      },
-      {
-        title: "Imaging Admin",
-        route: "imagingAdmin",
-        icon: "imagingAdmin",
         allowedRoles: ["admin", "cutting-department"],
       },
       {

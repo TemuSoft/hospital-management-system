@@ -31,6 +31,7 @@
                     <v-row no-gutters>
                       <v-col cols="12">
                         <v-text-field
+                          dense
                           v-model="editedItem.name"
                           outlined
                           counter="100"
@@ -41,6 +42,7 @@
                       </v-col>
                       <v-col cols="12">
                         <v-select
+                          dense
                           v-model="editedItem.gender"
                           :items="genderoptions"
                           :item-text="'name'"
@@ -57,6 +59,7 @@
 
                       <v-col cols="12">
                         <v-text-field
+                          dense
                           type="number"
                           v-model="editedItem.age"
                           outlined
@@ -67,6 +70,7 @@
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
+                          dense
                           v-model="editedItem.guardianName"
                           outlined
                           counter="100"
@@ -81,6 +85,7 @@
                     <v-row no-gutters>
                       <v-col cols="12">
                         <v-select
+                          dense
                           v-model="editedItem.marriageStatus"
                           :items="marriagestatusoptions"
                           :item-text="'name'"
@@ -95,6 +100,7 @@
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
+                          dense
                           v-model="editedItem.height"
                           outlined
                           counter="10"
@@ -105,6 +111,7 @@
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
+                          dense
                           v-model="editedItem.weight"
                           outlined
                           counter="10"
@@ -115,6 +122,7 @@
                       </v-col>
                       <v-col cols="12">
                         <v-select
+                          dense
                           v-model="editedItem.patientType"
                           hint="Patient type is mandatory"
                           :items="patientTypeoptions"
@@ -140,6 +148,7 @@
                     <v-row no-gutters>
                       <v-col cols="12">
                         <v-text-field
+                          dense
                           v-model="editedItem.phone"
                           outlined
                           counter="15"
@@ -150,6 +159,7 @@
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
+                          dense
                           v-model="editedItem.address"
                           outlined
                           counter="200"
@@ -164,6 +174,7 @@
                     <v-row no-gutters>
                       <v-col cols="12">
                         <v-text-field
+                          dense
                           v-model="editedItem.emailAddress"
                           outlined
                           counter="254"
@@ -187,6 +198,7 @@
                     <v-row no-gutters>
                       <v-col cols="12">
                         <v-select
+                          dense
                           v-model="editedItem.bloodGroup"
                           :hint="` ${editedItem.bloodGroup.name}`"
                           :items="bloodgroupoptions"
@@ -203,6 +215,7 @@
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
+                          dense
                           v-model="editedItem.bloodPressure"
                           outlined
                           counter="10"
@@ -217,6 +230,7 @@
                     <v-row no-gutters>
                       <v-col cols="12">
                         <v-textarea
+                          dense
                           label="Allergies"
                           outlined
                           counter="550"
@@ -227,6 +241,7 @@
 
                       <v-col cols="12">
                         <v-textarea
+                          dense
                           label="Note:"
                           outlined
                           counter="200"

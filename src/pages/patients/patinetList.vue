@@ -35,8 +35,8 @@
             >
           </div> -->
           <v-btn medium class="button" to="/regsiterPatinet"
-            ><v-icon>mdi-plus</v-icon>Register New Patient</v-btn
-          >
+            ><v-icon>mdi-plus</v-icon>Register New
+          </v-btn>
         </v-layout>
       </template>
       <template v-slot:[`item.gender`]="{ item }">

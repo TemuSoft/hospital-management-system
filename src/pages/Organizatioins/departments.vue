@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <v-data-table
       dense
       class="default"
@@ -111,4 +111,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.main {
+  margin: 7%;
+  margin-top: 2%;
+}
+</style>

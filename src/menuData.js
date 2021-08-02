@@ -62,6 +62,12 @@ const menusData = [
         icon: "store",
         allowedRoles: ["admin", "cutting-department"],
       },
+      {
+        title: "Issue",
+        route: "issue",
+        icon: "issue",
+        allowedRoles: ["admin", "cutting-department"],
+      },
     ],
   },
   {
@@ -157,6 +163,18 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
         route: "changePassword",
         icon: "changePassword",
+      },
+      {
+        title: "Work Permission",
+        allowedRoles: ["admin", "cutting-department"],
+        route: "workPermission",
+        icon: "workPermission",
+      },
+      {
+        title: "Annual Report",
+        allowedRoles: ["admin", "cutting-department"],
+        route: "annualReport",
+        icon: "annualReport",
       },
     ],
   },

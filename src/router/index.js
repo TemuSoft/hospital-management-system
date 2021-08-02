@@ -11,13 +11,13 @@ import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
 import medicine from "../pages/Inventory/Pharmacy/medicine.vue";
 import servicesCategory from "../pages/MedicalService/servicesCategory.vue";
 import medicalServices from "../pages/MedicalService/medicalServices.vue";
-import departments from "../pages/Organizatioins/departments.vue";
+import departments from "../pages/Organization/departments.vue";
+import insurance from "../pages/Organization/insurance.vue";
 import servicesBill from "../pages/Finance/servicesBill.vue";
-import bloodBank from "../pages/Inventory/BloodBank/bloodBank.vue";
-import staff from "../pages/Organizatioins/staffs/index.vue";
+import staff from "../pages/Organization/staffs/index.vue";
 import payment from "../pages/casher/index.vue";
 import nurse from "../pages/nurse/index.vue";
-import registerStaff from "../pages/Organizatioins/staffs/registerStaff.vue";
+import registerStaff from "../pages/Organization/staffs/registerStaff.vue";
 import chat from "../pages/chat/index.vue";
 
 import medicalServiceReport from "../pages/MedicalService/medicalServiceReport.vue";
@@ -25,6 +25,10 @@ import changePassword from "../pages/setting/changePassword.vue";
 import hospitalSetting from "../pages/setting/hospitalSetting.vue";
 import rolePermission from "../pages/setting/rolePermission.vue";
 import paymentHistory from "../pages/casher/paymentHistory.vue";
+
+import store from "../pages/Inventory/store/index.vue";
+import inventoryDetail from "../pages/Inventory/store/inventoryDetail.vue";
+import issue from "../pages/Inventory/store/issue.vue";
 
 Vue.use(VueRouter);
 
@@ -63,11 +67,6 @@ const routes = [
     path: "/servicesBill",
     name: "servicesBill",
     component: servicesBill,
-  },
-  {
-    path: "/bloodBank",
-    name: "bloodBank",
-    component: bloodBank,
   },
   {
     path: "/staff",
@@ -118,6 +117,26 @@ const routes = [
     path: "/payment/paymentHistory",
     name: "paymentHistory",
     component: paymentHistory,
+  },
+  {
+    path: "/store/inventory",
+    name: "store",
+    component: store,
+  },
+  {
+    path: "/store/issue",
+    name: "issue",
+    component: issue,
+  },
+  {
+    path: "/store/inventoryDetail",
+    name: "inventoryDetail",
+    component: inventoryDetail,
+  },
+  {
+    path: "/Organization/insurance",
+    name: "insurance",
+    component: insurance,
   },
 ];
 

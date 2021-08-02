@@ -1,32 +1,93 @@
 <template>
-  <div>
-    <v-data-table
-      dense
-      class="default"
-      :headers="headers"
-      :items="datalist"
-      :search="search"
-      sort-by="isActive"
-      :sort-desc="sortDesc"
-    >
-      <template v-slot:top>
-        <v-layout>
-          <h3>Medical service categories</h3>
-          <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            label="Enter search text ..."
-            dense
-            single-line
-            hide-details
-          ></v-text-field>
-          <v-spacer></v-spacer>
-          <v-btn dense prepend-icon="mdi-plus">
-            <v-icon left>mdi-plus</v-icon>New Medical Service
-          </v-btn>
-        </v-layout>
-      </template>
-    </v-data-table>
+  <div class="main">
+    <h3>Medical Service</h3>
+    <v-card flat>
+      <v-layout>
+        <v-spacer></v-spacer>
+        <v-btn small @click="registerLabDialog = true">Add New</v-btn>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <v-btn small @click="$router.push({ name: 'medicalServiceReport' })">
+          Medical Service Report
+        </v-btn>
+      </v-layout>
+      <br />
+
+      <v-data-table :items="dataList" :headers="headers"> </v-data-table>
+
+      <v-dialog v-model="registerLabDialog" persistent width="700px">
+        <v-card>
+          <v-toolbar color="green" dark>Add New Medical Service </v-toolbar>
+          <br />
+          <v-card-text>
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Type</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field dense outlined v-model="item.name"></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Cost</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  type="number"
+                  dense
+                  outlined
+                  v-model="item.cost"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Status</v-flex>
+              <v-flex xs12 sm8>
+                <v-autocomplete
+                  dense
+                  :items="statusList"
+                  outlined
+                  v-model="item.staus"
+                ></v-autocomplete>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Category</v-flex>
+              <v-flex xs12 sm8>
+                <v-autocomplete
+                  dense
+                  :items="statusList"
+                  outlined
+                  v-model="item.category"
+                ></v-autocomplete>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Description</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  dense
+                  outlined
+                  v-model="item.description"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-spacer></v-spacer>
+              <v-btn small @click="registerLabDialog = false">Cancel</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn small @click="save()">Save</v-btn>
+            </v-layout>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </v-card>
   </div>
 </template>
 
@@ -34,19 +95,33 @@
 export default {
   data() {
     return {
-      datalist: [],
-      search: "",
+      registerLabDialog: false,
+      statusList: ["Active", "Not Active"],
+      item: [],
+      dataList: [],
       headers: [
-        { text: "ID", value: "id" },
+        { text: "No", value: "no" },
         { text: "Name", value: "name" },
-        { text: "Is Active?", value: "isActive" },
-        { text: "Price", value: "price" },
-        { text: "Service Type", value: "serviceType" },
-        { text: "Action", value: "Action" },
+        { text: "Cost", value: "cost" },
+        { text: "Status", value: "status" },
+        { text: "Category", value: "category" },
+        { text: "Description", value: "description" },
+        { text: "Action", value: "action" },
       ],
     };
+  },
+
+  methods: {
+    async save() {
+      alert("save buton clicked");
+    },
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.main {
+  margin: 7%;
+  margin-top: 2%;
+}
+</style>

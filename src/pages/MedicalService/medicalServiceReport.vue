@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <v-card class="main">
-      <v-toolbar dense flat>
+  <div class="main">
+    <v-card flat>
+      <v-toolbar flat dense>
         <v-btn
           text
           class="text-capitalize"
-          @click="$router.push({ name: 'labratory' })"
+          @click="$router.push({ name: 'medicalServices' })"
         >
           <v-icon class="mx-3">mdi-arrow-left</v-icon>
           Go Back

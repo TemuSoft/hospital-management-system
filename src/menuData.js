@@ -16,8 +16,8 @@ const menusData = [
       },
       {
         title: "Payment",
-        route: "casher",
-        icon: "casher",
+        route: "payment",
+        icon: "payment",
         allowedRoles: ["admin", "cutting-department"],
       },
       {
@@ -68,18 +68,6 @@ const menusData = [
     title: "Medical Services",
     allowedRoles: ["admin", "cutting-department"],
     links: [
-      {
-        title: "Labratory",
-        route: "labratory",
-        icon: "labratory",
-        allowedRoles: ["admin", "cutting-department"],
-      },
-      {
-        title: "Imaging",
-        route: "imaging",
-        icon: "imaging",
-        allowedRoles: ["admin", "cutting-department"],
-      },
       {
         title: "Medical Services",
         route: "medicalServices",
@@ -149,6 +137,30 @@ const menusData = [
     ],
   },
   {
+    title: "Setting",
+    allowedRoles: ["admin", "cutting-department"],
+    links: [
+      {
+        title: "Hospital Setting",
+        allowedRoles: ["admin", "cutting-department"],
+        route: "hospitalSetting",
+        icon: "hospitalSetting",
+      },
+      {
+        title: "Role and Permission",
+        allowedRoles: ["admin", "cutting-department"],
+        route: "rolePermission",
+        icon: "rolePermission",
+      },
+      {
+        title: "Change Password",
+        allowedRoles: ["admin", "cutting-department"],
+        route: "changePassword",
+        icon: "changePassword",
+      },
+    ],
+  },
+  {
     title: "Reports",
     allowedRoles: ["admin", "cutting-department"],
     route: "reports",
@@ -159,12 +171,6 @@ const menusData = [
     allowedRoles: ["admin", "cutting-department"],
     route: "chat",
     icon: "chat",
-  },
-  {
-    title: "Setting",
-    allowedRoles: ["admin", "cutting-department"],
-    route: "setting",
-    icon: "setting",
   },
 ];
 export { menusData };

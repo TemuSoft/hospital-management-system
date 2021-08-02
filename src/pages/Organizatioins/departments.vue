@@ -55,7 +55,7 @@
                 dense
                 :items="statusList"
                 outlined
-                v-model="item.staus"
+                v-model="item.status"
               ></v-autocomplete>
             </v-flex>
           </v-layout>

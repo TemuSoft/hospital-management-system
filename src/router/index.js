@@ -15,12 +15,16 @@ import departments from "../pages/Organizatioins/departments.vue";
 import servicesBill from "../pages/Finance/servicesBill.vue";
 import bloodBank from "../pages/Inventory/BloodBank/bloodBank.vue";
 import staff from "../pages/Organizatioins/staffs/index.vue";
-import casher from "../pages/casher/index.vue";
+import payment from "../pages/casher/index.vue";
 import nurse from "../pages/nurse/index.vue";
-import labratory from "../pages/labratory/index.vue";
-import labratoryReport from "../pages/labratory/labratoryReport.vue";
 import registerStaff from "../pages/Organizatioins/staffs/registerStaff.vue";
 import chat from "../pages/chat/index.vue";
+
+import medicalServiceReport from "../pages/MedicalService/medicalServiceReport.vue";
+import changePassword from "../pages/setting/changePassword.vue";
+import hospitalSetting from "../pages/setting/hospitalSetting.vue";
+import rolePermission from "../pages/setting/rolePermission.vue";
+import paymentHistory from "../pages/casher/paymentHistory.vue";
 
 Vue.use(VueRouter);
 
@@ -44,6 +48,11 @@ const routes = [
     path: "/medicalServices",
     name: "medicalServices",
     component: medicalServices,
+  },
+  {
+    path: "/medicalServices/medicalServiceReport",
+    name: "medicalServiceReport",
+    component: medicalServiceReport,
   },
   {
     path: "/departments",
@@ -71,24 +80,14 @@ const routes = [
     component: finacedashboard,
   },
   {
-    path: "/casher",
-    name: "casher",
-    component: casher,
+    path: "/payment",
+    name: "payment",
+    component: payment,
   },
   {
     path: "/nurse",
     name: "nurse",
     component: nurse,
-  },
-  {
-    path: "/labratory",
-    name: "labratory",
-    component: labratory,
-  },
-  {
-    path: "/labratory/labratoryReport",
-    name: "labratoryReport",
-    component: labratoryReport,
   },
   {
     path: "/registerStaff",
@@ -99,6 +98,26 @@ const routes = [
     path: "/chat",
     name: "chat",
     component: chat,
+  },
+  {
+    path: "/setting/changePassword",
+    name: "changePassword",
+    component: changePassword,
+  },
+  {
+    path: "/setting/hospitalSetting",
+    name: "hospitalSetting",
+    component: hospitalSetting,
+  },
+  {
+    path: "/setting/rolePermission",
+    name: "rolePermission",
+    component: rolePermission,
+  },
+  {
+    path: "/payment/paymentHistory",
+    name: "paymentHistory",
+    component: paymentHistory,
   },
 ];
 

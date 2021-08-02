@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <v-data-table
       dense
       class="default"
@@ -11,15 +11,75 @@
     >
       <template v-slot:top>
         <v-layout>
-          <h3>Medical service categories</h3>
+          <h3>Medical Service Categories</h3>
           <v-spacer></v-spacer>
 
-          <v-btn dense prepend-icon="mdi-plus">
-            <v-icon left>mdi-plus</v-icon>New Medical Service Categories
+          <v-btn
+            dense
+            prepend-icon="mdi-plus"
+            @click="registerMedicalSrviceCategoryDialog = true"
+          >
+            Add New
           </v-btn>
         </v-layout>
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="registerMedicalSrviceCategoryDialog"
+      persistent
+      width="700px"
+    >
+      <v-card>
+        <v-toolbar color="green" dark
+          >Add New Medical Service Categories
+        </v-toolbar>
+        <br />
+        <v-card-text>
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm3> Name</v-flex>
+            <v-flex xs12 sm8>
+              <v-text-field dense outlined v-model="item.name"></v-text-field>
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm3> Description</v-flex>
+            <v-flex xs12 sm8>
+              <v-text-field
+                dense
+                outlined
+                v-model="item.description"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm3> Status</v-flex>
+            <v-flex xs12 sm8>
+              <v-autocomplete
+                dense
+                :items="statusList"
+                outlined
+                v-model="item.staus"
+              ></v-autocomplete>
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-spacer></v-spacer>
+            <v-btn small @click="registerMedicalSrviceCategoryDialog = false"
+              >Cancel</v-btn
+            >
+            <v-spacer></v-spacer>
+            <v-btn small @click="save()">Save</v-btn>
+          </v-layout>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -27,6 +87,8 @@
 export default {
   data() {
     return {
+      registerMedicalSrviceCategoryDialog: false,
+      item: [],
       datalist: [],
       headers: [
         { text: "ID", value: "id" },
@@ -39,4 +101,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.main {
+  margin: 7%;
+  margin-top: 2%;
+}
+</style>

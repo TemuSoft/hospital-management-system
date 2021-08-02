@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <v-card>
+      <h2>Staff</h2>
       <br />
       <v-data-table
         dense
@@ -13,8 +14,6 @@
       >
         <template v-slot:top>
           <v-layout>
-            <v-spacer></v-spacer>
-            <h3>Staff</h3>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-autocomplete

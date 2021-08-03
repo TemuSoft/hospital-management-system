@@ -13,7 +13,7 @@ import servicesCategory from "../pages/MedicalService/servicesCategory.vue";
 import medicalServices from "../pages/MedicalService/medicalServices.vue";
 import departments from "../pages/Organization/departments.vue";
 import insurance from "../pages/Organization/insurance.vue";
-import servicesBill from "../pages/Finance/servicesBill.vue";
+
 import staff from "../pages/Organization/staffs/index.vue";
 import payment from "../pages/casher/index.vue";
 import nurse from "../pages/nurse/index.vue";
@@ -62,11 +62,6 @@ const routes = [
     path: "/departments",
     name: "departments",
     component: departments,
-  },
-  {
-    path: "/servicesBill",
-    name: "servicesBill",
-    component: servicesBill,
   },
   {
     path: "/staff",

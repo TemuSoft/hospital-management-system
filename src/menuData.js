@@ -15,12 +15,6 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
-        title: "Payment",
-        route: "payment",
-        icon: "payment",
-        allowedRoles: ["admin", "cutting-department"],
-      },
-      {
         title: "Nurse",
         route: "nurse",
         icon: "nurse",
@@ -123,12 +117,6 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
-        title: "Services Bill's",
-        route: "servicesBill",
-        icon: "servicesBill",
-        allowedRoles: ["admin", "cutting-department"],
-      },
-      {
         title: "Transactions",
         route: "transactions",
         icon: "transactions",
@@ -138,6 +126,12 @@ const menusData = [
         title: "Financial Reports",
         route: "financialReports",
         icon: "financialReports",
+        allowedRoles: ["admin", "cutting-department"],
+      },
+      {
+        title: "Payment",
+        route: "payment",
+        icon: "payment",
         allowedRoles: ["admin", "cutting-department"],
       },
     ],

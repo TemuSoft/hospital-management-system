@@ -30,6 +30,8 @@ import store from "../pages/Inventory/store/index.vue";
 import inventoryDetail from "../pages/Inventory/store/inventoryDetail.vue";
 import issue from "../pages/Inventory/store/issue.vue";
 
+import workPermission from "../pages/Others/workPermission.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -132,6 +134,11 @@ const routes = [
     path: "/Organization/insurance",
     name: "insurance",
     component: insurance,
+  },
+  {
+    path: "/Others/workPermission",
+    name: "workPermission",
+    component: workPermission,
   },
 ];
 

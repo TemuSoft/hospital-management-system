@@ -173,6 +173,18 @@ const menusData = [
     ],
   },
   {
+    title: "Others",
+    allowedRoles: ["admin", "cutting-department"],
+    links: [
+      {
+        title: "Work Permission",
+        allowedRoles: ["admin", "cutting-department"],
+        route: "workPermission",
+        icon: "workPermission",
+      },
+    ],
+  },
+  {
     title: "Reports",
     allowedRoles: ["admin", "cutting-department"],
     route: "reports",

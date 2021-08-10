@@ -51,6 +51,12 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
+        title: "Measurment Unit",
+        route: "measurmentUnit",
+        icon: "measurmentUnit",
+        allowedRoles: ["admin", "cutting-department"],
+      },
+      {
         title: "Store",
         route: "store",
         icon: "store",

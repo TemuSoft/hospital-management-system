@@ -16,6 +16,8 @@ import insurance from "../pages/Organization/insurance.vue";
 
 import staff from "../pages/Organization/staffs/index.vue";
 import payment from "../pages/casher/index.vue";
+import paymentHistory from "../pages/casher/paymentHistory.vue";
+import registerPrepayment from "../pages/casher/registerPrepayment.vue";
 import nurse from "../pages/nurse/index.vue";
 import registerStaff from "../pages/Organization/staffs/registerStaff.vue";
 import chat from "../pages/chat/index.vue";
@@ -24,11 +26,11 @@ import medicalServiceReport from "../pages/MedicalService/medicalServiceReport.v
 import changePassword from "../pages/setting/changePassword.vue";
 import hospitalSetting from "../pages/setting/hospitalSetting.vue";
 import rolePermission from "../pages/setting/rolePermission.vue";
-import paymentHistory from "../pages/casher/paymentHistory.vue";
 
 import store from "../pages/Inventory/store/index.vue";
 import inventoryDetail from "../pages/Inventory/store/inventoryDetail.vue";
 import issue from "../pages/Inventory/store/issue.vue";
+import measurmentUnit from "../pages/Inventory/store/measurmentUnit.vue";
 
 import workPermission from "../pages/Others/workPermission.vue";
 
@@ -81,6 +83,11 @@ const routes = [
     component: payment,
   },
   {
+    path: "/payment/registerPrepayment",
+    name: "registerPrepayment",
+    component: registerPrepayment,
+  },
+  {
     path: "/nurse",
     name: "nurse",
     component: nurse,
@@ -114,6 +121,11 @@ const routes = [
     path: "/payment/paymentHistory",
     name: "paymentHistory",
     component: paymentHistory,
+  },
+  {
+    path: "/measurmentUnit",
+    name: "measurmentUnit",
+    component: measurmentUnit,
   },
   {
     path: "/store/inventory",

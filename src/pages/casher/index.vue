@@ -13,10 +13,27 @@
             single-line
             hide-details
           ></v-text-field>
-          <v-spacer></v-spacer>
-          <v-btn small @click="$router.push({ name: 'paymentHistory' })">
-            Payment History</v-btn
+          <v-spacer />
+          <v-spacer />
+
+          <v-btn
+            small
+            outlined
+            class="text-capitalize"
+            @click="$router.push({ name: 'registerPrepayment' })"
           >
+            Register Prepayment
+          </v-btn>
+          <v-spacer />
+
+          <v-btn
+            small
+            outlined
+            class="text-capitalize"
+            @click="$router.push({ name: 'paymentHistory' })"
+          >
+            Payment History
+          </v-btn>
         </v-layout>
 
         <br />

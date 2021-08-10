@@ -60,11 +60,10 @@
                       <v-col cols="12">
                         <v-text-field
                           dense
-                          type="number"
-                          v-model="editedItem.age"
+                          type="date"
+                          v-model="editedItem.birthDate"
                           outlined
-                          label="Age"
-                          hint="Patient age. E.g 34 (Mandatory)"
+                          label="BirthDate"
                           :rules="[rules.required]"
                         ></v-text-field>
                       </v-col>
@@ -270,7 +269,7 @@
                         <strong>Gender: {{ editedItem.gender }}</strong>
                       </v-list-item>
                       <v-list-item>
-                        <strong>Age: {{ editedItem.age }}</strong>
+                        <strong>Birth Date: {{ editedItem.birthDate }}</strong>
                       </v-list-item>
                       <v-list-item>
                         <strong>Guardian: {{ editedItem.guardianName }}</strong>
@@ -340,11 +339,8 @@
   </div>
 </template>
 <script>
-// import _tool_bar from "~/components/_tool_bar.vue";
 export default {
-  components: {
-    // "tool-bar": _tool_bar
-  },
+  components: {},
   data: () => ({
     title: "Register New Patient",
     formHasErrors: false,
@@ -359,7 +355,7 @@ export default {
       height: "",
       weight: "",
       bloodPressure: "",
-      age: 0,
+      birthDate: "",
       bloodGroup: "",
       gender: 0,
       isAdmitted: false,
@@ -377,7 +373,7 @@ export default {
       height: "",
       weight: "",
       bloodPressure: "",
-      age: 0,
+      birthDate: "",
       bloodGroup: 0,
       gender: 0,
       isAdmitted: false,
@@ -435,7 +431,7 @@ export default {
         height: "",
         weight: "",
         bloodPressure: "",
-        age: 0,
+        birthDate: "",
         bloodGroup: 0,
         gender: 0,
         isAdmitted: false,

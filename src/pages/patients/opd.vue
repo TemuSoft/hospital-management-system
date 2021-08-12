@@ -2,6 +2,7 @@
   <div class="main">
     <v-card flat>
       <h3>Active OPD consultations</h3>
+      {{ stateTy }}
       <br />
 
       <v-data-table
@@ -32,9 +33,11 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
+
 export default {
   components: {},
-  data: function () {
+  data() {
     return {
       search: "",
       datalist: [],
@@ -49,7 +52,9 @@ export default {
     };
   },
   created() {},
-  computed: {},
+  computed: {
+    ...mapState("doctor", ["stateTy"]),
+  },
 };
 </script>
 

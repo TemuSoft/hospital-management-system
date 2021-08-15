@@ -9,6 +9,7 @@
 
       <v-switch
         label="አማርኛ"
+        :input-value="currentLanguage === 'am'"
         color="primary"
         @change="toggleLanguage()"
         class="ml-4 mt-5"
@@ -116,6 +117,7 @@
 
 <script>
 import { menusData } from "@/menuData";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "App",
@@ -128,6 +130,14 @@ export default {
   },
   created() {
     this.menus = menusData;
+  },
+
+  computed: {
+    ...mapState("core", ["currentLanguage"]),
+  },
+
+  methods: {
+    ...mapMutations("core", ["toggleLanguage"]),
   },
 };
 </script>

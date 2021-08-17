@@ -1,6 +1,3 @@
-const path = [
-    {doctor: "/doctor"},
-    {nurse: "/nurse"}
-];
+const path = { items: "/Items", nurse: "/nurse" };
 
 export default path;

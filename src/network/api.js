@@ -10,6 +10,7 @@ import { API_ROOT } from "./root";
 
 const request = axios.create({
   baseURL: API_ROOT !== undefined ? API_ROOT : "//trackerapp.local/",
+  timeout: 1000,
 });
 
 request.CancelToken = axios.CancelToken;

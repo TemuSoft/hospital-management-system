@@ -39,9 +39,6 @@ export default {
 </script>
 
 <style scoped>
-.navDrawer {
-  cursor: pointer;
-}
 .mainDiv {
   width: 100%;
   margin-left: 5%;
@@ -55,5 +52,15 @@ export default {
 .chatRoom {
   cursor: pointer;
   margin-left: 1%;
+}
+
+.mainDiv {
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll;
+}
+
+.mainDiv::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
 }
 </style>

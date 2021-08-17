@@ -1,9 +1,7 @@
 <template>
   <div>
-    <v-app-bar app dark>
-      <div class="navDrawer" @click="navDrawerShow = !navDrawerShow">
-        ::::: Hospital Managment System
-      </div>
+    <v-app-bar app flat>
+      <div>::::: Hospital Managment System</div>
 
       <v-spacer></v-spacer>
 
@@ -46,8 +44,16 @@ export default {
 
   methods: {
     ...mapMutations("core", ["toggleLanguage"]),
+
+    darkmode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    },
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.navDrawer {
+  cursor: pointer;
+}
+</style>

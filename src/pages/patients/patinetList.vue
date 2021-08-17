@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-  {{$t("message")}}
+    {{ $t("message") }}
     <h2>Patinet List</h2>
     <v-card flat>
       <v-data-table

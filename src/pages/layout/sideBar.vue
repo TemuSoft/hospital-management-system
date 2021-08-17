@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <v-navigation-drawer class="navDrawerLeft" absolute expand-on-hover>
-      <v-list>
+  <v-navigation-drawer fixed class="navDrawerLeft" absolute expand-on-hover>
+    <perfect-scrollbar style="overflow: hidden">
+      <v-list class="profile">
         <v-list-item class="px-2">
           <v-list-item-avatar>
             <v-img src="@/assets/images/icon.png"></v-img>
@@ -20,7 +20,7 @@
 
       <v-divider></v-divider>
 
-      <v-list nav dense>
+      <v-list nav dense class="subMenu">
         <v-expansion-panels flat>
           <v-expansion-panel
             v-for="menu in menus"
@@ -66,8 +66,8 @@
           </v-expansion-panel>
         </v-expansion-panels>
       </v-list>
-    </v-navigation-drawer>
-  </div>
+    </perfect-scrollbar>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -86,4 +86,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

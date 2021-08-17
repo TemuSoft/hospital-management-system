@@ -9,11 +9,11 @@ Vue.use(Vuex);
 const core = {
   namespaced: true,
   state: {
-    currentLanguage: "am",
+    currentLanguage: "en",
   },
   mutations: {
     toggleLanguage(state) {
-      state.currentLanguage = state.currentLanguage === "am" ? "en" : "am";
+      state.currentLanguage = state.currentLanguage === "en" ? "am" : "en";
       i18n.locale = state.currentLanguage;
     },
   },

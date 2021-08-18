@@ -1,38 +1,33 @@
-import axios from "axios";
-import { API_ROOT } from "./root";
+import http from "./main";
 
-// export default axios.create({
-//   baseURL: "http://localhost:8080/api",
-//   headers: {
-//     "Content-type": "application/json"
-//   }
-// });
-
-const request = axios.create({
-  baseURL: API_ROOT !== undefined ? API_ROOT : "//trackerapp.local/",
-  timeout: 1000,
-});
-
-request.CancelToken = axios.CancelToken;
-request.isCancel = axios.isCancel;
-
-/*
- * The interceptor here ensures that we check for the token in local storage every time an request is made
- */
-request.interceptors.request.use(
-  (config) => {
-    let token = localStorage.getItem("authtoken");
-
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-
-  (error) => {
-    return Promise.reject(error);
+class api {
+  getAll(path) {
+    return http.get(`${path}`);
   }
-);
 
-export default request;
+  get(id) {
+    return http.get(`${path}/${id}`);
+  }
+
+  create(data) {
+    return http.post(`${path}`, data);
+  }
+
+  update(id, data) {
+    return http.put(`${path}/${id}`, data);
+  }
+
+  delete(id) {
+    return http.delete(`${path}/${id}`);
+  }
+
+  deleteAll() {
+    return http.delete(`${path}`);
+  }
+
+  findByTitle(title) {
+    return http.get(`${path}?title=${title}`);
+  }
+}
+
+export default new api();

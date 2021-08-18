@@ -1,6 +1,9 @@
 <template>
   <div class="main">
     {{ $t("message") }}
+    <br />
+
+    {{ items }}
     <h2>Patinet List</h2>
     <v-card flat>
       <v-data-table
@@ -40,6 +43,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+
 export default {
   data() {
     return {
@@ -57,6 +62,18 @@ export default {
         { text: "Created By", value: "createdBy" },
       ],
     };
+  },
+
+  created() {
+    this.loadAstraData();
+  },
+
+  computed: {
+    ...mapState("doctor", ["items"]),
+  },
+
+  methods: {
+    ...mapActions("doctor", ["loadAstraData"]),
   },
 };
 </script>

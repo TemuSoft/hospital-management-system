@@ -5,27 +5,27 @@ class api {
     return http.get(`${path}`);
   }
 
-  get(id) {
+  get(path, id) {
     return http.get(`${path}/${id}`);
   }
 
-  create(data) {
+  create(path, data) {
     return http.post(`${path}`, data);
   }
 
-  update(id, data) {
+  update(path, id, data) {
     return http.put(`${path}/${id}`, data);
   }
 
-  delete(id) {
+  delete(path, id) {
     return http.delete(`${path}/${id}`);
   }
 
-  deleteAll() {
+  deleteAll(path) {
     return http.delete(`${path}`);
   }
 
-  findByTitle(title) {
+  findByTitle(path, title) {
     return http.get(`${path}?title=${title}`);
   }
 }

@@ -2,8 +2,7 @@ const path = {
   items: "/Items",
   nurse: "/nurse",
   registerPatient: "/patient/register",
-  patient: "/patient",
-  patientFilter: "/petient/detail",
+  patient: "/patient/patient_detail",
 };
 
 export default path;

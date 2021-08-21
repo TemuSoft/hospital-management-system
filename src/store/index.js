@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import i18n from "../i18n";
 
 import doctor from "./doctor";
-import petient from "./patient";
+import patient from "./patient";
 
 Vue.use(Vuex);
 
@@ -25,6 +25,6 @@ export default new Vuex.Store({
   modules: {
     core,
     doctor,
-    petient,
+    patient,
   },
 });

@@ -1,194 +1,183 @@
 <template>
   <div class="main">
     <v-form @submit.prevent="save" ref="form">
-      <v-card flat>
-        <h2>{{ title }}</h2>
-        <br />
+      <h2>{{ title }}</h2>
+      <br />
 
-        <v-layout row justify-start>
-          <v-select
-            dense
-            :items="patientTypeoptions"
-            label="Select Patinet Type"
-            :rules="inputRules"
-            outlined
-            single-line
-          />
-          <v-spacer />
-          <v-spacer />
-        </v-layout>
+      <v-layout row justify-center>
+        <v-select
+          dense
+          v-model="item.patient_type"
+          :items="patientTypeoptions"
+          label="Select Patinet Type"
+          :rules="inputRules"
+          item-text="name"
+          item-id="value"
+          outlined
+          single-line
+        />
+        <v-spacer />
+        <v-spacer />
+      </v-layout>
 
-        <v-layout row justify-space-around>
-          <v-text-field
-            label="Full Name"
-            v-model="item.fullName"
-            :rules="inputRules"
-            outlined
-            dense
-          />
-          <v-spacer />
+      <v-layout row>
+        <v-text-field
+          label="First Name"
+          v-model="item.first_name"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-          <v-autocomplete
-            label="Gender"
-            v-model="item.gender"
-            :rules="inputRules"
-            :items="genderoptions"
-            outlined
-            dense
-          />
-          <v-spacer />
+        <v-text-field
+          label="Birth Date"
+          type="date"
+          v-model="item.birthdate"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-          <v-text-field
-            label="Birth Date"
-            type="date"
-            v-model="item.birthDate"
-            :rules="inputRules"
-            outlined
-            dense
-          />
-          <v-spacer />
+        <v-text-field
+          label="Phone"
+          v-model="item.phone_number"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-          <v-text-field
-            label="Phone"
-            v-model="item.phone"
-            :rules="inputRules"
-            outlined
-            dense
-          />
-        </v-layout>
+        <v-text-field
+          label="Guardian Name"
+          v-model="item.guardian_name"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+      </v-layout>
 
-        <v-layout row justify-space-around>
-          <v-text-field
-            label="Address"
-            v-model="item.address"
-            :rules="inputRules"
-            outlined
-            dense
-          />
-          <v-spacer />
+      <v-layout row>
+        <v-text-field
+          label="Father Name"
+          v-model="item.fathers_name"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-          <v-autocomplete
-            label="Married Status"
-            v-model="item.marriageStatus"
-            :rules="inputRules"
-            :items="marriagestatusoptions"
-            outlined
-            dense
-          />
-          <v-spacer />
+        <v-autocomplete
+          label="Nationality"
+          v-model="item.nationality"
+          :items="nationalityList"
+          item-text="name"
+          item-id="value"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-          <v-text-field
-            type="number"
-            label="Height"
-            v-model="item.height"
-            :rules="inputRules"
-            outlined
-            dense
-          />
-          <v-spacer />
+        <v-text-field label="Region" v-model="item.region" outlined dense />
+        <v-spacer />
 
-          <v-text-field
-            label="Weight"
-            v-model="item.weight"
-            :rules="inputRules"
-            outlined
-            dense
-          />
-        </v-layout>
+        <v-text-field
+          type="number"
+          label="Guardian Contact"
+          v-model="item.guardian_contact"
+          outlined
+          dense
+        />
+      </v-layout>
 
-        <v-layout row justify-space-around>
-          <v-text-field
-            label="Blood Pressure"
-            v-model="item.bloodPressure"
-            outlined
-            dense
-          />
-          <v-spacer />
+      <v-layout row>
+        <v-text-field
+          label="Grand Father"
+          v-model="item.last_name"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-          <v-autocomplete
-            label="Blood Group"
-            v-model="item.bloodGroup"
-            :rules="inputRules"
-            :items="bloodgroupoptions"
-            outlined
-            dense
-          />
-          <v-spacer />
+        <v-text-field label="Zone" v-model="item.zone" outlined dense />
+        <v-spacer />
 
-          <v-text-field
-            label="Guardian Name"
-            v-model="item.guardianName"
-            :rules="inputRules"
-            outlined
-            dense
-          />
-          <v-spacer />
+        <v-text-field label="Woreda" v-model="item.woreda" outlined dense />
+        <v-spacer />
 
-          <v-text-field
-            type="number"
-            label="Guardian Contact"
-            v-model="item.guardianContact"
-            :rules="inputRules"
-            outlined
-            dense
-          />
-        </v-layout>
+        <v-text-field label="Kebele" v-model="item.kebele" outlined dense />
+      </v-layout>
 
-        <v-layout row justify-space-around>
-          <v-textarea
-            label="Allergies"
-            rows="2"
-            v-model="item.allergies"
-            :rules="inputRules"
-            outlined
-            dense
-          />
-          <v-spacer />
+      <v-layout row>
+        <v-autocomplete
+          label="Gender"
+          v-model="item.gender"
+          :rules="inputRules"
+          :items="genderoptions"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-          <v-textarea
-            label="Note"
-            rows="2"
-            v-model="item.note"
-            outlined
-            dense
-          />
-        </v-layout>
-        <br />
+        <v-text-field
+          label="House Number"
+          v-model="item.house_number"
+          outlined
+          dense
+        />
+      </v-layout>
+      <br />
 
-        <v-layout>
-          <v-btn small text outlined color="green" @click="save()">
-            Register
-          </v-btn>
-        </v-layout>
-      </v-card>
+      <v-layout>
+        <v-btn small text outlined color="green" @click="save()">
+          Register
+        </v-btn>
+      </v-layout>
     </v-form>
+    {{ registeredPatient }}------------------------
   </div>
 </template>
 <script>
+import { mapActions, mapState } from "vuex";
+
 export default {
   components: {},
   data() {
     return {
-      item: [],
+      item: {},
       title: "Register New Patient",
-      valid: true,
       inputRules: [(v) => !!v || "This field is required"],
       genderoptions: ["Male", "Female"],
-      marriagestatusoptions: [
-        "Single",
-        "Married",
-        "Seperated",
-        "Widowed",
-        "Unspecified",
+
+      patientTypeoptions: [
+        { name: "Regular", value: 1 },
+        { name: "Credit", value: 2 },
+        { name: "Organization", value: 3 },
+        { name: "Temporary", value: 4 },
       ],
-      patientTypeoptions: ["Regular", "Credit", "Instatnt"],
-      bloodgroupoptions: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+      nationalityList: [
+        { name: "Ethiopia", value: 1 },
+        { name: "Others", value: 2 },
+      ],
     };
   },
+
+  mounted: {
+    ...mapState("patient", ["registeredPatient"]),
+  },
+
+  created() {},
+
   methods: {
-    save() {
+    ...mapActions("patient", ["registerPatient"]),
+
+    async save() {
       if (this.$refs.form.validate()) {
-        alert("Inserted data is valid");
+        await this.registerPatient(this.item);
+        if (this.registeredPatient === true) this.item = {};
+        else alert("Failed to Register Patinet");
       }
     },
   },

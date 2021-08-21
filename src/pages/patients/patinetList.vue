@@ -1,15 +1,13 @@
 <template>
   <div class="main">
-    {{ $t("message") }}
     <br />
-
-    {{ items }}
     <h2>Patinet List</h2>
+
     <v-card flat>
       <v-data-table
         dense
         :headers="headers"
-        :items="datalist"
+        :items="petients"
         :search="search"
         items-per-page="10"
       >
@@ -65,15 +63,19 @@ export default {
   },
 
   created() {
-    this.loadAstraData();
+    this.loadData();
   },
 
   computed: {
-    ...mapState("doctor", ["items"]),
+    ...mapState("petient", ["petients"]),
   },
 
   methods: {
-    ...mapActions("doctor", ["loadAstraData"]),
+    ...mapActions("petient", ["getPatientList"]),
+
+    async loadData() {
+      await this.getPatientList();
+    },
   },
 };
 </script>

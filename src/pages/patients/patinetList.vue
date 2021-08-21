@@ -3,6 +3,8 @@
     <br />
     <h2>Patinet List</h2>
 
+    <Detail />
+
     <v-card flat>
       <v-data-table :headers="headers" :items="patients" :search="search">
         <template v-slot:item.patient_type="{ item }">
@@ -13,7 +15,8 @@
         </template>
 
         <template v-slot:item.action="{ item }">
-          <Edit @click="item.id;" />
+          <Edit @click="editPatient(item.id)" />
+          <Detail @click="detailPatient(item.id)" />
         </template>
 
         <template v-slot:item.first_name="{ item }">
@@ -57,6 +60,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
+import Detail from "@/assets/icons/eye.svg";
 
 export default {
   data() {
@@ -70,7 +74,7 @@ export default {
         { text: "Phone Number", value: "phone_number" },
         { text: "Patient Type", value: "patient_type" },
         { text: "Guardian", value: "guardian_name" },
-        { text: "Date", value: "registration_date" },
+        { text: "Date Register", value: "registration_date" },
         { text: "Action", value: "action" },
       ],
     };
@@ -78,6 +82,7 @@ export default {
 
   components: {
     Edit,
+    Detail,
   },
 
   created() {

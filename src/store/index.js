@@ -5,6 +5,7 @@ import i18n from "../i18n";
 import doctor from "./doctor";
 import patient from "./patient";
 import staff from "./staff";
+import department from "./department";
 
 Vue.use(Vuex);
 
@@ -28,5 +29,6 @@ export default new Vuex.Store({
     doctor,
     patient,
     staff,
+    department,
   },
 });

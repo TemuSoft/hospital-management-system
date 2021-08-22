@@ -2,13 +2,19 @@
   <div class="main">
     <v-data-table
       dense
-      class="default"
       :headers="headers"
-      :items="datalist"
+      :items="departments"
       :search="search"
-      sort-by="isActive"
-      :sort-desc="sortDesc"
     >
+      <template v-slot:item.action="{ item }">
+        <Edit @click="editDepartment(item)" class="icon" />
+        &nbsp;&nbsp;&nbsp;
+        <Detail @click="detailDepartment(item)" class="icon" />
+        &nbsp;&nbsp;&nbsp;
+
+        <Delete @click="deleteDeprtment(item)" class="icon" />
+      </template>
+
       <template v-slot:top>
         <v-layout>
           <h3>Departments</h3>
@@ -26,6 +32,7 @@
           <v-btn
             @click="registerDepaDialog = true"
             small
+            outlined
             prepend-icon="mdi-plus"
           >
             <v-icon left>mdi-plus</v-icon>Add New
@@ -34,50 +41,66 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="registerDepaDialog" persistent width="700px">
+    <v-dialog dense v-model="registerDepaDialog" persistent width="700px">
       <v-card>
         <v-toolbar color="green" dark>Add New Departments </v-toolbar>
         <br />
         <v-card-text>
-          <v-layout>
-            <v-flex xs12 sm1> </v-flex>
-            <v-flex xs12 sm3> Name</v-flex>
-            <v-flex xs12 sm8>
-              <v-text-field dense outlined v-model="item.name"></v-text-field>
-            </v-flex>
-          </v-layout>
+          <v-form @submit.prevent="save" ref="form">
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Name</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  :rules="inputRules"
+                  dense
+                  outlined
+                  v-model="depertmentInfo.name"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
 
-          <v-layout>
-            <v-flex xs12 sm1> </v-flex>
-            <v-flex xs12 sm3> Status</v-flex>
-            <v-flex xs12 sm8>
-              <v-autocomplete
-                dense
-                :items="statusList"
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Status</v-flex>
+              <v-flex xs12 sm8>
+                <v-autocomplete
+                  dense
+                  :rules="inputRules"
+                  :items="statusList"
+                  item-text="name"
+                  item-id="value"
+                  outlined
+                  v-model="depertmentInfo.status"
+                ></v-autocomplete>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Description</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  dense
+                  outlined
+                  v-model="depertmentInfo.description"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-spacer></v-spacer>
+              <v-btn
+                small
                 outlined
-                v-model="item.status"
-              ></v-autocomplete>
-            </v-flex>
-          </v-layout>
-
-          <v-layout>
-            <v-flex xs12 sm1> </v-flex>
-            <v-flex xs12 sm3> Description</v-flex>
-            <v-flex xs12 sm8>
-              <v-text-field
-                dense
-                outlined
-                v-model="item.description"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-
-          <v-layout>
-            <v-spacer></v-spacer>
-            <v-btn small @click="registerDepaDialog = false">Cancel</v-btn>
-            <v-spacer></v-spacer>
-            <v-btn small @click="save()">Save</v-btn>
-          </v-layout>
+                color="red"
+                @click="registerDepaDialog = false"
+                >Cancel</v-btn
+              >
+              <v-spacer></v-spacer>
+              <v-btn small outlined color="green" @click="save()">Save</v-btn>
+            </v-layout>
+          </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -85,27 +108,65 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+import Edit from "@/assets/icons/edit.svg";
+import Detail from "@/assets/icons/eye.svg";
+import Delete from "@/assets/icons/delete.svg";
+
 export default {
   data() {
     return {
       registerDepaDialog: false,
-      item: [],
-      datalist: [],
-      statusList: ["Active", "Not Active"],
+      depertmentInfo: {},
+      inputRules: [(v) => !!v || "This field is required"],
+
+      statusList: [
+        { name: "Active", value: 1 },
+        { name: "Not Active", value: 0 },
+      ],
       headers: [
-        { text: "ID", value: "id" },
         { text: "Name", value: "name" },
         { text: "Description", value: "description" },
         { text: "Status", value: "status" },
-        { text: "Opening Date", value: "openingDAte" },
+        { text: "Created Date", value: "created_date" },
         { text: "Action", value: "action" },
       ],
     };
   },
 
+  components: { Edit, Detail, Delete },
+
+  computed: {
+    ...mapState("department", ["registeredDeprtment", "departments"]),
+  },
+
+  created() {
+    this.loadData();
+  },
+
   methods: {
+    ...mapActions("department", ["registerDepartment", "getDepartmentList"]),
+
+    async loadData() {
+      this.depertmentInfo.created_by = "Temesgen";
+      await this.getDepartmentList();
+    },
+
     async save() {
-      alert("Add new department save button clicked");
+      if (this.$refs.form.validate()) {
+        await this.registerDepartment(this.depertmentInfo);
+
+        if (this.registeredDeprtment === true) {
+          this.registerDepaDialog = false;
+          this.loadData();
+          this.depertmentInfo = {};
+        } else alert("Something wrong please fix first!!!");
+      }
+    },
+
+    async editDepartment(item) {
+      this.depertmentInfo = item;
+      this.registerDepaDialog = true;
     },
   },
 };
@@ -115,5 +176,8 @@ export default {
 .main {
   margin: 7%;
   margin-top: 2%;
+}
+.icon {
+  cursor: pointer;
 }
 </style>

@@ -43,6 +43,23 @@
 
           <v-layout>
             <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Gender</v-flex>
+            <v-flex xs12 sm4>
+              <v-autocomplete
+                :items="genderoptions"
+                :rules="inputRules"
+                dense
+                outlined
+                v-model="staffInfo.gender"
+              />
+            </v-flex>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm4> </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
             <v-flex xs12 sm1> First Name</v-flex>
             <v-flex xs12 sm4>
               <v-text-field
@@ -143,7 +160,7 @@ export default {
     return {
       staffInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
-
+      genderoptions: ["Male", "Female"],
       departmentList: [
         { name: "Adminstrator", value: 1 },
         { name: "Human Resource", value: 2 },

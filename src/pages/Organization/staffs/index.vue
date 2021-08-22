@@ -3,6 +3,7 @@
     <v-card>
       <h2>Staff</h2>
       <br />
+
       <v-data-table dense :headers="headers" :items="staffs" :search="search">
         <template v-slot:top>
           <v-layout>
@@ -22,7 +23,12 @@
               hide-details
             ></v-text-field
             ><v-spacer></v-spacer>
-            <v-btn small @click="$router.push({ name: 'registerStaff' })">
+            <v-btn
+              small
+              outlined
+              text
+              @click="$router.push({ name: 'registerStaff' })"
+            >
               Add New
             </v-btn>
           </v-layout>
@@ -40,14 +46,15 @@ export default {
   data() {
     return {
       search: "",
+
       headers: [
-        { text: "Card Number", value: "card_number" },
-        { text: "Name", value: "name" },
+        { text: "First Name", value: "first_name" },
+        { text: "Father Name", value: "father_name" },
+        { text: "Gender", value: "gender" },
         { text: "Department", value: "department" },
         { text: "Email", value: "email" },
-        { text: "Phone", value: "phone" },
-        { text: "Role", value: "role" },
-        { text: "Active?", value: "active" },
+        { text: "Phone Number", value: "phone_number" },
+        { text: "Active?", value: "is_active" },
       ],
       positionList: [
         { name: "Adminstrator", value: 1 },
@@ -70,10 +77,12 @@ export default {
   },
 
   methods: {
-    ...mapActions("staff", ["getStaffList"]),
+    ...mapActions("staff", ["getStaffList", "getStaffListFilter"]),
 
     async loadData() {
       await this.getStaffList();
+
+      // await this.getStaffListFilter({ key: "email", value: "email" });
     },
   },
 };

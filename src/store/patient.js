@@ -7,6 +7,7 @@ export default {
   state: {
     registeredPatient: false,
     patients: [],
+    updateResponse: false,
   },
   mutations: {
     setRegisterPatient(state, payload) {
@@ -15,6 +16,10 @@ export default {
 
     setPatientList(state, payload) {
       state.patients = payload;
+    },
+
+    setUpdatePatientInfo(state, payload) {
+      state.updateResponse = payload;
     },
   },
 
@@ -35,6 +40,12 @@ export default {
       let res = await api.create(path.patient, filter);
 
       commit("setPatientList", res.data);
+    },
+
+    async updatePatientInfo({ commit }, data) {
+      let res = await api.update(path.update_patient, data.id, data);
+
+      commit("setUpdatePatientInfo", res.data);
     },
   },
 };

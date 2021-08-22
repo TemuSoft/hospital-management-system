@@ -3,15 +3,7 @@
     <v-card>
       <h2>Staff</h2>
       <br />
-      <v-data-table
-        dense
-        class="default"
-        :headers="headers"
-        :items="datalist"
-        :search="search"
-        sort-by="isActive"
-        :sort-desc="sortDesc"
-      >
+      <v-data-table dense :headers="headers" :items="staffs" :search="search">
         <template v-slot:top>
           <v-layout>
             <v-spacer></v-spacer>
@@ -42,31 +34,47 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+
 export default {
   data() {
     return {
-      datalist: [],
       search: "",
       headers: [
-        { text: "ID", value: "id" },
+        { text: "Card Number", value: "card_number" },
         { text: "Name", value: "name" },
         { text: "Department", value: "department" },
         { text: "Email", value: "email" },
         { text: "Phone", value: "phone" },
         { text: "Role", value: "role" },
         { text: "Active?", value: "active" },
-        { text: "Aveliable?", value: "aveliable" },
       ],
       positionList: [
-        "Adminstrator",
-        "Human Resource",
-        "Labratory",
-        "OPD",
-        "Medical Directors",
-        "Nurse and Pharmacy",
-        "Store",
+        { name: "Adminstrator", value: 1 },
+        { name: "Human Resource", value: 2 },
+        { name: "Labratory", value: 3 },
+        { name: "OPD", value: 4 },
+        { name: "Medical Directors", value: 5 },
+        { name: "Nurse and Pharmacy", value: 6 },
+        { name: "Store", value: 7 },
       ],
     };
+  },
+
+  computed: {
+    ...mapState("staff", ["staffs"]),
+  },
+
+  created() {
+    this.loadData();
+  },
+
+  methods: {
+    ...mapActions("staff", ["getStaffList"]),
+
+    async loadData() {
+      await this.getStaffList();
+    },
   },
 };
 </script>

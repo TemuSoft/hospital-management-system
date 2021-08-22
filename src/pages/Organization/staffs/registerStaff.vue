@@ -18,61 +18,117 @@
       <br />
 
       <div>
-        <v-layout>
-          <v-flex xs12 sm1> </v-flex>
-          <v-flex xs12 sm1> Full Name</v-flex>
-          <v-flex xs12 sm4>
-            <v-text-field dense outlined v-model="item.fullName"></v-text-field>
-          </v-flex>
-          <v-flex xs12 sm1> </v-flex>
-          <v-flex xs12 sm1> Mobile</v-flex>
-          <v-flex xs12 sm4>
-            <v-text-field dense outlined v-model="item.mobile"></v-text-field>
-          </v-flex>
-        </v-layout>
+        <v-form @submit.prevent="save" ref="form">
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Title</v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field
+                dense
+                outlined
+                v-model="staffInfo.tilte"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Email</v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field
+                :rules="inputRules"
+                dense
+                outlined
+                v-model="staffInfo.email"
+              />
+            </v-flex>
+          </v-layout>
 
-        <v-layout>
-          <v-flex xs12 sm1> </v-flex>
-          <v-flex xs12 sm1> Address</v-flex>
-          <v-flex xs12 sm4>
-            <v-text-field dense outlined v-model="item.address"></v-text-field>
-          </v-flex>
-          <v-flex xs12 sm1> </v-flex>
-          <v-flex xs12 sm1> Email</v-flex>
-          <v-flex xs12 sm4>
-            <v-text-field dense outlined v-model="item.emial"></v-text-field>
-          </v-flex>
-        </v-layout>
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> First Name</v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field
+                dense
+                outlined
+                :rules="inputRules"
+                v-model="staffInfo.first_name"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Phone Number</v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field
+                dense
+                outlined
+                :rules="inputRules"
+                v-model="staffInfo.phone_number"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
 
-        <v-layout>
-          <v-flex xs12 sm1> </v-flex>
-          <v-flex xs12 sm1> Department</v-flex>
-          <v-flex xs12 sm4>
-            <v-autocomplete
-              outlined
-              dense
-              :items="positionList"
-              label="Positions"
-              v-model="item.position"
-            ></v-autocomplete>
-          </v-flex>
-          <v-flex xs12 sm1> </v-flex>
-          <v-flex xs12 sm1> Date Birth</v-flex>
-          <v-flex xs12 sm4>
-            <v-text-field
-              dense
-              outlined
-              v-model="item.dateBirth"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Father Name</v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field
+                dense
+                outlined
+                :rules="inputRules"
+                v-model="staffInfo.father_name"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Woreda</v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field dense outlined v-model="staffInfo.woreda" />
+            </v-flex>
+          </v-layout>
 
-        <v-layout>
-          <v-flex xs12 sm2> </v-flex>
-          <v-flex xs12 sm10>
-            <v-btn small>Save</v-btn>
-          </v-flex>
-        </v-layout>
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Date Birth</v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field
+                :rules="inputRules"
+                dense
+                outlined
+                type="date"
+                v-model="staffInfo.birth_date"
+              />
+            </v-flex>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Kebele</v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field dense outlined v-model="staffInfo.kebele" />
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Department</v-flex>
+            <v-flex xs12 sm4>
+              <v-autocomplete
+                :rules="inputRules"
+                outlined
+                dense
+                :items="departmentList"
+                item-text="name"
+                item-id="value"
+                v-model="staffInfo.department"
+              ></v-autocomplete>
+            </v-flex>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> House Number</v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field dense outlined v-model="staffInfo.house_number" />
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex xs12 sm2> </v-flex>
+            <v-flex xs12 sm10>
+              <v-btn small outlined color="green" @click="save()">Save</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-form>
       </div>
       <br />
     </v-card>
@@ -80,22 +136,42 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+
 export default {
   data() {
     return {
-      item: [],
-      positionList: [
-        "Adminstrator",
-        "Human Resource",
-        "Labratory",
-        "Labratory Head",
-        "OPD",
-        "Medical Doctor",
-        "Nurse",
-        "Pharmacy",
-        "Store",
+      staffInfo: {},
+      inputRules: [(v) => !!v || "This field is required"],
+
+      departmentList: [
+        { name: "Adminstrator", value: 1 },
+        { name: "Human Resource", value: 2 },
+        { name: "Labratory", value: 3 },
+        { name: "OPD", value: 4 },
+        { name: "Medical Directors", value: 5 },
+        { name: "Nurse and Pharmacy", value: 6 },
+        { name: "Store", value: 7 },
       ],
     };
+  },
+
+  computed: {
+    ...mapState("staff", ["registeredStaff"]),
+  },
+
+  created() {},
+
+  methods: {
+    ...mapActions("staff", ["registerStaff"]),
+
+    async save() {
+      if (this.$refs.form.validate()) {
+        await this.registerStaff(this.staffInfo);
+        if (this.registeredStaff === true) this.$router.push({ name: "staff" });
+        else alert("Faild to register please try again!!!");
+      }
+    },
   },
 };
 </script>

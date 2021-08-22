@@ -1,13 +1,13 @@
 <template>
   <div class="main">
     <v-form @submit.prevent="save" ref="form">
-      <h2>{{ title }}</h2>
+      <h2>Register New Patient</h2>
       <br />
 
       <v-layout row justify-center>
         <v-select
           dense
-          v-model="item.patient_type"
+          v-model="patientInfo.patient_type"
           :items="patientTypeoptions"
           label="Select Patinet Type"
           :rules="inputRules"
@@ -23,7 +23,7 @@
       <v-layout row>
         <v-text-field
           label="First Name"
-          v-model="item.first_name"
+          v-model="patientInfo.first_name"
           :rules="inputRules"
           outlined
           dense
@@ -33,7 +33,7 @@
         <v-text-field
           label="Birth Date"
           type="date"
-          v-model="item.birthdate"
+          v-model="patientInfo.birthdate"
           :rules="inputRules"
           outlined
           dense
@@ -42,7 +42,7 @@
 
         <v-text-field
           label="Phone"
-          v-model="item.phone_number"
+          v-model="patientInfo.phone_number"
           :rules="inputRules"
           outlined
           dense
@@ -51,7 +51,7 @@
 
         <v-text-field
           label="Guardian Name"
-          v-model="item.guardian_name"
+          v-model="patientInfo.guardian_name"
           :rules="inputRules"
           outlined
           dense
@@ -61,7 +61,7 @@
       <v-layout row>
         <v-text-field
           label="Father Name"
-          v-model="item.fathers_name"
+          v-model="patientInfo.fathers_name"
           :rules="inputRules"
           outlined
           dense
@@ -70,7 +70,7 @@
 
         <v-autocomplete
           label="Nationality"
-          v-model="item.nationality"
+          v-model="patientInfo.nationality"
           :items="nationalityList"
           item-text="name"
           item-id="value"
@@ -79,13 +79,18 @@
         />
         <v-spacer />
 
-        <v-text-field label="Region" v-model="item.region" outlined dense />
+        <v-text-field
+          label="Region"
+          v-model="patientInfo.region"
+          outlined
+          dense
+        />
         <v-spacer />
 
         <v-text-field
           type="number"
           label="Guardian Contact"
-          v-model="item.guardian_contact"
+          v-model="patientInfo.guardian_contact"
           outlined
           dense
         />
@@ -94,26 +99,36 @@
       <v-layout row>
         <v-text-field
           label="Grand Father"
-          v-model="item.last_name"
+          v-model="patientInfo.last_name"
           :rules="inputRules"
           outlined
           dense
         />
         <v-spacer />
 
-        <v-text-field label="Zone" v-model="item.zone" outlined dense />
+        <v-text-field label="Zone" v-model="patientInfo.zone" outlined dense />
         <v-spacer />
 
-        <v-text-field label="Woreda" v-model="item.woreda" outlined dense />
+        <v-text-field
+          label="Woreda"
+          v-model="patientInfo.woreda"
+          outlined
+          dense
+        />
         <v-spacer />
 
-        <v-text-field label="Kebele" v-model="item.kebele" outlined dense />
+        <v-text-field
+          label="Kebele"
+          v-model="patientInfo.kebele"
+          outlined
+          dense
+        />
       </v-layout>
 
       <v-layout row>
         <v-autocomplete
           label="Gender"
-          v-model="item.gender"
+          v-model="patientInfo.gender"
           :rules="inputRules"
           :items="genderoptions"
           outlined
@@ -123,7 +138,7 @@
 
         <v-text-field
           label="House Number"
-          v-model="item.house_number"
+          v-model="patientInfo.house_number"
           outlined
           dense
         />
@@ -131,12 +146,13 @@
       <br />
 
       <v-layout>
-        <v-btn small text outlined color="green" @click="save()">
-          Register
-        </v-btn>
+        <v-btn small outlined color="green" @click="save()"> Register </v-btn>
+        <v-spacer />
+        <v-btn small outlined color="red" @click="cancel()"> Cancel </v-btn>
+        <v-spacer />
+        <v-spacer />
       </v-layout>
     </v-form>
-    {{ registeredPatient }}------------------------
   </div>
 </template>
 <script>
@@ -146,8 +162,7 @@ export default {
   components: {},
   data() {
     return {
-      item: {},
-      title: "Register New Patient",
+      patientInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
       genderoptions: ["Male", "Female"],
 
@@ -164,7 +179,7 @@ export default {
     };
   },
 
-  mounted: {
+  computed: {
     ...mapState("patient", ["registeredPatient"]),
   },
 
@@ -175,10 +190,14 @@ export default {
 
     async save() {
       if (this.$refs.form.validate()) {
-        await this.registerPatient(this.item);
-        if (this.registeredPatient === true) this.item = {};
+        await this.registerPatient(this.patientInfo);
+        if (this.registeredPatient === true) this.patientInfo = {};
         else alert("Failed to Register Patinet");
       }
+    },
+
+    async cancel() {
+      this.$router.push({ name: "patinets" });
     },
   },
 };

@@ -14,7 +14,7 @@ class api {
   }
 
   update(path, id, data) {
-    return http.put(`${path}/${id}`, data);
+    return http.patch(`${path}/${id}/`, data);
   }
 
   delete(path, id) {

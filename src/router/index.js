@@ -10,6 +10,7 @@ import opd from "../pages/patients/opd.vue";
 import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
 import medicine from "../pages/Inventory/Pharmacy/medicine.vue";
 import labratoryTest from "../pages/MedicalService/labratory/labratoryTest.vue";
+import labratoryReport from "../pages/MedicalService/labratory/labratoryReport.vue";
 import imagingTest from "../pages/MedicalService/imaging/imagingTest.vue";
 import departments from "../pages/Organization/departments.vue";
 import insurance from "../pages/Organization/insurance.vue";
@@ -55,6 +56,11 @@ const routes = [
     path: "/labratoryTest",
     name: "labratoryTest",
     component: labratoryTest,
+  },
+  {
+    path: "/labratoryReport",
+    name: "labratoryReport",
+    component: labratoryReport,
   },
   {
     path: "/departments",

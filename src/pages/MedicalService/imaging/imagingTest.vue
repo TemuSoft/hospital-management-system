@@ -6,8 +6,12 @@
         <v-spacer></v-spacer>
         <v-btn small @click="registerLabDialog = true">Add New</v-btn>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <v-btn small @click="$router.push({ name: 'medicalServiceReport' })">
-          Medical Service Report
+        <v-btn small @click="registerLabGroupDialog = true"
+          >Register Test Group</v-btn
+        >
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <v-btn small @click="$router.push({ name: 'labratoryReport' })">
+          Labratory Report
         </v-btn>
       </v-layout>
       <br />
@@ -16,7 +20,7 @@
 
       <v-dialog v-model="registerLabDialog" persistent width="700px">
         <v-card>
-          <v-toolbar color="green" dark>Add New Medical Service </v-toolbar>
+          <v-toolbar color="green" dark>Add New Labratory Service </v-toolbar>
           <br />
           <v-card-text>
             <v-layout>

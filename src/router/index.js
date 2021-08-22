@@ -9,8 +9,8 @@ import appointments from "../pages/Appointment/index.vue";
 import opd from "../pages/patients/opd.vue";
 import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
 import medicine from "../pages/Inventory/Pharmacy/medicine.vue";
-import servicesCategory from "../pages/MedicalService/servicesCategory.vue";
-import medicalServices from "../pages/MedicalService/medicalServices.vue";
+import labratoryTest from "../pages/MedicalService/labratory/labratoryTest.vue";
+import imagingTest from "../pages/MedicalService/imaging/imagingTest.vue";
 import departments from "../pages/Organization/departments.vue";
 import insurance from "../pages/Organization/insurance.vue";
 
@@ -22,7 +22,6 @@ import nurse from "../pages/nurse/index.vue";
 import registerStaff from "../pages/Organization/staffs/registerStaff.vue";
 import chat from "../pages/chat/index.vue";
 
-import medicalServiceReport from "../pages/MedicalService/medicalServiceReport.vue";
 import changePassword from "../pages/setting/changePassword.vue";
 import hospitalSetting from "../pages/setting/hospitalSetting.vue";
 import rolePermission from "../pages/setting/rolePermission.vue";
@@ -48,19 +47,14 @@ const routes = [
   { path: "/pharmacy", name: "pharmacy", component: pharmacy },
   { path: "/medicine", name: "medicine", component: medicine },
   {
-    path: "/servicesCategory",
-    name: "servicesCategory",
-    component: servicesCategory,
+    path: "/imagingTest",
+    name: "imagingTest",
+    component: imagingTest,
   },
   {
-    path: "/medicalServices",
-    name: "medicalServices",
-    component: medicalServices,
-  },
-  {
-    path: "/medicalServices/medicalServiceReport",
-    name: "medicalServiceReport",
-    component: medicalServiceReport,
+    path: "/labratoryTest",
+    name: "labratoryTest",
+    component: labratoryTest,
   },
   {
     path: "/departments",

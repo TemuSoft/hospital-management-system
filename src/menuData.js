@@ -75,15 +75,15 @@ const menusData = [
     allowedRoles: ["admin", "cutting-department"],
     links: [
       {
-        title: "Medical Services",
-        route: "medicalServices",
-        icon: "medicalServices",
+        title: "Labratory Test",
+        route: "labratoryTest",
+        icon: "labratoryTest",
         allowedRoles: ["admin", "cutting-department"],
       },
       {
-        title: "Services Category",
-        route: "servicesCategory",
-        icon: "servicesCategory",
+        title: "Imaging Test",
+        route: "imageTest",
+        icon: "imageTest",
         allowedRoles: ["admin", "cutting-department"],
       },
     ],

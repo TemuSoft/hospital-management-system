@@ -9,6 +9,12 @@ const path = {
   register_department: "/admin/register_department",
   department: "/admin/department_data",
   update_department: "/admin/update_department_data",
+
+  register_work_permission: "/register_work_permission",
+  register_lab_group: "/register_lab_group",
+  lab_group: "/lab_group",
+  lab_test: "/lab_test",
+  imaging_test: "/imaging_test",
 };
 
 export default path;

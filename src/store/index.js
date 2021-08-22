@@ -6,6 +6,8 @@ import doctor from "./doctor";
 import patient from "./patient";
 import staff from "./staff";
 import department from "./department";
+import workPermission from "./workPermission";
+import medicalService from "./medicalService";
 
 Vue.use(Vuex);
 
@@ -30,5 +32,7 @@ export default new Vuex.Store({
     patient,
     staff,
     department,
+    workPermission,
+    medicalService,
   },
 });

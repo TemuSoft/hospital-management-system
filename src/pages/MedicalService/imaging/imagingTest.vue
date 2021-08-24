@@ -1,93 +1,94 @@
 <template>
   <div class="main">
-    <h3>Medical Service</h3>
+    <h3>Imaging Medical Service</h3>
     <v-card flat>
       <v-layout>
         <v-spacer></v-spacer>
-        <v-btn small @click="registerLabDialog = true">Add New</v-btn>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <v-btn small @click="registerLabGroupDialog = true"
-          >Register Test Group</v-btn
+        <v-btn small @click="registerImagingDialog = true" outlined
+          >Add New</v-btn
         >
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <v-btn small @click="$router.push({ name: 'labratoryReport' })">
-          Labratory Report
+
+        <v-btn outlined small @click="$router.push({ name: 'imagingReport' })">
+          Imaging Report
         </v-btn>
       </v-layout>
       <br />
 
-      <v-data-table :items="dataList" :headers="headers"> </v-data-table>
+      <v-data-table :items="imagingTestList" :headers="headers"> </v-data-table>
 
-      <v-dialog v-model="registerLabDialog" persistent width="700px">
+      <v-dialog v-model="registerImagingDialog" persistent width="700px">
         <v-card>
-          <v-toolbar color="green" dark>Add New Labratory Service </v-toolbar>
+          <v-toolbar color="green" dark>Add New Imaging Test </v-toolbar>
           <br />
           <v-card-text>
-            <v-layout>
-              <v-flex xs12 sm1> </v-flex>
-              <v-flex xs12 sm3> Type</v-flex>
-              <v-flex xs12 sm8>
-                <v-text-field dense outlined v-model="item.name"></v-text-field>
-              </v-flex>
-            </v-layout>
+            <v-form @submit.prevent="save" ref="form">
+              <v-layout>
+                <v-flex xs12 sm1> </v-flex>
+                <v-flex xs12 sm3> Type</v-flex>
+                <v-flex xs12 sm8>
+                  <v-text-field
+                    dense
+                    outlined
+                    :rules="inputRules"
+                    v-model="testInfo.name"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
 
-            <v-layout>
-              <v-flex xs12 sm1> </v-flex>
-              <v-flex xs12 sm3> Cost</v-flex>
-              <v-flex xs12 sm8>
-                <v-text-field
-                  type="number"
-                  dense
+              <v-layout>
+                <v-flex xs12 sm1> </v-flex>
+                <v-flex xs12 sm3> Cost</v-flex>
+                <v-flex xs12 sm8>
+                  <v-text-field
+                    type="number"
+                    dense
+                    outlined
+                    :rules="inputRules"
+                    v-model="testInfo.cost"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+
+              <v-layout>
+                <v-flex xs12 sm1> </v-flex>
+                <v-flex xs12 sm3> Status</v-flex>
+                <v-flex xs12 sm8>
+                  <v-autocomplete
+                    dense
+                    :items="statusList"
+                    outlined
+                    :rules="inputRules"
+                    v-model="testInfo.status"
+                  ></v-autocomplete>
+                </v-flex>
+              </v-layout>
+
+              <v-layout>
+                <v-flex xs12 sm1> </v-flex>
+                <v-flex xs12 sm3> Description</v-flex>
+                <v-flex xs12 sm8>
+                  <v-text-field
+                    dense
+                    outlined
+                    v-model="testInfo.description"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+
+              <v-layout>
+                <v-spacer></v-spacer>
+                <v-btn
+                  small
                   outlined
-                  v-model="item.cost"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-
-            <v-layout>
-              <v-flex xs12 sm1> </v-flex>
-              <v-flex xs12 sm3> Status</v-flex>
-              <v-flex xs12 sm8>
-                <v-autocomplete
-                  dense
-                  :items="statusList"
-                  outlined
-                  v-model="item.staus"
-                ></v-autocomplete>
-              </v-flex>
-            </v-layout>
-
-            <v-layout>
-              <v-flex xs12 sm1> </v-flex>
-              <v-flex xs12 sm3> Category</v-flex>
-              <v-flex xs12 sm8>
-                <v-autocomplete
-                  dense
-                  :items="statusList"
-                  outlined
-                  v-model="item.category"
-                ></v-autocomplete>
-              </v-flex>
-            </v-layout>
-
-            <v-layout>
-              <v-flex xs12 sm1> </v-flex>
-              <v-flex xs12 sm3> Description</v-flex>
-              <v-flex xs12 sm8>
-                <v-text-field
-                  dense
-                  outlined
-                  v-model="item.description"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-
-            <v-layout>
-              <v-spacer></v-spacer>
-              <v-btn small @click="registerLabDialog = false">Cancel</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn small @click="save()">Save</v-btn>
-            </v-layout>
+                  color="red"
+                  @click="registerImagingDialog = false"
+                  >Cancel</v-btn
+                >
+                <v-spacer></v-spacer>
+                <v-btn small outlined color="green" @click="save()">Save</v-btn>
+              </v-layout>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -96,28 +97,50 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
-      registerLabDialog: false,
+      registerImagingDialog: false,
       statusList: ["Active", "Not Active"],
-      item: [],
-      dataList: [],
+      testInfo: {},
+      inputRules: [(v) => !!v || "This field is required"],
+
+      tests: [],
       headers: [
         { text: "No", value: "no" },
         { text: "Name", value: "name" },
         { text: "Cost", value: "cost" },
         { text: "Status", value: "status" },
-        { text: "Category", value: "category" },
         { text: "Description", value: "description" },
         { text: "Action", value: "action" },
       ],
     };
   },
 
+  created() {
+    this.loadData();
+  },
+
+  computed: {
+    ...mapState("medicalService", ["registeredImaging", "imagingTestList"]),
+  },
+
   methods: {
+    ...mapActions("medicalService", ["registerImaging", "getImagingTestList"]),
+
+    async loadData() {
+      this.testInfo.created_by = "Temesgen";
+      await this.getImagingTestList();
+    },
+
     async save() {
-      alert("save buton clicked");
+      if (this.$refs.form.validate()) {
+        await this.registeredImaging(this.testInfo);
+
+        if (this.registeredImaging === true) this.registerImagingDialog = false;
+        else alert("Somethong wrong plese try later");
+      }
     },
   },
 };

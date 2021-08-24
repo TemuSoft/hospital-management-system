@@ -1,65 +1,97 @@
 <template>
   <div class="main">
-    <br />
-    <h2>Patinet List</h2>
+    <v-btn @click="$router.push({ name: 'patientDetail' })"
+      >Patient Detail Test</v-btn
+    >
+    <v-layout>
+      <v-flex xs12 sm2><h2>Patinet List</h2></v-flex>
 
-    <v-card flat>
-      <v-data-table :headers="headers" :items="patients" :search="search">
-        <template v-slot:item.patient_type="{ item }">
-          <label v-if="item.patient_type === 1">Regular</label>
-          <label v-else-if="item.patient_type === 2">Credit</label>
-          <label v-else-if="item.patient_type === 3">Organization</label>
-          <label v-else-if="item.patient_type === 4">Temporary</label>
-        </template>
+      <v-flex xs12 sm6>
+        <v-tabs v-model="tab" right>
+          <v-tabs-slider color="yellow"></v-tabs-slider>
 
-        <template v-slot:item.action="{ item }">
-          <Edit @click="editPatient(item)" class="icon" />
-          &nbsp;&nbsp;&nbsp;
-          <Detail @click="detailPatient(item)" class="icon" />
-          &nbsp;&nbsp;&nbsp;
-          <Transfer
-            v-if="item.status === 1"
-            @click="transferPatient(item)"
-            class="icon"
-          />
-          <Payment v-else @click="repaymentCardPatient(item)" class="icon" />
-        </template>
+          <v-tab @click.stop="tabSelectedChanged('first_name')">
+            First Name
+          </v-tab>
+          <v-tab @click.stop="tabSelectedChanged('card_number')">
+            Card Number
+          </v-tab>
+          <v-tab @click.stop="tabSelectedChanged('phone_number')">
+            Phone Number
+          </v-tab>
+        </v-tabs>
+      </v-flex>
+    </v-layout>
 
-        <template v-slot:item.first_name="{ item }">
-          <label>
-            {{ item.first_name }}
-            {{ item.fathers_name }}
-            {{ item.last_name }}
-          </label>
-        </template>
+    <v-tabs-items v-model="tab">
+      <v-card flat>
+        <v-data-table :headers="headers" :items="patients" :search="search">
+          <template v-slot:item.patient_type="{ item }">
+            <label v-if="item.patient_type === 1">Regular</label>
+            <label v-else-if="item.patient_type === 2">Credit</label>
+            <label v-else-if="item.patient_type === 3">Organization</label>
+            <label v-else-if="item.patient_type === 4">Temporary</label>
+          </template>
 
-        <template v-slot:top>
-          <v-layout>
-            <v-text-field
-              v-model="search"
-              label="Enter search text ..."
-              dense
-              rounded
-              :search="search"
-            >
-            </v-text-field>
+          <template v-slot:item.action="{ item }">
+            <Edit @click="editPatient(item)" class="icon" />
+            &nbsp;&nbsp;&nbsp;
+            <Detail @click="detailPatient(item)" class="icon" />
+            &nbsp;&nbsp;&nbsp;
+            <Transfer
+              v-if="item.status === 1"
+              @click="transferPatient(item)"
+              class="icon"
+            />
+            <Payment v-else @click="repaymentCardPatient(item)" class="icon" />
+          </template>
 
-            <v-spacer></v-spacer>
-            <v-btn
-              small
-              outlined
-              @click="$router.push({ name: 'regsiterPatinet' })"
-            >
-              Add New
-            </v-btn>
-          </v-layout>
-        </template>
+          <template v-slot:item.first_name="{ item }">
+            <label>
+              {{ item.first_name }}
+              {{ item.fathers_name }}
+              {{ item.last_name }}
+            </label>
+          </template>
 
-        <template v-slot:no-data>
-          <h3>No Data available ...</h3>
-        </template>
-      </v-data-table>
-    </v-card>
+          <template v-slot:top>
+            <br />
+            <v-layout>
+              <v-text-field
+                v-model="search"
+                label="Enter search text ..."
+                dense
+                rounded
+                :search="search"
+              />
+              <v-spacer />
+
+              <v-text-field
+                v-model="filterationText"
+                label="Filteration text"
+                dense
+                outlined
+              />
+              <v-spacer />
+              <v-btn text outlined @click="filterPatient()">Filter</v-btn>
+              <v-spacer />
+
+              <v-btn
+                small
+                outlined
+                @click="$router.push({ name: 'regsiterPatinet' })"
+              >
+                Add New
+              </v-btn>
+            </v-layout>
+          </template>
+
+          <template v-slot:no-data>
+            <h3>No Data available ...</h3>
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-tabs-items>
 
     <v-dialog v-model="updatePatientDialog" width="900px" persistent>
       <v-card>
@@ -247,6 +279,9 @@ import Payment from "@/assets/icons/payment.svg";
 export default {
   data() {
     return {
+      tab: null,
+      tabSelected: "first_name",
+      filterationText: "",
       updatePatientDialog: false,
       patientInfo: {},
       search: "",
@@ -318,10 +353,6 @@ export default {
 
     async loadData() {
       await this.getPatientList();
-      // await this.getPatientFilter({
-      //   key: "card_number",
-      //   value: "Ga001",
-      // });
     },
 
     async updatePatient() {
@@ -333,6 +364,17 @@ export default {
           await this.getPatientList();
         } else alert("Something wrong try again!!!");
       }
+    },
+
+    async tabSelectedChanged(text) {
+      this.tabSelected = text;
+    },
+
+    async filterPatient() {
+      await this.getPatientFilter({
+        key: this.tabSelected,
+        value: this.filterationText,
+      });
     },
   },
 };

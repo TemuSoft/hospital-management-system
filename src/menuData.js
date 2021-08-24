@@ -82,8 +82,8 @@ const menusData = [
       },
       {
         title: "Imaging Test",
-        route: "imageTest",
-        icon: "imageTest",
+        route: "imagingTest",
+        icon: "imagingTest",
         allowedRoles: ["admin", "cutting-department"],
       },
     ],

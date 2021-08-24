@@ -46,57 +46,61 @@
         <br />
 
         <v-card-text>
-          <v-layout>
-            <v-textarea
+          <v-form @submit.prevent="save" ref="save">
+            <v-layout>
+              <v-textarea
+                dense
+                label="Reason"
+                v-model="item.reason"
+                :rules="inputRules"
+                outlined
+              ></v-textarea>
+            </v-layout>
+
+            <v-layout>
+              <v-autocomplete
+                :items="inventorys"
+                item-text="name"
+                item-value="id"
+                outlined
+                dense
+                @click="loadInventoryItems($event)"
+                label="Inventory"
+              />
+              <v-spacer></v-spacer>
+
+              <v-autocomplete
+                :items="inventotyItems"
+                item-text="name"
+                item-value="id"
+                outlined
+                dense
+                label="Item"
+                multiple
+                chips
+              />
+              <v-spacer></v-spacer>
+
+              <v-btn small text outlined @click="addIssuedItems()">Add</v-btn>
+            </v-layout>
+
+            <v-data-table
               dense
-              label="Reason"
-              v-model="item.reason"
-              outlined
-            ></v-textarea>
-          </v-layout>
+              :items="itemsIssue"
+              :headers="headersItems"
+              items-per-page="10"
+            ></v-data-table>
 
-          <v-layout>
-            <v-autocomplete
-              :items="inventory"
-              item-text="name"
-              item-value="id"
-              outlined
-              dense
-              label="Inventory"
-            />
-            <v-spacer></v-spacer>
-
-            <v-autocomplete
-              :items="inventotyItems"
-              item-text="name"
-              item-value="id"
-              outlined
-              dense
-              label="Item"
-              multiple
-              chips
-            />
-            <v-spacer></v-spacer>
-
-            <v-btn small text outlined>Add</v-btn>
-          </v-layout>
-
-          <v-data-table
-            dense
-            :items="item"
-            :headers="headersItems"
-            items-per-page="10"
-          ></v-data-table>
-
-          <v-layout>
-            <v-spacer></v-spacer>
-            <v-spacer></v-spacer>
-            <v-btn small text outlined @click="sendIssueRequestDialog = false"
-              >Cancel</v-btn
-            >
-            <v-spacer></v-spacer>
-            <v-btn small text outlined>Save</v-btn>
-          </v-layout>
+            <v-layout>
+              <v-spacer></v-spacer>
+              <v-spacer></v-spacer>
+              <v-btn small text outlined @click="sendIssueRequestDialog = false"
+                >Cancel</v-btn
+              >
+              <v-spacer></v-spacer>
+              <v-btn small text outlined @click="save()">Save</v-btn>
+            </v-layout>
+          </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -104,13 +108,14 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
       sendIssueRequestDialog: false,
-      inventory: [],
-      inventotyItems: [],
-      item: [],
+      inputRules: [(v) => !!v || "This field is required"],
+
+      itemsIssue: [],
       headersItems: [
         { text: "Inventory", value: "inventory" },
         { text: "Name", value: "name" },
@@ -127,6 +132,56 @@ export default {
         { text: "Detail", value: "detail", width: "10%" },
       ],
     };
+  },
+
+  created() {
+    this.loadData();
+  },
+
+  computed: {
+    ...mapState("inventory", ["inventorys"]),
+    ...mapState("items", ["inventotyItems"]),
+    ...mapState("issue", ["sendIssuedRequest", "issues"]),
+  },
+
+  methods: {
+    ...mapActions("inventory", ["loadInventoryList"]),
+    ...mapActions("item", ["getInventoryItems"]),
+    ...mapActions("issue", ["sendIssueRequest", "loadIssueRequest"]),
+
+    async loadData() {
+      await this.loadInventoryList();
+      await this.loadIssueRequest();
+    },
+
+    async loadInventoryItems(id) {
+      await this.getInventoryItems(id);
+    },
+
+    async addIssuedItems() {
+      for (let i = 0; i < this.inventotyItems.length; i++) {
+        let exist = 0;
+        for (let j = 0; j < this.itemsIssue.length; j++) {
+          if (this.itemsIssue[j].id === this.inventotyItems[i].id) {
+            exist = 1;
+            break;
+          } else exist = 0;
+        }
+
+        if (exist === 0) this.itemsIssue.push(this.inventotyItems[i]);
+      }
+    },
+
+    async save() {
+      if (this.$refs.save.validate()) {
+        await this.sendIssueRequest(this.itemsIssue);
+
+        if (this.sendIssuedRequest === true) {
+          this.sendIssueRequestDialog = false;
+          await this.loadData();
+        } else alert("Something wrong try later!!!");
+      }
+    },
   },
 };
 </script>

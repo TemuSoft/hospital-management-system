@@ -5,6 +5,7 @@ import finacedashboard from "../pages/Dashboard/index.vue";
 
 import regsiterPatinet from "../pages/patients/regsiter.vue";
 import patinetList from "../pages/patients/patinetList.vue";
+import patientDetail from "../pages/patients/patientDetail.vue";
 import appointments from "../pages/Appointment/index.vue";
 import opd from "../pages/patients/opd.vue";
 import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
@@ -12,6 +13,7 @@ import medicine from "../pages/Inventory/Pharmacy/medicine.vue";
 import labratoryTest from "../pages/MedicalService/labratory/labratoryTest.vue";
 import labratoryReport from "../pages/MedicalService/labratory/labratoryReport.vue";
 import imagingTest from "../pages/MedicalService/imaging/imagingTest.vue";
+import imagingReport from "../pages/MedicalService/imaging/imagingReport.vue";
 import departments from "../pages/Organization/departments.vue";
 import insurance from "../pages/Organization/insurance.vue";
 
@@ -43,6 +45,7 @@ const routes = [
     component: regsiterPatinet,
   },
   { path: "/patinets", name: "patinets", component: patinetList },
+  { path: "/patient/detail", name: "patientDetail", component: patientDetail },
   { path: "/appointments", name: "appointments", component: appointments },
   { path: "/opd", name: "opd", component: opd },
   { path: "/pharmacy", name: "pharmacy", component: pharmacy },
@@ -56,6 +59,11 @@ const routes = [
     path: "/labratoryTest",
     name: "labratoryTest",
     component: labratoryTest,
+  },
+  {
+    path: "/imagingReport",
+    name: "imagingReport",
+    component: imagingReport,
   },
   {
     path: "/labratoryReport",

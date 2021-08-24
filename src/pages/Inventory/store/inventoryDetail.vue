@@ -22,7 +22,7 @@
       <p>Date : Date created about Inventory.....</p>
       <br />
 
-      <v-data-table :search="search" :items="dataList" :headers="headers">
+      <v-data-table :search="search" :items="items" :headers="headers">
         <template v-slot:top>
           <br />
           <v-layout>
@@ -46,58 +46,67 @@
           <v-toolbar color="green" dark>Add New Item </v-toolbar>
           <br />
           <v-card-text>
-            <v-layout>
-              <v-flex xs12 sm1> </v-flex>
-              <v-flex xs12 sm3> Name</v-flex>
-              <v-flex xs12 sm8>
-                <v-text-field dense outlined v-model="item.name"></v-text-field>
-              </v-flex>
-            </v-layout>
+            <v-form @submit.prevent="save" ref="save">
+              <v-layout>
+                <v-flex xs12 sm1> </v-flex>
+                <v-flex xs12 sm3> Name</v-flex>
+                <v-flex xs12 sm8>
+                  <v-text-field
+                    dense
+                    outlined
+                    :rules="inputRules"
+                    v-model="itemInfo.name"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
 
-            <v-layout>
-              <v-flex xs12 sm1> </v-flex>
-              <v-flex xs12 sm3> Total Quantity</v-flex>
-              <v-flex xs12 sm8>
-                <v-text-field
-                  dense
-                  type="number"
-                  outlined
-                  v-model="item.totalQuantity"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
+              <v-layout>
+                <v-flex xs12 sm1> </v-flex>
+                <v-flex xs12 sm3> Total Quantity</v-flex>
+                <v-flex xs12 sm8>
+                  <v-text-field
+                    dense
+                    type="number"
+                    outlined
+                    :rules="inputRules"
+                    v-model="itemInfo.totalQuantity"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
 
-            <v-layout>
-              <v-flex xs12 sm1> </v-flex>
-              <v-flex xs12 sm3> Unit Of Measurment</v-flex>
-              <v-flex xs12 sm8>
-                <v-autocomplete
-                  dense
-                  :items="unitOfMeasurment"
-                  outlined
-                  v-model="item.uofm"
-                ></v-autocomplete>
-              </v-flex>
-            </v-layout>
+              <v-layout>
+                <v-flex xs12 sm1> </v-flex>
+                <v-flex xs12 sm3> Unit Of Measurment</v-flex>
+                <v-flex xs12 sm8>
+                  <v-autocomplete
+                    dense
+                    :items="unitOfMeasurment"
+                    outlined
+                    :rules="inputRules"
+                    v-model="itemInfo.uofm"
+                  ></v-autocomplete>
+                </v-flex>
+              </v-layout>
 
-            <v-layout>
-              <v-flex xs12 sm1> </v-flex>
-              <v-flex xs12 sm3> Description</v-flex>
-              <v-flex xs12 sm8>
-                <v-text-field
-                  dense
-                  outlined
-                  v-model="item.description"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
+              <v-layout>
+                <v-flex xs12 sm1> </v-flex>
+                <v-flex xs12 sm3> Description</v-flex>
+                <v-flex xs12 sm8>
+                  <v-text-field
+                    dense
+                    outlined
+                    v-model="itemInfo.description"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
 
-            <v-layout>
-              <v-spacer></v-spacer>
-              <v-btn small @click="registerItemDialog = false">Cancel</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn small @click="save()">Save</v-btn>
-            </v-layout>
+              <v-layout>
+                <v-spacer></v-spacer>
+                <v-btn small @click="registerItemDialog = false">Cancel</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn small @click="save()">Save</v-btn>
+              </v-layout>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -106,14 +115,15 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
       unitOfMeasurment: [],
-      item: [],
+      itemInfo: [],
       registerItemDialog: false,
+      inputRules: [(v) => !!v || "This field is required"],
       search: "",
-      dataList: [],
       headers: [
         { text: "Name", value: "name" },
         { text: "Total Register", value: "totalRegister" },
@@ -122,6 +132,33 @@ export default {
         { text: "Action", value: "action" },
       ],
     };
+  },
+  created() {
+    this.loadData();
+  },
+
+  computed: {
+    ...mapState("item", ["registeredItem", "items"]),
+  },
+
+  methods: {
+    ...mapActions("item", ["registerItem", "loadItemList"]),
+
+    async loadData() {
+      await this.loadItemList();
+    },
+
+    async save() {
+      if (this.$refs.save.validate()) {
+        this.itemInfo.avaliable = this.itemInfo.totalQuantity;
+        await this.registerItem(this.itemInfo);
+
+        if (this.registeredItem === true) {
+          this.registerItemDialog = false;
+          await this.loadData();
+        } else alert("Something wrong try again later please!!!");
+      }
+    },
   },
 };
 </script>

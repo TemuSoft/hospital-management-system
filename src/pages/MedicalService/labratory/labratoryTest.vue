@@ -20,7 +20,7 @@
       </v-layout>
       <br />
 
-      <v-data-table :items="tests" :headers="headers"> </v-data-table>
+      <v-data-table :items="labTestList" :headers="headers"> </v-data-table>
 
       <v-dialog v-model="registerLabDialog" persistent width="700px">
         <v-card>
@@ -30,7 +30,7 @@
             <v-form @submit.prevent="save" ref="form">
               <v-layout>
                 <v-flex xs12 sm1> </v-flex>
-                <v-flex xs12 sm3> Category</v-flex>
+                <v-flex xs12 sm3> Group</v-flex>
                 <v-flex xs12 sm8>
                   <v-autocomplete
                     dense
@@ -156,6 +156,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -166,7 +167,6 @@ export default {
       labgroupInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
 
-      tests: [],
       headers: [
         { text: "No", value: "no" },
         { text: "Name", value: "name" },
@@ -179,16 +179,50 @@ export default {
     };
   },
 
+  created() {
+    this.loadData();
+  },
+
+  computed: {
+    ...mapState("medicalService", [
+      "registeredLabGroup",
+      "registeredLab",
+      "labratoryGroup",
+      "labTestList",
+    ]),
+  },
+
   methods: {
+    ...mapActions("medicalService", [
+      "registerLabGroup",
+      "registerLab",
+      "getLabratoryGroup",
+      "getLabTestList",
+    ]),
+
+    async loadData() {
+      this.labgroupInfo.created_by = "Temesegn";
+      this.testInfo.created_by = "Temesgen";
+      await this.getLabratoryGroup();
+      await this.getLabTestList();
+    },
+
     async save() {
       if (this.$refs.form.validate()) {
-        alert("Input valid");
+        await this.registeredLab(this.testInfo);
+
+        if (this.registeredLab === true) this.registerLabDialog = false;
+        else alert("Somethong wrong plese try later");
       }
     },
 
     async saveGroup() {
       if (this.$refs.saveGroup.validate()) {
-        alert("Input for group registeration corrct");
+        await this.registerLabGroup(this.labgroupInfo);
+
+        if (this.registeredLabGroup === true)
+          this.registerLabGroupDialog = false;
+        else alert("Something wrong please try later");
       }
     },
   },

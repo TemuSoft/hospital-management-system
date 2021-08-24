@@ -8,6 +8,9 @@ import staff from "./staff";
 import department from "./department";
 import workPermission from "./workPermission";
 import medicalService from "./medicalService";
+import inventory from "./inventory";
+import item from "./item";
+import issue from "./issue";
 
 Vue.use(Vuex);
 
@@ -34,5 +37,8 @@ export default new Vuex.Store({
     department,
     workPermission,
     medicalService,
+    inventory,
+    item,
+    issue,
   },
 });

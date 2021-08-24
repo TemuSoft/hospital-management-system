@@ -15,6 +15,12 @@ const path = {
   lab_group: "/lab_group",
   lab_test: "/lab_test",
   imaging_test: "/imaging_test",
+  register_inventory: "/register_inventory",
+  inventory: "/inventory",
+  register_item: "/register_item",
+  item: "/item",
+  register_issue: "/register_issue",
+  isuse: "/issue",
 };
 
 export default path;

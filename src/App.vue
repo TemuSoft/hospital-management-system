@@ -1,5 +1,7 @@
 <template>
   <v-app class="mainBody">
+    <notifications />
+
     <topBar />
 
     <v-main>
@@ -30,7 +32,13 @@ export default {
     sideBar,
   },
 
-  created() {},
+  created() {
+    alert("start");
+    this.$notify({
+      title: "Important message",
+      text: "Hello user! This is a notification!",
+    });
+  },
 
   computed: {},
 

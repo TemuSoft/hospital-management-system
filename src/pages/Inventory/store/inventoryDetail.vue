@@ -17,9 +17,15 @@
       <v-divider></v-divider>
       <br />
 
-      <h3>Name : Medical Tools</h3>
-      <p>Description : Description about Inventory .....</p>
-      <p>Date : Date created about Inventory.....</p>
+      <h3>Name : Medical Tools // {{ singleInventory.name }}</h3>
+      <p>
+        Description : Description about Inventory ..... ///
+        {{ singleInventory.description }}
+      </p>
+      <p>
+        Date : Date created about Inventory..... ///
+        {{ singleInventory.dateCreated }}
+      </p>
       <br />
 
       <v-data-table :search="search" :items="items" :headers="headers">
@@ -124,6 +130,7 @@ export default {
       registerItemDialog: false,
       inputRules: [(v) => !!v || "This field is required"],
       search: "",
+      inventoryId: "",
       headers: [
         { text: "Name", value: "name" },
         { text: "Total Register", value: "totalRegister" },
@@ -134,17 +141,22 @@ export default {
     };
   },
   created() {
+    const { inventoryId } = this.$route.params;
+    this.inventoryId = inventoryId;
     this.loadData();
   },
 
   computed: {
     ...mapState("item", ["registeredItem", "items"]),
+    ...mapState("inventory", ["singleInventory"]),
   },
 
   methods: {
     ...mapActions("item", ["registerItem", "loadItemList"]),
+    ...mapActions("inventory", ["loadSingleInvetory"]),
 
     async loadData() {
+      await this.loadSingleInvetory(this.inventoryId);
       await this.loadItemList();
     },
 

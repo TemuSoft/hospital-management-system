@@ -8,6 +8,7 @@ import i18n from "./i18n";
 import Notifications from "vue-notification";
 
 Vue.config.productionTip = false;
+
 Vue.use(Notifications);
 
 new Vue({

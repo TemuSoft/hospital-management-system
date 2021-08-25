@@ -6,10 +6,12 @@ import vuetify from "./plugins/vuetify";
 import i18n from "./i18n";
 
 import Notifications from "vue-notification";
+import VueSimpleAlert from "vue-simple-alert";
 
 Vue.config.productionTip = false;
 
 Vue.use(Notifications);
+Vue.use(VueSimpleAlert);
 
 new Vue({
   router,

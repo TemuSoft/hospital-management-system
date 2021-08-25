@@ -1,6 +1,12 @@
 <template>
   <v-app class="mainBody">
-    <notifications />
+    <notifications position="top center" duration="5" max="3" width="300" />
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <button @click="notify">Popup alert</button>
 
     <topBar />
 
@@ -32,17 +38,24 @@ export default {
     sideBar,
   },
 
-  created() {
-    alert("start");
-    this.$notify({
-      title: "Important message",
-      text: "Hello user! This is a notification!",
-    });
-  },
+  created() {},
 
   computed: {},
 
-  methods: {},
+  methods: {
+    clear() {
+      this.$notify({
+        clean: true,
+      });
+    },
+    notify() {
+      this.$notify({
+        type: "success",
+        title: "Something Wrong!!!",
+        text: "Input is invlide try agin please!!!",
+      });
+    },
+  },
 };
 </script>
 

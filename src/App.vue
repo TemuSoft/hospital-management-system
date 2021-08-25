@@ -54,6 +54,15 @@ export default {
         title: "Something Wrong!!!",
         text: "Input is invlide try agin please!!!",
       });
+
+      this.$fire({
+        title: "Title",
+        text: "text",
+        type: "error",
+        timer: 3000,
+      }).then((r) => {
+        console.log(r.value);
+      });
     },
   },
 };

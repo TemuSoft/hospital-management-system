@@ -4,7 +4,9 @@
     <br />
     <br />
 
-    <v-data-table :search="search" :items="inventorys" :headers="headers">
+    {{ inventorysTemp }}
+
+    <v-data-table :search="search" :items="inventorysTemp" :headers="headers">
       <template v-slot:top>
         <br />
         <v-layout>
@@ -17,13 +19,19 @@
           ></v-text-field>
           <v-spacer></v-spacer>
 
-          <v-btn small @click="$router.push({ name: 'inventoryDetail' })"
-            >Detail Try</v-btn
-          ><v-btn small @click="registerInventoryDialog = true"
+          <v-btn small @click="registerInventoryDialog = true"
             >Add Inventory</v-btn
           >
         </v-layout>
         <br />
+      </template>
+
+      <template v-slot:item.action="{ item }">
+        <Edit @click="editInventory(item)" class="icon" />
+        &nbsp;&nbsp;&nbsp;
+        <Detail @click="detailInventory(item)" class="icon" />
+        &nbsp;&nbsp;&nbsp;
+        <Delete @click="deleteInventory(item)" class="icon" />
       </template>
     </v-data-table>
 
@@ -76,6 +84,10 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import Edit from "@/assets/icons/edit.svg";
+import Detail from "@/assets/icons/eye.svg";
+import Delete from "@/assets/icons/delete.svg";
+
 export default {
   data() {
     return {
@@ -85,15 +97,30 @@ export default {
       inputRules: [(v) => !!v || "This field is required"],
       headers: [
         { text: "Name", value: "name" },
-        { text: "Date Created", value: "dateCreatde" },
+        { text: "Date Created", value: "dateCreated" },
         { text: "Description", value: "description" },
         { text: "Action", value: "action" },
       ],
+      inventorysTemp: [],
     };
+  },
+
+  components: {
+    Edit,
+    Detail,
+    Delete,
   },
 
   created() {
     this.loadData();
+    this.inventorysTemp = [
+      {
+        id: 1,
+        name: "Inventory one",
+        dateCreated: "09-08-2021",
+        description: "Description...",
+      },
+    ];
   },
 
   computed: {
@@ -105,7 +132,22 @@ export default {
 
     async loadData() {
       await this.loadInventoryList();
-      await this.loadInventoryList();
+    },
+
+    async editInventory(item) {
+      this.inventoryInfo = item;
+      this.registerInventoryDialog = true;
+    },
+
+    async detailInventory(item) {
+      this.$router.push({
+        name: "inventoryDetail",
+        params: { inventoryId: item.id },
+      });
+    },
+
+    async deleteInventory(item) {
+      alert(item.id);
     },
 
     async save() {
@@ -124,5 +166,8 @@ export default {
 .main {
   margin: 7%;
   margin-top: 3%;
+}
+.icon {
+  cursor: pointer;
 }
 </style>

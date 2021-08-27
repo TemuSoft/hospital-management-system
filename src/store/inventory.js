@@ -9,6 +9,7 @@ export default {
     registeredInventory: false,
     inventorys: [],
     singleInventory: [],
+    updatedInventory: false,
   },
 
   mutations: {
@@ -23,11 +24,15 @@ export default {
     setLoadSingleInvetory(state, payload) {
       state.singleInventory = payload;
     },
+
+    setUpdateInventory(state, payload) {
+      state.updatedInventory = payload;
+    },
   },
 
   actions: {
     async registerInventory({ commit }, data) {
-      let res = await api.create(path.register_inventory, data);
+      let res = await api.create(path.inventory, data);
 
       commit("setRegisterInventory", res.data);
     },
@@ -42,6 +47,12 @@ export default {
       let res = await api.get(path.inventory, id);
 
       commit("setLoadSingleInvetory", res.data);
+    },
+
+    async updateInventory({ commit }, data) {
+      let res = await api.update(path.update_inventory, data.id, data);
+
+      commit("setUpdateInventory", res.data);
     },
   },
 };

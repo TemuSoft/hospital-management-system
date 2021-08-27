@@ -16,8 +16,11 @@ import imagingTest from "../pages/MedicalService/imaging/imagingTest.vue";
 import imagingReport from "../pages/MedicalService/imaging/imagingReport.vue";
 import departments from "../pages/Organization/departments.vue";
 import insurance from "../pages/Organization/insurance.vue";
+import insuranceDetail from "../pages/Organization/insuranceDetail.vue";
 
 import staff from "../pages/Organization/staffs/index.vue";
+import staffDetail from "../pages/Organization/staffs/staffDetail.vue";
+import staffUpdate from "../pages/Organization/staffs/staffUpdate.vue";
 import payment from "../pages/casher/index.vue";
 import paymentHistory from "../pages/casher/paymentHistory.vue";
 import registerPrepayment from "../pages/casher/registerPrepayment.vue";
@@ -36,9 +39,12 @@ import measurmentUnit from "../pages/Inventory/store/measurmentUnit.vue";
 
 import workPermission from "../pages/Others/workPermission.vue";
 
+import logintry from "../pages/layout/login.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
+  { path: "/logintry", name: "logintry", component: logintry },
   {
     path: "/regsiterPatinet",
     name: "regsiterPatinet",
@@ -75,11 +81,9 @@ const routes = [
     name: "departments",
     component: departments,
   },
-  {
-    path: "/staff",
-    name: "staff",
-    component: staff,
-  },
+  { path: "/staff", name: "staff", component: staff },
+  { path: "/staffDetail", name: "staffDetail", component: staffDetail },
+  { path: "/staffUpdate", name: "staffUpdate", component: staffUpdate },
   {
     path: "/finance/dashboard",
     name: "finacedashboard",
@@ -154,6 +158,11 @@ const routes = [
     path: "/Organization/insurance",
     name: "insurance",
     component: insurance,
+  },
+  {
+    path: "Organization/insuranceDetail",
+    name: "insuranceDetail",
+    component: insuranceDetail,
   },
   {
     path: "/Others/workPermission",

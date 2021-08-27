@@ -104,6 +104,72 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <v-dialog dense v-model="updateDepaDialog" persistent width="700px">
+      <v-card>
+        <v-toolbar color="green" dark>Update Departments </v-toolbar>
+        <br />
+        <v-card-text>
+          <v-form @submit.prevent="update" ref="update">
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Name</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  :rules="inputRules"
+                  dense
+                  outlined
+                  v-model="updateDepertmentInfo.name"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Status</v-flex>
+              <v-flex xs12 sm8>
+                <v-autocomplete
+                  dense
+                  :rules="inputRules"
+                  :items="statusList"
+                  item-text="name"
+                  item-id="value"
+                  outlined
+                  v-model="updateDepertmentInfo.status"
+                ></v-autocomplete>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Description</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  dense
+                  outlined
+                  v-model="updateDepertmentInfo.description"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-spacer></v-spacer>
+              <v-btn
+                small
+                outlined
+                color="red"
+                @click="updateDepaDialog = false"
+                >Cancel</v-btn
+              >
+              <v-spacer></v-spacer>
+              <v-btn small outlined color="green" @click="update()"
+                >Update</v-btn
+              >
+            </v-layout>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -117,7 +183,9 @@ export default {
   data() {
     return {
       registerDepaDialog: false,
+      updateDepaDialog: false,
       depertmentInfo: {},
+      updateDepertmentInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
 
       statusList: [
@@ -137,7 +205,11 @@ export default {
   components: { Edit, Detail, Delete },
 
   computed: {
-    ...mapState("department", ["registeredDeprtment", "departments"]),
+    ...mapState("department", [
+      "registeredDeprtment",
+      "updatedDeprtment",
+      "departments",
+    ]),
   },
 
   created() {
@@ -145,7 +217,11 @@ export default {
   },
 
   methods: {
-    ...mapActions("department", ["registerDepartment", "getDepartmentList"]),
+    ...mapActions("department", [
+      "registerDepartment",
+      "updateDeprtment",
+      "getDepartmentList",
+    ]),
 
     async loadData() {
       this.depertmentInfo.created_by = "Temesgen";
@@ -160,13 +236,37 @@ export default {
           this.registerDepaDialog = false;
           this.loadData();
           this.depertmentInfo = {};
-        } else alert("Something wrong please fix first!!!");
+        } else
+          this.$fire({
+            title: "Department Registeration",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
+      }
+    },
+
+    async update() {
+      if (this.$refs.update.validate()) {
+        await this.updateDeprtment(this.updateDepertmentInfo);
+
+        if (this.updatedDeprtment === true) {
+          this.updateDepaDialog = false;
+          this.loadData();
+          this.depertmentInfo = {};
+        } else
+          this.$fire({
+            title: "Department Info Update",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
 
     async editDepartment(item) {
-      this.depertmentInfo = item;
-      this.registerDepaDialog = true;
+      this.updateDepertmentInfo = item;
+      this.updateDepaDialog = true;
     },
   },
 };

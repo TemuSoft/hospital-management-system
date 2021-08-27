@@ -74,6 +74,7 @@
 import { menusData } from "@/menuData";
 
 export default {
+  name: "sideBar",
   data() {
     return {
       menus: [],

@@ -5,6 +5,12 @@
       <br />
 
       <v-data-table dense :headers="headers" :items="staffs" :search="search">
+        <template v-slot:item.action="{ item }">
+          <Edit @click="editStaff(item)" class="icon" />
+          &nbsp;&nbsp;&nbsp;
+          <Detail @click="detailStaff(item)" class="icon" />
+        </template>
+
         <template v-slot:top>
           <v-layout>
             <v-spacer></v-spacer>
@@ -41,8 +47,12 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import Edit from "@/assets/icons/edit.svg";
+import Detail from "@/assets/icons/eye.svg";
 
 export default {
+  name: "staffIndex",
+
   data() {
     return {
       search: "",
@@ -55,6 +65,7 @@ export default {
         { text: "Email", value: "email" },
         { text: "Phone Number", value: "phone_number" },
         { text: "Active?", value: "is_active" },
+        { text: "Action", value: "action" },
       ],
       positionList: [
         { name: "Adminstrator", value: 1 },
@@ -68,12 +79,17 @@ export default {
     };
   },
 
-  computed: {
-    ...mapState("staff", ["staffs"]),
+  components: {
+    Edit,
+    Detail,
   },
 
   created() {
     this.loadData();
+  },
+
+  computed: {
+    ...mapState("staff", ["staffs"]),
   },
 
   methods: {
@@ -84,6 +100,14 @@ export default {
 
       // await this.getStaffListFilter({ key: "email", value: "email" });
     },
+
+    async editStaff(item) {
+      this.$router.push({ name: "staffUpdate", params: { staffId: item.id } });
+    },
+
+    async detailStaff(item) {
+      this.$router.push({ name: "staffDetail", params: { staffId: item.id } });
+    },
   },
 };
 </script>
@@ -92,5 +116,9 @@ export default {
 .main {
   margin: 7%;
   margin-top: 2%;
+}
+
+.icon {
+  cursor: pointer;
 }
 </style>

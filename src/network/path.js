@@ -9,18 +9,22 @@ const path = {
   register_department: "/admin/register_department",
   department: "/admin/department_data",
   update_department: "/admin/update_department_data",
+  inventory: "/store/inventory",
+  update_inventory: "/store/inventory_update",
 
+  logout: "/user/logout",
+  login: "/user/login",
   register_work_permission: "/register_work_permission",
   register_lab_group: "/register_lab_group",
   lab_group: "/lab_group",
   lab_test: "/lab_test",
   imaging_test: "/imaging_test",
-  register_inventory: "/register_inventory",
-  inventory: "/inventory",
   register_item: "/register_item",
   item: "/item",
   register_issue: "/register_issue",
   isuse: "/issue",
+  insurance: "/insurance",
+  measurement: "/measurement",
 };
 
 export default path;

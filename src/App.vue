@@ -1,13 +1,6 @@
 <template>
   <v-app class="mainBody">
-    <notifications position="top center" duration="5" max="3" width="300" />
-    <br />
-    <br />
-    <br />
-    <br />
-
-    <button @click="notify">Popup alert</button>
-
+    <notifications position="top center" duration:5 max:3 width="300" />
     <topBar />
 
     <v-main>
@@ -63,6 +56,14 @@ export default {
       }).then((r) => {
         console.log(r.value);
       });
+
+      // this.$confirm("Are you sure?").then(() => {
+      //do something...
+      // });
+
+      // this.$prompt("Input your name").then(() => {
+      // do somthing with text
+      // });
     },
   },
 };

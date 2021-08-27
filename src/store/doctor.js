@@ -4,20 +4,9 @@ import { api, path } from "../network/index";
 
 export default {
   namespaced: true,
-  state: {
-    stateTy: "State try work well done!",
-    items: [],
-  },
-  mutations: {
-    setLoadAstraData(state, data) {
-      state.items = data;
-    },
-  },
+  state: {},
 
-  actions: {
-    async loadAstraData({ commit }) {
-      let res = await api.getAll(path.items);
-      commit("setLoadAstraData", res);
-    },
-  },
+  mutations: {},
+
+  actions: {},
 };

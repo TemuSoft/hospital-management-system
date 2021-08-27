@@ -7,6 +7,8 @@ export default {
   state: {
     registeredStaff: false,
     staffs: [],
+    updatedStaff: false,
+    singleStaff: [],
   },
 
   mutations: {
@@ -16,6 +18,14 @@ export default {
 
     setStaffList(state, payload) {
       state.staffs = payload;
+    },
+
+    setSingleStaff(state, payload) {
+      state.singleStaff = payload;
+    },
+
+    setUpdateStaff(state, payload) {
+      state.updatedStaff = payload;
     },
   },
 
@@ -35,9 +45,19 @@ export default {
     async getStaffListFilter({ commit }, filter) {
       let res = await api.create(path.staff, filter);
 
-      console.log(res);
-
       commit("setStaffList", res.data);
+    },
+
+    async getSingleStaff({ commit }, id) {
+      let res = await api.get(path.staff, id);
+
+      commit("setSingleStaff", res.data);
+    },
+
+    async updateStaff({ commit }, data) {
+      let res = await api.update(path.staff, data);
+
+      commit("setUpdateStaff", res.data);
     },
   },
 };

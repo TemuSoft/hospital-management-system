@@ -28,6 +28,17 @@ class api {
   findByTitle(path, title) {
     return http.get(`${path}?title=${title}`);
   }
+
+  login(email, password, path) {
+    return Request.post(`${path}`, {
+      email,
+      password,
+    });
+  }
+
+  logout(path) {
+    return Request.post(`${path}`);
+  }
 }
 
 export default new api();

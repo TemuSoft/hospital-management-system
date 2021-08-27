@@ -7,6 +7,7 @@ export default {
   state: {
     registeredDeprtment: false,
     departments: [],
+    updatedDeprtment: false,
   },
 
   mutations: {
@@ -16,6 +17,10 @@ export default {
 
     setDeprtmentList(state, payload) {
       state.departments = payload;
+    },
+
+    setUpdateDeprtment(state, payload) {
+      state.updatedDeprtment = payload;
     },
   },
 
@@ -30,6 +35,12 @@ export default {
       let res = await api.getAll(path.department);
 
       commit("setDeprtmentList", res.data);
+    },
+
+    async updateDeprtment({ commit }, data) {
+      let res = await api.update(path.department, data.id, data);
+
+      commit("setUpdateDeprtment", res.data);
     },
   },
 };

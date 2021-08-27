@@ -11,7 +11,7 @@
           Go Back
         </v-btn>
         <v-spacer />
-        Register Staff
+        Update Staff
         <v-spacer />
       </v-toolbar>
       <v-divider></v-divider>
@@ -153,6 +153,7 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
+      staffId: "",
       staffInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
       genderoptions: ["Male", "Female"],
@@ -169,21 +170,31 @@ export default {
   },
 
   computed: {
-    ...mapState("staff", ["registeredStaff"]),
+    ...mapState("staff", ["singleStaff", "updatedStaff"]),
   },
 
-  created() {},
+  created() {
+    this.loadData();
+  },
 
   methods: {
-    ...mapActions("staff", ["registerStaff"]),
+    ...mapActions("staff", ["getSingleStaff", "updateStaff"]),
+
+    async loadData() {
+      const { staffId } = this.$route.params;
+      this.staffId = staffId;
+
+      await this.getSingleStaff(this.staffId);
+      this.staffInfo = this.singleStaff;
+    },
 
     async save() {
       if (this.$refs.form.validate()) {
-        await this.registerStaff(this.staffInfo);
-        if (this.registeredStaff === true) this.$router.push({ name: "staff" });
+        await this.updateStaff(this.staffInfo);
+        if (this.updatedStaff === true) this.$router.push({ name: "staff" });
         else
           this.$fire({
-            title: "Staff Registeration",
+            title: "Staff Info Update",
             text: "Something wrong please try again!!!",
             type: "error",
             timer: 7000,

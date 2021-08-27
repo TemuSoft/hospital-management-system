@@ -4,9 +4,7 @@
     <br />
     <br />
 
-    {{ inventorysTemp }}
-
-    <v-data-table :search="search" :items="inventorysTemp" :headers="headers">
+    <v-data-table :search="search" :items="inventorys" :headers="headers">
       <template v-slot:top>
         <br />
         <v-layout>
@@ -79,6 +77,49 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="updateInventoryDialog" persistent width="700px">
+      <v-card>
+        <v-toolbar color="green" dark>Update Inventory </v-toolbar>
+        <br />
+        <v-card-text>
+          <v-form @submit.prevent="update()" ref="update">
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Name</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  dense
+                  outlined
+                  :rules="inputRules"
+                  v-model="updateInventoryInfo.name"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Description</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  dense
+                  outlined
+                  :rules="inputRules"
+                  v-model="updateInventoryInfo.description"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-spacer></v-spacer>
+              <v-btn small @click="updateInventoryDialog = false">Cancel</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn small @click="update()">Update</v-btn>
+            </v-layout>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -89,10 +130,14 @@ import Detail from "@/assets/icons/eye.svg";
 import Delete from "@/assets/icons/delete.svg";
 
 export default {
+  name: "Staff",
+
   data() {
     return {
-      inventoryInfo: [],
+      inventoryInfo: {},
+      updateInventoryInfo: {},
       registerInventoryDialog: false,
+      updateInventoryDialog: false,
       search: "",
       inputRules: [(v) => !!v || "This field is required"],
       headers: [
@@ -101,7 +146,6 @@ export default {
         { text: "Description", value: "description" },
         { text: "Action", value: "action" },
       ],
-      inventorysTemp: [],
     };
   },
 
@@ -113,30 +157,30 @@ export default {
 
   created() {
     this.loadData();
-    this.inventorysTemp = [
-      {
-        id: 1,
-        name: "Inventory one",
-        dateCreated: "09-08-2021",
-        description: "Description...",
-      },
-    ];
   },
 
   computed: {
-    ...mapState("inventory", ["registeredInventory", "inventorys"]),
+    ...mapState("inventory", [
+      "registeredInventory",
+      "inventorys",
+      "updatedInventory",
+    ]),
   },
 
   methods: {
-    ...mapActions("inventory", ["registerInventory", "loadInventoryList"]),
+    ...mapActions("inventory", [
+      "registerInventory",
+      "loadInventoryList",
+      "updateInventory",
+    ]),
 
     async loadData() {
       await this.loadInventoryList();
     },
 
     async editInventory(item) {
-      this.inventoryInfo = item;
-      this.registerInventoryDialog = true;
+      this.updateInventoryInfo = item;
+      this.updateInventoryDialog = true;
     },
 
     async detailInventory(item) {
@@ -152,10 +196,35 @@ export default {
 
     async save() {
       if (this.$refs.save.validate()) {
+        await this.registerInventory(this.inventoryInfo);
+
         if (this.registeredInventory === true) {
           this.registerInventoryDialog = false;
           await this.loadData();
-        } else alert("Sonething wrong please try later!!!");
+        } else
+          this.$fire({
+            title: "Inventory Registeration!!!",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
+      }
+    },
+
+    async update() {
+      if (this.$refs.update.validate()) {
+        await this.updateInventory(this.updateInventoryInfo);
+
+        if (this.updatedInventory === true) {
+          this.updateInventoryDialog = false;
+          await this.loadData();
+        } else
+          this.$fire({
+            title: "Inventory Info Update!!!",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
   },

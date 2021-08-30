@@ -1,0 +1,398 @@
+<template>
+  <div class="main">
+    <v-card>
+      <v-toolbar dense>
+        <v-btn
+          text
+          class="text-capitalize"
+          @click="$router.push({ name: 'nurse' })"
+        >
+          <v-icon class="mx-3">mdi-arrow-left</v-icon>
+          Go Back
+        </v-btn>
+        <v-spacer />
+
+        <h3>Patinet Detail</h3>
+        <v-spacer />
+
+        <v-btn
+          class="text-capitalize"
+          text
+          outlined
+          @click="registerVitalSignDialog = true"
+        >
+          Register Vital Sign
+        </v-btn>
+      </v-toolbar>
+      <v-divider />
+      <br />
+
+      <v-layout>
+        <v-flex xs12 sm1></v-flex>
+        <v-flex xs12 sm5>
+          <label class="titleHead">Full Name : </label>
+          <label class="titleCont"
+            >{{ singlePatient[0].first_name }}
+            {{ singlePatient[0].fathers_name }} ({{
+              singlePatient[0].gender
+            }})</label
+          >
+          <br />
+
+          <label class="titleHead">Card Number : </label>
+          <label class="titleCont">{{ singlePatient.card_number }} </label>
+          <br />
+
+          <label class="titleHead">BirthDate : </label>
+          <label class="titleCont">{{ singlePatient[0].birthdate }} </label>
+          <br />
+
+          <label class="titleHead">Card Last Updated Date :</label>
+          <label class="titleCont">{{
+            singlePatient[0].card_updated_date
+          }}</label>
+          <br />
+
+          <label class="titleHead">Phone Number : </label>
+          <label class="titleCont">{{ singlePatient[0].phone_number }} </label>
+          <br />
+
+          <label class="titleHead">Patient Type : </label>
+          <label v-if="singlePatient[0].patient_type === 1" class="titleCont"
+            >Regular</label
+          >
+          <label
+            v-else-if="singlePatient[0].patient_type === 2"
+            class="titleCont"
+            >Credit</label
+          >
+          <label
+            v-else-if="singlePatient[0].patient_type === 3"
+            class="titleCont"
+            >Organization</label
+          >
+          <label
+            v-else-if="singlePatient[0].patient_type === 4"
+            class="titleCont"
+            >Temporary</label
+          >
+        </v-flex>
+
+        <v-flex xs12 sm6>
+          <label class="titleHead">Guardian Name : </label>
+          <label class="titleCont">{{ singlePatient[0].guardian_name }}</label>
+          <br />
+
+          <label class="titleHead">Guardian Contact : </label>
+          <label class="titleCont">{{
+            singlePatient[0].guardian_contact
+          }}</label>
+          <br />
+
+          <label class="titleHead">Registration Date :</label>
+          <label class="titleCont">{{
+            singlePatient[0].registration_date
+          }}</label>
+          <br />
+
+          <label class="titleHead">Nationality :</label>
+          <label class="titleCont">{{ singlePatient[0].nationality }}</label>
+          <br />
+
+          <label class="titleHead">Address main :</label>
+          <label class="titleCont"
+            >{{ singlePatient[0].zone }}, {{ singlePatient[0].woreda }}</label
+          >
+          <br />
+
+          <label class="titleHead">Address Detail</label>
+          <label class="titleCont"
+            >{{ singlePatient[0].kebele }},
+            {{ singlePatient[0].house_number }}</label
+          >
+        </v-flex>
+      </v-layout>
+
+      <div style="margin: 5%; margin-top: 2%">
+        <h3>Register New Vital Signs</h3>
+        <br />
+        <v-form
+          @submit.prevent="savePatientVitalSign"
+          ref="savePatientVitalSign"
+        >
+          <v-layout>
+            <v-autocomplete
+              label="Vital Signs"
+              dense
+              outlined
+              :items="vitalSigns"
+              item-text="name"
+              item-value="id"
+              :rules="inputRules"
+              v-model="patientVitalSignInfo.vital_sign_id"
+            />
+            <v-spacer />
+            <v-text-field
+              dense
+              :rules="inputRules"
+              v-model="patientVitalSignInfo.result"
+              outlined
+              label="Description / Value"
+            />
+            <v-spacer />
+            <v-btn
+              text
+              outlined
+              color="green"
+              class="text-capitalize"
+              @click="registerPatientVitalSign()"
+              >Register</v-btn
+            >
+          </v-layout>
+        </v-form>
+
+        <v-data-table
+          :items="patientVitalSigns"
+          :headers="patientVSHeaders"
+          :search="search"
+        >
+          <template v-slot:item.action="{ item }">
+            <Edit class="icon" @click="editPatientVitalSign(item)" />
+          </template>
+        </v-data-table>
+      </div>
+
+      <v-dialog persistent width="700px" v-model="registerVitalSignDialog">
+        <v-card flat>
+          <v-toolbar color="green" dense>
+            Vital Sign
+            <v-spacer></v-spacer>
+            <v-btn
+              small
+              class="text-capitalize"
+              text
+              outlined
+              @click="(register = true), (update = false), (vitalSignInfo = {})"
+            >
+              Add New
+            </v-btn>
+            <v-spacer></v-spacer>
+            <Close class="icon" @click="registerVitalSignDialog = false" />
+          </v-toolbar>
+          <br />
+          <v-card-text>
+            <div v-if="register || update">
+              <v-form @submit.prevent="save" ref="save" lazy-validation>
+                <v-layout>
+                  <v-flex xs12 sm3><h3>Vital Sign Name</h3></v-flex>
+                  <v-text-field
+                    :rules="inputRules"
+                    outlined
+                    dense
+                    v-model="vitalSignInfo.name"
+                  />
+                </v-layout>
+
+                <v-layout>
+                  <v-flex xs12 sm3><h3>Description</h3></v-flex>
+                  <v-textarea
+                    rows="2"
+                    :rules="inputRules"
+                    outlined
+                    dense
+                    v-model="vitalSignInfo.description"
+                  />
+                </v-layout>
+              </v-form>
+
+              <v-layout>
+                <v-spacer></v-spacer>
+                <v-btn
+                  v-if="register"
+                  small
+                  class="text-capitalize"
+                  text
+                  outlined
+                  @click="save()"
+                >
+                  Save
+                </v-btn>
+                <v-spacer />
+
+                <v-btn
+                  v-if="update"
+                  small
+                  class="text-capitalize"
+                  text
+                  outlined
+                  @click="save()"
+                >
+                  Update
+                </v-btn>
+              </v-layout>
+            </div>
+            <br />
+
+            <v-data-table
+              :items="vitalSigns"
+              :headers="vitalSignHeaders"
+              :items-per-page="10"
+            >
+              <template v-slot:item.action="{ item }">
+                <Edit
+                  class="icon"
+                  @click="
+                    (vitalSignInfo = item), (update = true), (register = false)
+                  "
+                />
+              </template>
+            </v-data-table>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog width="500px" v-model="editPatientVitalSignDialog">
+        <v-card>
+          <v-toolbar dense color="gree"> Update Vital Sign </v-toolbar>
+          <br />
+
+          <v-card-text>
+            <v-layout>
+              <v-flex xs12 sm3>Vital Sign Name</v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </v-card>
+  </div>
+</template>
+
+<script>
+import { mapActions, mapState } from "vuex";
+import Edit from "@/assets/icons/edit.svg";
+import Close from "@/assets/icons/close.svg";
+
+export default {
+  data() {
+    return {
+      patientId: "",
+      service_id: "",
+      vitalSignInfo: {},
+      update: false,
+      register: false,
+      registerVitalSignDialog: false,
+      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      vitalSignHeaders: [
+        { text: "Vital Sign Name", value: "name" },
+        { text: "Description", value: "description" },
+        { text: "Action", value: "action" },
+      ],
+      inputRules: [(v) => !!v || "This field is required"],
+
+      patientVitalSignInfo: {},
+      patientVSHeaders: [
+        { text: "Vistal Name", value: "vital_sign.name" },
+        { text: "Result", value: "result" },
+        { text: "Action", value: "action" },
+      ],
+    };
+  },
+  components: {
+    Edit,
+    Close,
+  },
+
+  created() {
+    const { patientId, service_id } = this.$route.params;
+    this.service_id = service_id;
+    this.patientId = patientId;
+    this.loadData();
+  },
+
+  computed: {
+    ...mapState("nurse", [
+      "vitalSigns",
+      "registeredVitalSign",
+      "patientVitalSigns",
+    ]),
+    ...mapState("patient", ["singlePatient"]),
+  },
+
+  methods: {
+    ...mapActions("nurse", [
+      "getVitalSignsList",
+      "registerVitalSign",
+      "updateVitalSign",
+      "getPatientVitalSigns",
+      "patientVitalSignsRegisteration",
+    ]),
+    ...mapActions("patient", ["singlePatientInfo"]),
+
+    async loadData() {
+      await this.singlePatientInfo(this.patientId);
+      await this.getVitalSignsList();
+      await this.getPatientVitalSigns(this.service_id);
+    },
+
+    async save() {
+      if (this.$refs.save.validate()) {
+        this.vitalSignInfo.user_id = this.login_user.id;
+        if (this.register) await this.registerVitalSign(this.vitalSignInfo);
+        else await this.updateVitalSign(this.vitalSignInfo);
+
+        if (this.registeredVitalSign === true) {
+          this.register = false;
+          this.update = false;
+          this.vitalSignInfo = {};
+          this.$fire({
+            title: "Vital Sign Registeration",
+            text: "Vital Sign Registered Successfull!!!",
+            type: "success",
+            timer: 7000,
+          });
+          await this.loadData();
+        } else
+          this.$fire({
+            title: "Vital Sign Registeration",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
+      }
+    },
+
+    async registerPatientVitalSign() {
+      if (this.$refs.savePatientVitalSign.validate()) {
+        this.patientVitalSignInfo.service_id = this.service_id;
+        this.patientVitalSignInfo.user_id = this.login_user.id;
+        await this.patientVitalSignsRegisteration(this.patientVitalSignInfo);
+        await this.getPatientVitalSigns(this.service_id);
+      }
+    },
+
+    async editPatientVitalSign(item) {
+      alert(item.id);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.main {
+  margin: 2%;
+  margin-top: 0%;
+}
+
+.titleHead {
+  font-family: bold;
+  font: bold 12px/30px Georgia;
+  letter-spacing: 2px;
+}
+.titleCont {
+  font-size: 17px;
+}
+
+.icon {
+  cursor: pointer;
+}
+</style>

@@ -20,7 +20,11 @@
       </v-layout>
       <br />
 
-      <v-data-table :items="labTestList" :headers="headers"> </v-data-table>
+      <v-data-table :items="labTestList" :headers="headers">
+        <template v-slot:item.action="{ item }">
+          <Edit class="icon" @click="editLabTestCase(item)" />
+        </template>
+      </v-data-table>
 
       <v-dialog v-model="registerLabDialog" persistent width="700px">
         <v-card>
@@ -36,8 +40,10 @@
                     dense
                     :items="labratoryGroup"
                     outlined
+                    item-text="title"
+                    item-value="id"
                     :rules="inputRules"
-                    v-model="testInfo.group"
+                    v-model="testInfo.group_id"
                   ></v-autocomplete>
                 </v-flex>
               </v-layout>
@@ -50,7 +56,7 @@
                     dense
                     outlined
                     :rules="inputRules"
-                    v-model="testInfo.name"
+                    v-model="testInfo.title"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -63,8 +69,7 @@
                     type="number"
                     dense
                     outlined
-                    :rules="inputRules"
-                    v-model="testInfo.cost"
+                    v-model="testInfo.price"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -76,8 +81,9 @@
                   <v-autocomplete
                     dense
                     :items="statusList"
+                    item-text="text"
+                    item-value="value"
                     outlined
-                    :rules="inputRules"
                     v-model="testInfo.status"
                   ></v-autocomplete>
                 </v-flex>
@@ -114,7 +120,12 @@
 
       <v-dialog v-model="registerLabGroupDialog" persistent width="500px">
         <v-card>
-          <v-toolbar dense color="green">Register Labratory Group</v-toolbar>
+          <v-toolbar dense color="green">
+            Register Labratory Group
+            <v-spacer />
+
+            <Close @click="registerLabGroupDialog = false" class="icon" />
+          </v-toolbar>
           <br />
           <br />
 
@@ -122,32 +133,34 @@
             <v-form @submit.prevent="saveGroup" ref="saveGroup">
               <v-layout>
                 <v-flex xs12 sm1> </v-flex>
-                <v-flex xs12 sm3> Name</v-flex>
+                <v-flex xs12 sm3> Title</v-flex>
                 <v-flex xs12 sm8>
                   <v-text-field
                     dense
                     outlined
                     :rules="inputRules"
-                    v-model="labgroupInfo.name"
+                    v-model="labgroupInfo.title"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
 
               <v-layout>
-                <v-spacer></v-spacer>
-                <v-btn
-                  small
-                  outlined
-                  color="red"
-                  @click="registerLabGroupDialog = false"
-                  >Cancel</v-btn
-                >
-                <v-spacer></v-spacer>
-                <v-btn small outlined color="green" @click="saveGroup()"
-                  >Save</v-btn
-                >
+                <v-spacer />
+                <v-btn small outlined color="green" @click="saveGroup()">
+                  Save
+                </v-btn>
               </v-layout>
             </v-form>
+
+            <v-data-table :items="labratoryGroup" :headers="labGroupHeader">
+              <template v-slot:item.number="{ item }">
+                {{ labratoryGroup.indexOf(item) + 1 }}
+              </template>
+
+              <template v-slot:item.action="{ item }">
+                <Edit @click="editLabTestGroup(item)" class="icon" />
+              </template>
+            </v-data-table>
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -157,23 +170,35 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import Edit from "@/assets/icons/edit.svg";
+import Close from "@/assets/icons/close.svg";
+
 export default {
   data() {
     return {
+      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
       registerLabDialog: false,
       registerLabGroupDialog: false,
-      statusList: ["Active", "Not Active"],
+      statusList: [
+        { text: "Active", value: 1 },
+        { text: "Not Active", value: 0 },
+      ],
       testInfo: {},
       labgroupInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
 
       headers: [
-        { text: "No", value: "no" },
-        { text: "Name", value: "name" },
-        { text: "Cost", value: "cost" },
+        { text: "Name", value: "title" },
+        { text: "Price", value: "price" },
         { text: "Status", value: "status" },
-        { text: "Group", value: "group" },
         { text: "Description", value: "description" },
+        { text: "Group", value: "group.title" },
+        { text: "Action", value: "action" },
+      ],
+
+      labGroupHeader: [
+        { text: "Number", value: "number" },
+        { text: "Title", value: "title" },
         { text: "Action", value: "action" },
       ],
     };
@@ -181,6 +206,11 @@ export default {
 
   created() {
     this.loadData();
+  },
+
+  components: {
+    Edit,
+    Close,
   },
 
   computed: {
@@ -209,20 +239,35 @@ export default {
 
     async save() {
       if (this.$refs.form.validate()) {
-        await this.registeredLab(this.testInfo);
+        this.testInfo.registered_by = this.login_user.id;
+        await this.registerLab(this.testInfo);
 
         if (this.registeredLab === true) this.registerLabDialog = false;
-        else alert("Somethong wrong plese try later");
+        else
+          this.$fire({
+            title: "Lab Text Case Registeration",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
 
     async saveGroup() {
       if (this.$refs.saveGroup.validate()) {
+        this.labgroupInfo.registered_by = this.login_user.id;
         await this.registerLabGroup(this.labgroupInfo);
 
-        if (this.registeredLabGroup === true)
-          this.registerLabGroupDialog = false;
-        else alert("Something wrong please try later");
+        if (this.registeredLabGroup === true) {
+          await this.getLabratoryGroup();
+          this.labgroupInfo = {};
+        } else
+          this.$fire({
+            title: "Lab group Registeration",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
   },
@@ -233,5 +278,9 @@ export default {
 .main {
   margin: 7%;
   margin-top: 2%;
+}
+
+.icon {
+  cursor: pointer;
 }
 </style>

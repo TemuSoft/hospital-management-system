@@ -1,77 +1,104 @@
 <template>
   <div class="main">
-    <h2 style="color: lightgreen">Patient Detail</h2>
-    <br />
+    <v-card>
+      <v-toolbar dense>
+        <v-btn
+          text
+          class="text-capitalize"
+          @click="$router.push({ name: 'patinets' })"
+        >
+          <v-icon class="mx-3">mdi-arrow-left</v-icon>
+          Go Back
+        </v-btn>
+        <v-spacer />
+        <h2 style="color: lightgreen">Patient Detail</h2>
+        <v-spacer />
+        <v-spacer />
+      </v-toolbar>
+      <v-divider />
 
-    <v-card flat>
       <v-layout>
         <v-flex xs12 sm1></v-flex>
         <v-flex xs12 sm5>
           <label class="titleHead">Full Name : </label>
           <label class="titleCont"
-            >{{ mainInfo.first_name }} {{ mainInfo.fathers_name }} ({{
-              mainInfo.gender
+            >{{ singlePatient[0].first_name }}
+            {{ singlePatient[0].fathers_name }} ({{
+              singlePatient[0].gender
             }})</label
           >
           <br />
 
           <label class="titleHead">Card Number : </label>
-          <label class="titleCont">{{ mainInfo.card_number }} </label>
+          <label class="titleCont">{{ singlePatient.card_number }} </label>
           <br />
 
           <label class="titleHead">BirthDate : </label>
-          <label class="titleCont">{{ mainInfo.birthdate }} </label>
+          <label class="titleCont">{{ singlePatient[0].birthdate }} </label>
           <br />
 
           <label class="titleHead">Card Last Updated Date :</label>
-          <label class="titleCont">{{ mainInfo.card_updated_date }}</label>
+          <label class="titleCont">{{
+            singlePatient[0].card_updated_date
+          }}</label>
           <br />
 
           <label class="titleHead">Phone Number : </label>
-          <label class="titleCont">{{ mainInfo.phone_number }} </label>
+          <label class="titleCont">{{ singlePatient[0].phone_number }} </label>
           <br />
 
           <label class="titleHead">Patient Type : </label>
-          <label v-if="mainInfo.patient_type === 1" class="titleCont"
+          <label v-if="singlePatient[0].patient_type === 1" class="titleCont"
             >Regular</label
           >
-          <label v-else-if="mainInfo.patient_type === 2" class="titleCont"
+          <label
+            v-else-if="singlePatient[0].patient_type === 2"
+            class="titleCont"
             >Credit</label
           >
-          <label v-else-if="mainInfo.patient_type === 3" class="titleCont"
+          <label
+            v-else-if="singlePatient[0].patient_type === 3"
+            class="titleCont"
             >Organization</label
           >
-          <label v-else-if="mainInfo.patient_type === 4" class="titleCont"
+          <label
+            v-else-if="singlePatient[0].patient_type === 4"
+            class="titleCont"
             >Temporary</label
           >
         </v-flex>
 
         <v-flex xs12 sm6>
           <label class="titleHead">Guardian Name : </label>
-          <label class="titleCont">{{ mainInfo.guardian_name }}</label>
+          <label class="titleCont">{{ singlePatient[0].guardian_name }}</label>
           <br />
 
           <label class="titleHead">Guardian Contact : </label>
-          <label class="titleCont">{{ mainInfo.guardian_contact }}</label>
+          <label class="titleCont">{{
+            singlePatient[0].guardian_contact
+          }}</label>
           <br />
 
           <label class="titleHead">Registration Date :</label>
-          <label class="titleCont">{{ mainInfo.registration_date }}</label>
+          <label class="titleCont">{{
+            singlePatient[0].registration_date
+          }}</label>
           <br />
 
           <label class="titleHead">Nationality :</label>
-          <label class="titleCont">{{ mainInfo.nationality }}</label>
+          <label class="titleCont">{{ singlePatient[0].nationality }}</label>
           <br />
 
           <label class="titleHead">Address main :</label>
           <label class="titleCont"
-            >{{ mainInfo.zone }}, {{ mainInfo.woreda }}</label
+            >{{ singlePatient[0].zone }}, {{ singlePatient[0].woreda }}</label
           >
           <br />
 
           <label class="titleHead">Address Detail</label>
           <label class="titleCont"
-            >{{ mainInfo.kebele }}, {{ mainInfo.house_number }}</label
+            >{{ singlePatient[0].kebele }},
+            {{ singlePatient[0].house_number }}</label
           >
         </v-flex>
       </v-layout>
@@ -80,44 +107,29 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
-      patientDetail: [
-        {
-          id: 5,
-          card_number: "Ga003",
-          first_name: "Temesgen",
-          fathers_name: "Kefie",
-          last_name: "Tsega",
-          gender: "Male",
-          phone_number: "09208374",
-          nationality: 1,
-          region: "",
-          zone: "",
-          woreda: "",
-          kebele: "",
-          house_number: "",
-          birthdate: "2021-08-21",
-          patient_type: 1,
-          status: 0,
-          guardian_name: "Guardian ...",
-          guardian_contact: "0912056623",
-          card_updated_date: "2021-08-21",
-          registration_date: "2021-08-21",
-        },
-      ],
-      mainInfo: {},
+      patientId: "",
     };
   },
 
   created() {
+    const { patientId } = this.$route.params;
+    this.patientId = patientId;
     this.loadData();
   },
 
+  computed: {
+    ...mapState("patient", ["singlePatient"]),
+  },
+
   methods: {
+    ...mapActions("patient", ["singlePatientInfo"]),
+
     async loadData() {
-      this.mainInfo = this.patientDetail[0];
+      await this.singlePatientInfo(this.patientId);
     },
   },
 };

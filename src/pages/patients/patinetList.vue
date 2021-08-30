@@ -1,8 +1,5 @@
 <template>
   <div class="main">
-    <v-btn @click="$router.push({ name: 'patientDetail' })"
-      >Patient Detail Test</v-btn
-    >
     <v-layout>
       <v-flex xs12 sm2><h2>Patinet List</h2></v-flex>
 
@@ -266,6 +263,86 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="assignPatientDialog" width="800" persistent>
+      <v-card>
+        <v-toolbar dense color="green">
+          Patient Assign / Send Request for Nurse
+        </v-toolbar>
+        <br />
+
+        <v-card-text>
+          <v-form @submit.prevent="assignRoomSave" ref="assignRoomSave">
+            <v-layout>
+              <v-flex xs12 sm1></v-flex>
+              <v-flex xs12 sm6>
+                <label class="titleHead">Full Name : </label>
+                <label class="titleCont">
+                  {{ selectedPatinet.first_name }}
+                  {{ selectedPatinet.fathers_name }}
+                  ({{ selectedPatinet.gender }})
+                </label>
+                <br />
+                <label class="titleHead">Card Number : </label>
+                <label class="titleCont">
+                  {{ selectedPatinet.card_number }}
+                </label>
+                <br />
+                <label class="titleHead">Guardian Name : </label>
+                <label class="titleCont">
+                  {{ selectedPatinet.guardian_name }}
+                </label>
+                <br />
+              </v-flex>
+
+              <v-flex xs12 sm4>
+                <label class="titleHead">Room Number To Assign </label>
+                <br />
+                <v-autocomplete
+                  dense
+                  :items="rooms"
+                  outlined
+                  item-text="room_number"
+                  item-value="id"
+                  :rules="inputRules"
+                  v-model="assignRoom.room_id"
+                />
+
+                <v-checkbox
+                  label="Emergency"
+                  v-model="assignRoom.is_emergency"
+                />
+              </v-flex>
+            </v-layout>
+            <br />
+            <br />
+
+            <v-layout>
+              <v-spacer />
+              <v-spacer />
+
+              <v-btn
+                text
+                outlined
+                color="red"
+                @click="assignPatientDialog = false"
+              >
+                Cancel
+              </v-btn>
+              <v-spacer />
+
+              <v-btn text outlined color="green" @click="assignRoomSave()">
+                Assign
+              </v-btn>
+              <v-spacer />
+              <v-spacer />
+            </v-layout>
+            <br />
+            <br />
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -279,9 +356,12 @@ import Payment from "@/assets/icons/payment.svg";
 export default {
   data() {
     return {
+      assignRoom: {},
+      selectedPatinet: {},
       tab: null,
       tabSelected: "first_name",
       filterationText: "",
+      assignPatientDialog: false,
       updatePatientDialog: false,
       patientInfo: {},
       search: "",
@@ -326,6 +406,7 @@ export default {
 
   computed: {
     ...mapState("patient", ["patients", "updateResponse"]),
+    ...mapState("room", ["rooms", "assignedPatientRoomRequest"]),
   },
 
   methods: {
@@ -335,16 +416,23 @@ export default {
       "updatePatientInfo",
     ]),
 
+    ...mapActions("room", ["getRoomsList", "assignPatientRoomRequest"]),
+
     async editPatient(item) {
       this.patientInfo = item;
       this.updatePatientDialog = true;
     },
+
     async detailPatient(item) {
-      console.log(item);
+      this.$router.push({
+        name: "patientDetail",
+        params: { patientId: item.id },
+      });
     },
 
     async transferPatient(item) {
-      console.log(item);
+      this.selectedPatinet = item;
+      this.assignPatientDialog = true;
     },
 
     async repaymentCardPatient(item) {
@@ -353,6 +441,37 @@ export default {
 
     async loadData() {
       await this.getPatientList();
+      await this.getRoomsList();
+    },
+
+    async assignRoomSave() {
+      if (this.$refs.assignRoomSave.validate()) {
+        this.assignRoom.patient_id = this.selectedPatinet.id;
+        this.assignRoom.reception_user_id = 1;
+        await this.assignPatientRoomRequest(this.assignRoom);
+
+        if (this.assignedPatientRoomRequest.status === 1) {
+          this.assignPatientDialog = false;
+          this.loadData();
+        } else if (this.assignedPatientRoomRequest.type === -101)
+          this.$fire({
+            title: "Assign Room",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          }).then(() => {
+            this.assignPatientDialog = false;
+          });
+        else
+          this.$fire({
+            title: "Assign Room",
+            text: "Selected Patient Assigned Before!!!",
+            type: "warning",
+            timer: 7000,
+          }).then(() => {
+            this.assignPatientDialog = false;
+          });
+      }
     },
 
     async updatePatient() {
@@ -388,5 +507,14 @@ export default {
 
 .icon {
   cursor: pointer;
+}
+
+.titleHead {
+  font-family: bold;
+  font: bold 12px/30px Georgia;
+  letter-spacing: 2px;
+}
+.titleCont {
+  font-size: 17px;
 }
 </style>

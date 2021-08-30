@@ -24,7 +24,10 @@ import staffUpdate from "../pages/Organization/staffs/staffUpdate.vue";
 import payment from "../pages/casher/index.vue";
 import paymentHistory from "../pages/casher/paymentHistory.vue";
 import registerPrepayment from "../pages/casher/registerPrepayment.vue";
+
 import nurse from "../pages/nurse/index.vue";
+import nursePatientDetail from "../pages/nurse/nursePatientDetail.vue";
+
 import registerStaff from "../pages/Organization/staffs/registerStaff.vue";
 import chat from "../pages/chat/index.vue";
 
@@ -38,6 +41,11 @@ import issue from "../pages/Inventory/store/issue.vue";
 import measurmentUnit from "../pages/Inventory/store/measurmentUnit.vue";
 
 import workPermission from "../pages/Others/workPermission.vue";
+import room from "../pages/Others/Room.vue";
+import roomDetail from "../pages/Others/RoomDetail.vue";
+
+//Main infrmation holder in nurse nd OPD
+import labratoryOrder from "../pages/nurseOPD/labratoryOrder.vue";
 
 import logintry from "../pages/layout/login.vue";
 
@@ -99,10 +107,11 @@ const routes = [
     name: "registerPrepayment",
     component: registerPrepayment,
   },
+  { path: "/nurse", name: "nurse", component: nurse },
   {
-    path: "/nurse",
-    name: "nurse",
-    component: nurse,
+    path: "/nurse/patientDetail",
+    name: "nursePatientDetail",
+    component: nursePatientDetail,
   },
   {
     path: "/registerStaff",
@@ -168,6 +177,13 @@ const routes = [
     path: "/Others/workPermission",
     name: "workPermission",
     component: workPermission,
+  },
+  { path: "/Others/room", name: "room", component: room },
+  { path: "/Others/room/detail", name: "roomDetail", component: roomDetail },
+  {
+    path: "/patient/labratoryOrder",
+    name: "labratoryOrder",
+    component: labratoryOrder,
   },
 ];
 

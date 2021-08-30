@@ -44,13 +44,13 @@ export default {
     },
 
     async loadSingleInvetory({ commit }, id) {
-      let res = await api.get(path.inventory, id);
+      let res = await api.get(path.inventory_detail, id);
 
       commit("setLoadSingleInvetory", res.data);
     },
 
     async updateInventory({ commit }, data) {
-      let res = await api.update(path.update_inventory, data.id, data);
+      let res = await api.update(path.inventory_detail, data.id, data);
 
       commit("setUpdateInventory", res.data);
     },

@@ -17,18 +17,24 @@
       <v-divider></v-divider>
       <br />
 
-      <h3>Name : Medical Tools // {{ singleInventory.name }}</h3>
+      <h3>Name : {{ singleInventory.name }}</h3>
       <p>
-        Description : Description about Inventory ..... ///
+        Description :
         {{ singleInventory.description }}
       </p>
       <p>
-        Date : Date created about Inventory..... ///
-        {{ singleInventory.dateCreated }}
+        Date :
+        {{ singleInventory.created_date }}
       </p>
       <br />
 
       <v-data-table :search="search" :items="items" :headers="headers">
+        <template v-slot:item.action="{ item }">
+          <Edit @click="editItem(item)" class="icon" />
+          &nbsp;&nbsp;&nbsp;
+          <Detail @click="detailItem(item)" class="icon" />
+        </template>
+
         <template v-slot:top>
           <br />
           <v-layout>
@@ -41,7 +47,9 @@
             ></v-text-field>
             <v-spacer></v-spacer>
 
-            <v-btn small @click="registerItemDialog = true">Add Item</v-btn>
+            <v-btn small @click="registerItemDialog = true" outlined text
+              >Add Item</v-btn
+            >
           </v-layout>
           <br />
         </template>
@@ -75,7 +83,7 @@
                     type="number"
                     outlined
                     :rules="inputRules"
-                    v-model="itemInfo.totalQuantity"
+                    v-model="itemInfo.total_quantity"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -86,11 +94,13 @@
                 <v-flex xs12 sm8>
                   <v-autocomplete
                     dense
-                    :items="unitOfMeasurment"
+                    :items="measurements"
                     outlined
+                    item-text="unit"
+                    item-value="id"
                     :rules="inputRules"
                     v-model="itemInfo.uofm"
-                  ></v-autocomplete>
+                  />
                 </v-flex>
               </v-layout>
 
@@ -122,24 +132,32 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import Edit from "@/assets/icons/edit.svg";
+import Detail from "@/assets/icons/eye.svg";
+
 export default {
   data() {
     return {
-      unitOfMeasurment: [],
-      itemInfo: [],
+      itemInfo: {},
       registerItemDialog: false,
       inputRules: [(v) => !!v || "This field is required"],
       search: "",
       inventoryId: "",
       headers: [
         { text: "Name", value: "name" },
-        { text: "Total Register", value: "totalRegister" },
-        { text: "Aveliable", value: "aveliable" },
+        { text: "Total Register", value: "total_quantity" },
+        { text: "Aveliable", value: "available_quantity" },
         { text: "Unit Of Measurment", value: "uofm" },
         { text: "Action", value: "action" },
       ],
     };
   },
+
+  components: {
+    Edit,
+    Detail,
+  },
+
   created() {
     const { inventoryId } = this.$route.params;
     this.inventoryId = inventoryId;
@@ -149,27 +167,45 @@ export default {
   computed: {
     ...mapState("item", ["registeredItem", "items"]),
     ...mapState("inventory", ["singleInventory"]),
+    ...mapState("measurement", ["measurements"]),
   },
 
   methods: {
     ...mapActions("item", ["registerItem", "loadItemList"]),
     ...mapActions("inventory", ["loadSingleInvetory"]),
+    ...mapActions("measurement", ["getMeasurementList"]),
 
     async loadData() {
       await this.loadSingleInvetory(this.inventoryId);
-      await this.loadItemList();
+      await this.loadItemList(this.inventoryId);
+      await this.getMeasurementList();
     },
 
     async save() {
       if (this.$refs.save.validate()) {
-        this.itemInfo.avaliable = this.itemInfo.totalQuantity;
+        this.itemInfo.inventory_id = this.inventoryId;
+        this.itemInfo.available_quantity = this.itemInfo.total_quantity;
         await this.registerItem(this.itemInfo);
 
         if (this.registeredItem === true) {
           this.registerItemDialog = false;
           await this.loadData();
-        } else alert("Something wrong try again later please!!!");
+        } else
+          this.$fire({
+            title: "Item Registeration",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
+    },
+
+    async editItem(item) {
+      alert(item.id);
+    },
+
+    async detailItem(item) {
+      alert(item.id);
     },
   },
 };
@@ -179,5 +215,9 @@ export default {
 .main {
   margin: 7%;
   margin-top: 3%;
+}
+
+.icon {
+  cursor: pointer;
 }
 </style>

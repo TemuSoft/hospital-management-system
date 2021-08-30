@@ -15,7 +15,11 @@
       </v-layout>
       <br />
 
-      <v-data-table :items="imagingTestList" :headers="headers"> </v-data-table>
+      <v-data-table :items="imagingTestList" :headers="headers">
+        <template v-slot:item.action="{ item }">
+          <Edit class="icon" @click="editImagingTestCase(item)" />
+        </template>
+      </v-data-table>
 
       <v-dialog v-model="registerImagingDialog" persistent width="700px">
         <v-card>
@@ -25,27 +29,26 @@
             <v-form @submit.prevent="save" ref="form">
               <v-layout>
                 <v-flex xs12 sm1> </v-flex>
-                <v-flex xs12 sm3> Type</v-flex>
+                <v-flex xs12 sm3> Title</v-flex>
                 <v-flex xs12 sm8>
                   <v-text-field
                     dense
                     outlined
                     :rules="inputRules"
-                    v-model="testInfo.name"
+                    v-model="imagingInfo.title"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
 
               <v-layout>
                 <v-flex xs12 sm1> </v-flex>
-                <v-flex xs12 sm3> Cost</v-flex>
+                <v-flex xs12 sm3> Price</v-flex>
                 <v-flex xs12 sm8>
                   <v-text-field
                     type="number"
                     dense
                     outlined
-                    :rules="inputRules"
-                    v-model="testInfo.cost"
+                    v-model="imagingInfo.price"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -58,8 +61,7 @@
                     dense
                     :items="statusList"
                     outlined
-                    :rules="inputRules"
-                    v-model="testInfo.status"
+                    v-model="imagingInfo.status"
                   ></v-autocomplete>
                 </v-flex>
               </v-layout>
@@ -71,7 +73,7 @@
                   <v-text-field
                     dense
                     outlined
-                    v-model="testInfo.description"
+                    v-model="imagingInfo.description"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -98,24 +100,33 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import Edit from "@/assets/icons/edit.svg";
+
 export default {
   data() {
     return {
+      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
       registerImagingDialog: false,
-      statusList: ["Active", "Not Active"],
-      testInfo: {},
+      statusList: [
+        { text: "Active", value: 1 },
+        { text: "Not Active", value: 0 },
+      ],
+      imagingInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
 
       tests: [],
       headers: [
-        { text: "No", value: "no" },
-        { text: "Name", value: "name" },
-        { text: "Cost", value: "cost" },
+        { text: "Title", value: "title" },
+        { text: "Price", value: "price" },
         { text: "Status", value: "status" },
         { text: "Description", value: "description" },
         { text: "Action", value: "action" },
       ],
     };
+  },
+
+  components: {
+    Edit,
   },
 
   created() {
@@ -130,16 +141,22 @@ export default {
     ...mapActions("medicalService", ["registerImaging", "getImagingTestList"]),
 
     async loadData() {
-      this.testInfo.created_by = "Temesgen";
       await this.getImagingTestList();
     },
 
     async save() {
       if (this.$refs.form.validate()) {
-        await this.registeredImaging(this.testInfo);
+        this.imagingInfo.registered_by = this.login_user.id;
+        await this.registerImaging(this.imagingInfo);
 
         if (this.registeredImaging === true) this.registerImagingDialog = false;
-        else alert("Somethong wrong plese try later");
+        else
+          this.$fire({
+            title: "Imaging Registeration",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
   },
@@ -150,5 +167,8 @@ export default {
 .main {
   margin: 7%;
   margin-top: 2%;
+}
+.icon {
+  cursor: pointer;
 }
 </style>

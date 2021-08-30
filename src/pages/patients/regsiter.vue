@@ -12,7 +12,7 @@
           label="Select Patinet Type"
           :rules="inputRules"
           item-text="name"
-          item-id="value"
+          item-value="value"
           outlined
           single-line
         />
@@ -192,7 +192,13 @@ export default {
       if (this.$refs.form.validate()) {
         await this.registerPatient(this.patientInfo);
         if (this.registeredPatient === true) this.patientInfo = {};
-        else alert("Failed to Register Patinet");
+        else
+          this.$fire({
+            title: "Patient Registeration",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
 

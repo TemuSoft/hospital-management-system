@@ -3,6 +3,11 @@
     <h3>Measurement Units</h3>
 
     <v-data-table :headers="headers" :items="measurements" :search="search">
+      <template v-slot:item.type="{ item }">
+        <label v-if="item.type === 1">Store</label>
+        <label v-else>Pharmacy</label>
+      </template>
+
       <template v-slot:item.action="{ item }">
         <Edit @click="editMeasurement(item)" class="icon" />
       </template>
@@ -55,6 +60,7 @@
                 dense
                 outlined
                 :rules="inputRules"
+                type="number"
                 label=" Quantity"
                 v-model="measurementInfo.quantity"
               />
@@ -63,7 +69,7 @@
 
             <v-layout>
               <v-spacer />
-              <v-btn small outlined text color="red" @click="cnacel()">
+              <v-btn small outlined text color="red" @click="cancel()">
                 Cancel
               </v-btn>
               <v-spacer />
@@ -105,6 +111,7 @@
                 dense
                 outlined
                 :rules="inputRules"
+                type="number"
                 label=" Quantity"
                 v-model="measurementInfo.quantity"
               />
@@ -113,7 +120,7 @@
 
             <v-layout>
               <v-spacer />
-              <v-btn small outlined text color="red" @click="cnacel()">
+              <v-btn small outlined text color="red" @click="cancel()">
                 Cancel
               </v-btn>
               <v-spacer />
@@ -140,11 +147,10 @@ export default {
       search: "",
       inputRules: [(v) => !!v || "This field is required"],
       headers: [
-        { text: "ID", value: "id" },
-        { text: "Created Date", value: "date" },
         { text: "Unit", value: "unit" },
         { text: "Symbol", value: "symbol" },
         { text: "Quantity", value: "quantity" },
+        { text: "Type", value: "type" },
         { text: "Action", value: "action" },
       ],
     };
@@ -179,6 +185,7 @@ export default {
 
     async save() {
       if (this.$refs.save.validate()) {
+        this.measurementInfo.type = 1;
         await this.registerMeasurement(this.measurementInfo);
 
         if (this.registeredMeasurement === true) {

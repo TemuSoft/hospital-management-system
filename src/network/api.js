@@ -6,7 +6,11 @@ class api {
   }
 
   get(path, id) {
-    return http.get(`${path}/${id}`);
+    return http.get(`${path}/${id}/`);
+  }
+
+  getPatientStatus(path, id, status) {
+    return http.get(`${path}/${id}/${status}/`);
   }
 
   create(path, data) {

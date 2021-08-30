@@ -25,7 +25,7 @@
     </v-layout>
 
     <v-data-table
-      :items="issueList"
+      :items="issues"
       :headers="headersIssue"
       items-per-page="10"
       dense
@@ -115,6 +115,7 @@ export default {
       sendIssueRequestDialog: false,
       inputRules: [(v) => !!v || "This field is required"],
 
+      item: {},
       itemsIssue: [],
       headersItems: [
         { text: "Inventory", value: "inventory" },

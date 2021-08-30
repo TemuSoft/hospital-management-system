@@ -34,7 +34,7 @@ export default {
     async getMeasurementList({ commit }) {
       let res = await api.getAll(path.measurement);
 
-      commit("setMeasurementList".res.data);
+      commit("setMeasurementList", res.data);
     },
 
     async updateMeasurement({ commit }, data) {

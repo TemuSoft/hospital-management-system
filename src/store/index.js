@@ -11,6 +11,10 @@ import medicalService from "./medicalService";
 import inventory from "./inventory";
 import item from "./item";
 import issue from "./issue";
+import measurement from "./measurement";
+import room from "./room";
+import nurse from "./nurse";
+import mainPatientInfoManager from "./mainPatientInfoManager";
 
 Vue.use(Vuex);
 
@@ -40,5 +44,9 @@ export default new Vuex.Store({
     inventory,
     item,
     issue,
+    measurement,
+    room,
+    nurse,
+    mainPatientInfoManager,
   },
 });

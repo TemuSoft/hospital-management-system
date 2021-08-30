@@ -1,7 +1,7 @@
 import { api, path } from "../network";
 
 export default {
-  namedspace: true,
+  namespaced: true,
 
   states: {
     registeredItem: false,
@@ -25,13 +25,13 @@ export default {
 
   actions: {
     async registerItem({ commit }, data) {
-      let res = await api.create(path.register_item, data);
+      let res = await api.create(path.item, data);
 
       commit("setRegisterItem", res.data);
     },
 
-    async loadItemList({ commit }) {
-      let res = await api.getAll(path.item);
+    async loadItemList({ commit }, id) {
+      let res = await api.get(path.update_item, id);
 
       commit("setLoadItemList", res.data);
     },

@@ -125,14 +125,14 @@
             <v-flex xs12 sm1> Department</v-flex>
             <v-flex xs12 sm4>
               <v-autocomplete
-                :rules="inputRules"
                 outlined
                 dense
-                :items="departmentList"
+                :items="departments"
                 item-text="name"
-                item-id="value"
+                item-value="id"
+                :rules="inputRules"
                 v-model="staffInfo.department"
-              ></v-autocomplete>
+              />
             </v-flex>
             <v-flex xs12 sm1> </v-flex>
             <v-flex xs12 sm1> </v-flex>
@@ -156,26 +156,25 @@ export default {
       staffInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
       genderoptions: ["Male", "Female"],
-      departmentList: [
-        { name: "Adminstrator", value: 1 },
-        { name: "Human Resource", value: 2 },
-        { name: "Labratory", value: 3 },
-        { name: "OPD", value: 4 },
-        { name: "Medical Directors", value: 5 },
-        { name: "Nurse and Pharmacy", value: 6 },
-        { name: "Store", value: 7 },
-      ],
     };
   },
 
   computed: {
     ...mapState("staff", ["registeredStaff"]),
+    ...mapState("department", ["departments"]),
   },
 
-  created() {},
+  created() {
+    this.loadData();
+  },
 
   methods: {
     ...mapActions("staff", ["registerStaff"]),
+    ...mapActions("department", ["getDepartmentList"]),
+
+    async loadData() {
+      await this.getDepartmentList();
+    },
 
     async save() {
       if (this.$refs.form.validate()) {

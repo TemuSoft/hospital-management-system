@@ -188,6 +188,12 @@ const menusData = [
         route: "workPermission",
         icon: "workPermission",
       },
+      {
+        title: "Room",
+        allowedRoles: ["admin", "cutting-department"],
+        route: "room",
+        icon: "room",
+      },
     ],
   },
   {

@@ -1,11 +1,6 @@
 <template>
   <div class="main">
-    <v-data-table
-      dense
-      :headers="headers"
-      :items="departments"
-      :search="search"
-    >
+    <v-data-table :headers="headers" :items="departments" :search="search">
       <template v-slot:item.action="{ item }">
         <Edit @click="editDepartment(item)" class="icon" />
         &nbsp;&nbsp;&nbsp;

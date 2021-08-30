@@ -142,7 +142,7 @@ export default {
       inputRules: [(v) => !!v || "This field is required"],
       headers: [
         { text: "Name", value: "name" },
-        { text: "Date Created", value: "dateCreated" },
+        { text: "Date Created", value: "created_date" },
         { text: "Description", value: "description" },
         { text: "Action", value: "action" },
       ],

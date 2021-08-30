@@ -94,7 +94,8 @@
         </div>
         <v-tabs-items style="margin-left: 3%">
           <LabratoryOrder v-if="selectedTab === 1" />
-          <ImagingOrder v-if="selectedTab === 2" />
+          <ImagingOrder v-else-if="selectedTab === 2" />
+          <Appointment v-else-if="selectedTab === 4" />
         </v-tabs-items>
       </v-tabs>
     </v-card>
@@ -108,6 +109,7 @@ import Detail from "@/assets/icons/eye.svg";
 //Main infromation about patient controler
 import LabratoryOrder from "../nurseOPD/labratoryOrder.vue";
 import ImagingOrder from "../nurseOPD/imagingOrder.vue";
+import Appointment from "../nurseOPD/appointement.vue";
 
 export default {
   data() {
@@ -150,6 +152,7 @@ export default {
     Detail,
     LabratoryOrder,
     ImagingOrder,
+    Appointment,
   },
 
   computed: {

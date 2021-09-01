@@ -95,6 +95,7 @@
         <v-tabs-items style="margin-left: 3%">
           <LabratoryOrder v-if="selectedTab === 1" />
           <ImagingOrder v-else-if="selectedTab === 2" />
+          <VitalSign v-else-if="selectedTab === 3" />
           <Appointment v-else-if="selectedTab === 4" />
         </v-tabs-items>
       </v-tabs>
@@ -110,6 +111,7 @@ import Detail from "@/assets/icons/eye.svg";
 import LabratoryOrder from "../nurseOPD/labratoryOrder.vue";
 import ImagingOrder from "../nurseOPD/imagingOrder.vue";
 import Appointment from "../nurseOPD/appointement.vue";
+import VitalSign from "../nurseOPD/vitalSign.vue";
 
 export default {
   data() {
@@ -152,6 +154,7 @@ export default {
     Detail,
     LabratoryOrder,
     ImagingOrder,
+    VitalSign,
     Appointment,
   },
 

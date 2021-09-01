@@ -1,7 +1,7 @@
 <template>
   <v-card>
-    <br />
     <v-layout>
+      <h3>Appointment Recordes</h3>
       <v-spacer />
       <v-btn
         small
@@ -129,4 +129,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.icon {
+  cursor: pointer;
+}
+</style>

@@ -113,55 +113,6 @@
         </v-flex>
       </v-layout>
 
-      <div style="margin: 5%; margin-top: 2%">
-        <h3>Register New Vital Signs</h3>
-        <br />
-        <v-form
-          @submit.prevent="savePatientVitalSign"
-          ref="savePatientVitalSign"
-        >
-          <v-layout>
-            <v-autocomplete
-              label="Vital Signs"
-              dense
-              outlined
-              :items="vitalSigns"
-              item-text="name"
-              item-value="id"
-              :rules="inputRules"
-              v-model="patientVitalSignInfo.vital_sign_id"
-            />
-            <v-spacer />
-            <v-text-field
-              dense
-              :rules="inputRules"
-              v-model="patientVitalSignInfo.result"
-              outlined
-              label="Description / Value"
-            />
-            <v-spacer />
-            <v-btn
-              text
-              outlined
-              color="green"
-              class="text-capitalize"
-              @click="registerPatientVitalSign()"
-              >Register</v-btn
-            >
-          </v-layout>
-        </v-form>
-
-        <v-data-table
-          :items="patientVitalSigns"
-          :headers="patientVSHeaders"
-          :search="search"
-        >
-          <template v-slot:item.action="{ item }">
-            <Edit class="icon" @click="editPatientVitalSign(item)" />
-          </template>
-        </v-data-table>
-      </div>
-
       <v-dialog persistent width="700px" v-model="registerVitalSignDialog">
         <v-card flat>
           <v-toolbar color="green" dense>
@@ -281,20 +232,12 @@ export default {
       update: false,
       register: false,
       registerVitalSignDialog: false,
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
       vitalSignHeaders: [
         { text: "Vital Sign Name", value: "name" },
         { text: "Description", value: "description" },
         { text: "Action", value: "action" },
       ],
       inputRules: [(v) => !!v || "This field is required"],
-
-      patientVitalSignInfo: {},
-      patientVSHeaders: [
-        { text: "Vistal Name", value: "vital_sign.name" },
-        { text: "Result", value: "result" },
-        { text: "Action", value: "action" },
-      ],
     };
   },
   components: {
@@ -310,28 +253,16 @@ export default {
   },
 
   computed: {
-    ...mapState("nurse", [
-      "vitalSigns",
-      "registeredVitalSign",
-      "patientVitalSigns",
-    ]),
+    ...mapState("nurse", ["vitalSigns", "registeredVitalSign"]),
     ...mapState("patient", ["singlePatient"]),
   },
 
   methods: {
-    ...mapActions("nurse", [
-      "getVitalSignsList",
-      "registerVitalSign",
-      "updateVitalSign",
-      "getPatientVitalSigns",
-      "patientVitalSignsRegisteration",
-    ]),
+    ...mapActions("nurse", ["registerVitalSign", "updateVitalSign"]),
     ...mapActions("patient", ["singlePatientInfo"]),
 
     async loadData() {
       await this.singlePatientInfo(this.patientId);
-      await this.getVitalSignsList();
-      await this.getPatientVitalSigns(this.service_id);
     },
 
     async save() {
@@ -359,19 +290,6 @@ export default {
             timer: 7000,
           });
       }
-    },
-
-    async registerPatientVitalSign() {
-      if (this.$refs.savePatientVitalSign.validate()) {
-        this.patientVitalSignInfo.service_id = this.service_id;
-        this.patientVitalSignInfo.user_id = this.login_user.id;
-        await this.patientVitalSignsRegisteration(this.patientVitalSignInfo);
-        await this.getPatientVitalSigns(this.service_id);
-      }
-    },
-
-    async editPatientVitalSign(item) {
-      alert(item.id);
     },
   },
 };

@@ -1,0 +1,114 @@
+<template>
+  <div>
+    <div>
+      <h3>Vital Sign</h3>
+      <br />
+      <v-form @submit.prevent="savePatientVitalSign" ref="savePatientVitalSign">
+        <v-layout>
+          <v-autocomplete
+            label="Vital Signs"
+            dense
+            outlined
+            :items="vitalSigns"
+            item-text="name"
+            item-value="id"
+            :rules="inputRules"
+            v-model="patientVitalSignInfo.vital_sign_id"
+          />
+          <v-spacer />
+          <v-text-field
+            dense
+            :rules="inputRules"
+            v-model="patientVitalSignInfo.result"
+            outlined
+            label="Description / Value"
+          />
+          <v-spacer />
+          <v-btn
+            text
+            outlined
+            color="green"
+            class="text-capitalize"
+            @click="registerPatientVitalSign()"
+            >Register</v-btn
+          >
+        </v-layout>
+      </v-form>
+
+      <v-data-table
+        :items="patientVitalSigns"
+        :headers="patientVSHeaders"
+        :search="search"
+      >
+        <template v-slot:item.action="{ item }">
+          <Edit class="icon" @click="editPatientVitalSign(item)" />
+        </template>
+      </v-data-table>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapActions, mapState } from "vuex";
+import Edit from "@/assets/icons/edit.svg";
+// import Close from "@/assets/icons/close.svg";
+
+export default {
+  data() {
+    return {
+      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+
+      patientVitalSignInfo: {},
+      patientVSHeaders: [
+        { text: "Vistal Name", value: "vital_sign.name" },
+        { text: "Result", value: "result" },
+        { text: "Action", value: "action" },
+      ],
+    };
+  },
+
+  components: {
+    Edit,
+    // Close,
+  },
+
+  created() {
+    this.loadData();
+  },
+
+  computed: {
+    ...mapState("nurse", ["vitalSigns", "patientVitalSigns"]),
+  },
+
+  methods: {
+    ...mapActions("nurse", [
+      "getVitalSignsList",
+      "getPatientVitalSigns",
+      "patientVitalSignsRegisteration",
+    ]),
+
+    async loadData() {
+      await this.getPatientVitalSigns(this.service_id);
+    },
+
+    async registerPatientVitalSign() {
+      if (this.$refs.savePatientVitalSign.validate()) {
+        this.patientVitalSignInfo.service_id = this.service_id;
+        this.patientVitalSignInfo.user_id = this.login_user.id;
+        await this.patientVitalSignsRegisteration(this.patientVitalSignInfo);
+        await this.getPatientVitalSigns(this.service_id);
+      }
+    },
+
+    async editPatientVitalSign(item) {
+      alert(item.id);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.icon {
+  cursor: pointer;
+}
+</style>

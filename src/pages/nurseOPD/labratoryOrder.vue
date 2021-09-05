@@ -60,11 +60,10 @@
       </template>
 
       <template v-slot:item.action="{ item }">
-        <Edit class="icon" @click="editPatientTestCase(item)" />
-        <Delete
-          style="margin-left: 20px"
+        <Edit
+          v-if="item.status === 2"
           class="icon"
-          @click="deletePatientTestCase(item)"
+          @click="editPatientTestCase(item)"
         />
       </template>
     </v-data-table>
@@ -73,7 +72,6 @@
 
 <script>
 import Edit from "@/assets/icons/edit.svg";
-import Delete from "@/assets/icons/delete.svg";
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -95,7 +93,6 @@ export default {
 
   components: {
     Edit,
-    Delete,
   },
 
   created() {

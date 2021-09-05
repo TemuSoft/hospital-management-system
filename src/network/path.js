@@ -26,6 +26,8 @@ const path = {
   update_lab_test_case: "/lab/update_lab_test_case",
   patient_test_case: "/lab/lab_test_request",
   get_patient_test_case: "/lab/lab_test_history_data",
+  all_lab_test_case_request: "/lab/lab_test_request",
+  single_lab_test_case_request: "/lab/lab_test_history_data",
   measurement: "/common/measurement",
   assing_patient_room: "/",
 

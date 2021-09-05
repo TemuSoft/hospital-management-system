@@ -1,10 +1,21 @@
 <template>
   <div class="main">
     <h3>Labratory Request</h3>
-
-    <v-data-table :items="temp" :headers="labRequestHeaders" :search="search">
+    {{ singleLabratoryRequests }}
+    <v-data-table
+      :items="labratoryRequests"
+      :headers="labRequestHeaders"
+      :search="search"
+    >
       <template v-slot:item.action="{ item }">
-        <Edit @click="editLabrtoryResult(item)" class="icon" />
+        <Edit
+          @click="editLabrtoryResult(item.service_id, item.patient)"
+          class="icon"
+        />
+      </template>
+
+      <template v-slot:item.patient="{ item }">
+        {{ item.patient.first_name }} {{ item.patient.fathers_name }}
       </template>
 
       <template v-slot:top>
@@ -35,7 +46,10 @@
             <v-layout>
               <v-flex xs12 sm4>
                 Full Name :
-                <h3>{{ selectedResult.fullName }}</h3>
+                <h3>
+                  {{ selectedResult.first_name }}
+                  {{ selectedResult.fathers_name }}
+                </h3>
               </v-flex>
 
               <v-flex xs12 sm4>
@@ -45,7 +59,7 @@
 
               <v-flex xs12 sm4>
                 Total Lab Test :
-                <h3>{{ selectedResult.totalLabTest }}</h3>
+                <h3>{{ labtestResult.length }}</h3>
               </v-flex>
             </v-layout>
             <br />
@@ -54,8 +68,7 @@
             <v-layout>
               <table>
                 <tr>
-                  <th>Need Referal</th>
-                  <th>Group</th>
+                  <th>Need Outsourced</th>
                   <th>Test Case</th>
                   <th>Result</th>
                 </tr>
@@ -73,17 +86,17 @@
                       @click="checkboxWholeProcess(labtestResult[i].id, i)"
                     />
                   </td>
-                  <td>{{ labtestResult[i].title }}</td>
-                  <td>{{ labtestResult[i].group }}</td>
+                  <td>{{ labtestResult[i].test_case_name }}</td>
                   <td>
                     <v-text-field
+                      class="tdCell"
                       v-if="!checkboxWhole[labtestResult[i].id]"
                       v-model="labtestResult[i].result"
                       :rules="inputRules"
                       dense
-                      rounded
+                      outlined
                     />
-                    <label v-else style="color: red">Needs Referal</label>
+                    <label v-else style="color: red">Outsourced</label>
                   </td>
                 </tr>
               </table>
@@ -113,21 +126,16 @@ export default {
   data() {
     return {
       inputRules: [(v) => !!v || "This field is required"],
-      labtestResult: [
-        { id: 1, title: "Test one", group: "Group one", result: "" },
-        { id: 2, title: "Test Two", group: "Group one", result: "" },
-        { id: 3, title: "Test Three", group: "Group one", result: "" },
-      ],
+      labtestResult: [],
       selectedResult: {},
-      temp: [],
+
       checkboxWhole: {},
       search: "",
       enterLabResultDialog: false,
       labRequestHeaders: [
-        { text: "Card Number", value: "card_number" },
-        { text: "Full Name", value: "fullName" },
-        { text: "Total Lab Test", value: "totalLabTest" },
-        { text: "Status", value: "status" },
+        { text: "Card Number", value: ".patient.card_number" },
+        { text: "Full Name", value: "patient" },
+        { text: "Who Sent Request", value: "opd_user" },
         { text: "Action", value: "action" },
       ],
     };
@@ -135,23 +143,6 @@ export default {
 
   created() {
     this.loadData();
-
-    this.temp = [
-      {
-        id: 56,
-        card_number: "bdksj",
-        fullName: "Temesgn Kefie",
-        totalLabTest: "67",
-        status: "1",
-      },
-      {
-        id: 57,
-        card_number: "bdksj",
-        fullName: "Temesgn Kefie",
-        totalLabTest: "67",
-        status: "1",
-      },
-    ];
   },
 
   components: {
@@ -162,14 +153,20 @@ export default {
   },
 
   computed: {
-    ...mapState("medicalService", ["labratoryRequests"]),
+    ...mapState("medicalService", [
+      "labratoryRequests",
+      "singleLabratoryRequests",
+    ]),
   },
 
   methods: {
-    ...mapActions("medicalService", ["getLabrtoryRequest"]),
+    ...mapActions("medicalService", [
+      "getLabrtoryRequest",
+      "getSingleLabrtoryRequest",
+    ]),
 
     async loadData() {
-      this.getLabrtoryRequest();
+      await this.getLabrtoryRequest();
     },
 
     async saveResult() {
@@ -188,9 +185,11 @@ export default {
       this.checkboxWhole = temp;
     },
 
-    async editLabrtoryResult(item) {
+    async editLabrtoryResult(service_id, selectedResult) {
+      this.selectedResult = selectedResult;
       this.enterLabResultDialog = true;
-      this.selectedResult = item;
+      await this.getSingleLabrtoryRequest(service_id);
+      this.labtestResult = this.singleLabratoryRequests.data;
     },
   },
 };
@@ -218,5 +217,9 @@ td {
 
 tr:nth-child(even) {
   background-color: #f2f2f2;
+}
+
+.tdCell {
+  height: 50px;
 }
 </style>

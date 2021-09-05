@@ -12,6 +12,8 @@ export default {
     labTestList: [],
     imagingTestList: [],
     labtestcases: [],
+    labratoryRequests: [],
+    singleLabratoryRequests: [],
   },
   mutations: {
     setRegisterLab(state, payload) {
@@ -40,6 +42,14 @@ export default {
 
     setTestCaseByGroup(state, payload) {
       state.labtestcases = payload;
+    },
+
+    setLabrtoryRequest(state, payload) {
+      state.labratoryRequests = payload;
+    },
+
+    setSingleLabrtoryRequest(state, payload) {
+      state.singleLabratoryRequests = payload;
     },
   },
 
@@ -77,6 +87,16 @@ export default {
     async getTestCaseByGroup({ commit }, groupid) {
       let res = await api.get(path.lab_test_case_by_gruop, groupid);
       commit("setTestCaseByGroup", res.data);
+    },
+
+    async getLabrtoryRequest({ commit }) {
+      let res = await api.getAll(path.all_lab_test_case_request);
+      commit("setLabrtoryRequest", res.data);
+    },
+
+    async getSingleLabrtoryRequest({ commit }, service_id) {
+      let res = await api.get(path.single_lab_test_case_request, service_id);
+      commit("setSingleLabrtoryRequest", res.data);
     },
   },
 };

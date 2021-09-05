@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <h3>Labratory Request</h3>
-    {{ singleLabratoryRequests }}
+    {{ labtestResult }}
     <v-data-table
       :items="labratoryRequests"
       :headers="labRequestHeaders"
@@ -9,7 +9,7 @@
     >
       <template v-slot:item.action="{ item }">
         <Edit
-          @click="editLabrtoryResult(item.service_id, item.patient)"
+          @click="editLabrtoryResult(item.service_id, item.id, item.patient)"
           class="icon"
         />
       </template>
@@ -125,9 +125,12 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
+      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+
       inputRules: [(v) => !!v || "This field is required"],
       labtestResult: [],
       selectedResult: {},
+      selectedId: "",
 
       checkboxWhole: {},
       search: "",
@@ -156,6 +159,7 @@ export default {
     ...mapState("medicalService", [
       "labratoryRequests",
       "singleLabratoryRequests",
+      "insertedLabRequestResult",
     ]),
   },
 
@@ -163,6 +167,8 @@ export default {
     ...mapActions("medicalService", [
       "getLabrtoryRequest",
       "getSingleLabrtoryRequest",
+      "insertLabRequestResult",
+      "insertLabRequestResultOutsource",
     ]),
 
     async loadData() {
@@ -171,7 +177,34 @@ export default {
 
     async saveResult() {
       if (this.$refs.saveResult.validate()) {
-        alert("All input data id corrct");
+        let haveR = [];
+        let haveNR = [];
+
+        for (let i = 0; i < this.labtestResult.length; i++)
+          if (this.labtestResult[i].result === "")
+            haveNR.push({ id: this.labtestResult[i].id, reason: "" });
+          else haveR.push(this.labtestResult[i]);
+
+        for (let i = 0; i < this.haveR.length; i++) {
+          this.haveR[i].examined_by = this.login_user.id;
+          await this.insertLabRequestResult(this.haveR[i]);
+        }
+
+        if (this.insertedLabRequestResult === true) {
+          await this.insertLabRequestResultOutsource({
+            user_id: this.login_user.id,
+            id: this.selectedId,
+            cases: haveNR,
+          });
+          this.enterLabResultDialog = false;
+          this.loadData();
+        } else
+          this.$fire({
+            title: "Inseert Labtest Case",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
 
@@ -185,7 +218,8 @@ export default {
       this.checkboxWhole = temp;
     },
 
-    async editLabrtoryResult(service_id, selectedResult) {
+    async editLabrtoryResult(service_id, id, selectedResult) {
+      this.selectedId = id;
       this.selectedResult = selectedResult;
       this.enterLabResultDialog = true;
       await this.getSingleLabrtoryRequest(service_id);

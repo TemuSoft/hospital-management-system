@@ -78,6 +78,7 @@
                 <v-text-field
                   dense
                   outlined
+                  :rules="inputRules"
                   v-model="depertmentInfo.description"
                 ></v-text-field>
               </v-flex>
@@ -142,6 +143,7 @@
                 <v-text-field
                   dense
                   outlined
+                  :rules="inputRules"
                   v-model="updateDepertmentInfo.description"
                 ></v-text-field>
               </v-flex>
@@ -177,6 +179,7 @@ import Delete from "@/assets/icons/delete.svg";
 export default {
   data() {
     return {
+      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
       registerDepaDialog: false,
       updateDepaDialog: false,
       depertmentInfo: {},
@@ -219,12 +222,12 @@ export default {
     ]),
 
     async loadData() {
-      this.depertmentInfo.created_by = "Temesgen";
       await this.getDepartmentList();
     },
 
     async save() {
       if (this.$refs.form.validate()) {
+        this.depertmentInfo.created_by = this.login_user.id;
         await this.registerDepartment(this.depertmentInfo);
 
         if (this.registeredDeprtment === true) {

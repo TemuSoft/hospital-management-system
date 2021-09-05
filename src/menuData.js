@@ -81,6 +81,12 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
+        title: "Labratory Result",
+        route: "labratoryResult",
+        icon: "labratoryResult",
+        allowedRoles: ["admin", "others"],
+      },
+      {
         title: "Imaging Test",
         route: "imagingTest",
         icon: "imagingTest",

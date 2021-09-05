@@ -80,26 +80,6 @@
         </v-data-table>
       </v-card>
     </v-tabs-items>
-
-    <v-card>
-      <v-tabs vertical>
-        <v-tabs-slider color="yellow"></v-tabs-slider>
-        <div v-for="(info, i) in mainInfoTab" :key="i">
-          <v-tab
-            @click.stop="loadTab(mainInfoTab[i].value)"
-            class="text-capitalize"
-          >
-            {{ mainInfoTab[i].text }}
-          </v-tab>
-        </div>
-        <v-tabs-items style="margin-left: 3%">
-          <LabratoryOrder v-if="selectedTab === 1" />
-          <ImagingOrder v-else-if="selectedTab === 2" />
-          <VitalSign v-else-if="selectedTab === 3" />
-          <Appointment v-else-if="selectedTab === 4" />
-        </v-tabs-items>
-      </v-tabs>
-    </v-card>
   </div>
 </template>
 
@@ -107,16 +87,9 @@
 import { mapActions, mapState } from "vuex";
 import Detail from "@/assets/icons/eye.svg";
 
-//Main infromation about patient controler
-import LabratoryOrder from "../nurseOPD/labratoryOrder.vue";
-import ImagingOrder from "../nurseOPD/imagingOrder.vue";
-import Appointment from "../nurseOPD/appointement.vue";
-import VitalSign from "../nurseOPD/vitalSign.vue";
-
 export default {
   data() {
     return {
-      selectedTab: 1,
       search: "",
       tab: null,
       tabPatient: null,
@@ -132,18 +105,6 @@ export default {
         { text: "Is Emergency?", value: "is_emergency" },
         { text: "Action", value: "action" },
       ],
-      mainInfoTab: [
-        { text: "Labratory Order", value: 1 },
-        { text: "Imaging Order", value: 2 },
-        { text: "Vital Sign", value: 3 },
-        { text: "Apponintment", value: 4 },
-        { text: "Prescription", value: 5 },
-        { text: "Mediacal History", value: 6 },
-        { text: "Referal", value: 7 },
-        { text: "Medical Certeficate", value: 8 },
-        { text: "Material Request", value: 9 },
-        { text: "Vital Certeficate", value: 10 },
-      ],
     };
   },
   created() {
@@ -152,10 +113,6 @@ export default {
 
   components: {
     Detail,
-    LabratoryOrder,
-    ImagingOrder,
-    VitalSign,
-    Appointment,
   },
 
   computed: {
@@ -206,10 +163,6 @@ export default {
         service_id: item.service_id,
       });
       await this.loadData();
-    },
-
-    async loadTab(i) {
-      this.selectedTab = i;
     },
   },
 };

@@ -356,6 +356,7 @@ import Payment from "@/assets/icons/payment.svg";
 export default {
   data() {
     return {
+      login_user: { id: 2, name: "Temesgen Kefie", role: "Nurse" },
       assignRoom: {},
       selectedPatinet: {},
       tab: null,
@@ -447,7 +448,7 @@ export default {
     async assignRoomSave() {
       if (this.$refs.assignRoomSave.validate()) {
         this.assignRoom.patient_id = this.selectedPatinet.id;
-        this.assignRoom.reception_user_id = 1;
+        this.assignRoom.reception_user_id = this.login_user.id;
         await this.assignPatientRoomRequest(this.assignRoom);
 
         if (this.assignedPatientRoomRequest.status === 1) {

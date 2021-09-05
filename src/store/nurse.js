@@ -84,13 +84,13 @@ export default {
     },
 
     async patientVitalSignsRegisteration({ commit }, data) {
+      console.log(data);
       await api.create(path.patient_vital_sign, data);
       commit;
     },
 
     async getPatientVitalSigns({ commit }, service_id) {
       let res = await api.get(path.patient_vital_sign_read, service_id);
-      console.log(res.data);
       commit("setPatientVitalSigns", res.data);
     },
   },

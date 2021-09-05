@@ -30,7 +30,7 @@ export default {
 
   actions: {
     async registerPatient({ commit }, data) {
-      let res = await api.create(path.register_atient, data);
+      let res = await api.create(path.register_patient, data);
 
       commit("setRegisterPatient", res.data);
     },

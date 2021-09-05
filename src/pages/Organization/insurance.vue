@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h2>Insurane</h2>
+    <h2>Insurance</h2>
     <br />
 
     <v-data-table :headers="headers" :items="insuranes" :search="search">
@@ -34,7 +34,7 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="updateInsuranceDialog" persistent width="700px">
+    <v-dialog v-model="registerInsuranceDialog" persistent width="700px">
       <v-card>
         <v-toolbar color="green" dark>Add New Insurane </v-toolbar>
         <br />
@@ -62,7 +62,7 @@
                   :items="statusList"
                   outlined
                   item-text="name"
-                  item-id="value"
+                  item-value="value"
                   :rules="inputRules"
                   v-model="insuranceInfo.status"
                 ></v-autocomplete>
@@ -121,7 +121,7 @@
                   outlined
                   :rules="inputRules"
                   item-text="name"
-                  item-id="value"
+                  item-value="value"
                   v-model="insuranceInfo.status"
                 ></v-autocomplete>
               </v-flex>
@@ -169,7 +169,6 @@ export default {
         { name: "Not Active", value: 0 },
       ],
       headers: [
-        { text: "ID", value: "id" },
         { text: "Partner Name", value: "name" },
         { text: "Description", value: "description" },
         { text: "Status", value: "status" },

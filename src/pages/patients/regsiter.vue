@@ -191,8 +191,10 @@ export default {
     async save() {
       if (this.$refs.form.validate()) {
         await this.registerPatient(this.patientInfo);
-        if (this.registeredPatient === true) this.patientInfo = {};
-        else
+        if (this.registeredPatient === true) {
+          this.patientInfo = {};
+          this.$router.push({ name: "patinets" });
+        } else
           this.$fire({
             title: "Patient Registeration",
             text: "Something wrong please try again!!!",

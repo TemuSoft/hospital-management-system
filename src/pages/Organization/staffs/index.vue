@@ -4,7 +4,7 @@
       <h2>Staff</h2>
       <br />
 
-      <v-data-table dense :headers="headers" :items="staffs" :search="search">
+      <v-data-table :headers="headers" :items="staffs" :search="search">
         <template v-slot:item.action="{ item }">
           <Edit @click="editStaff(item)" class="icon" />
           &nbsp;&nbsp;&nbsp;
@@ -17,8 +17,10 @@
             <v-spacer></v-spacer>
             <v-autocomplete
               dense
-              :items="positionList"
+              :items="departments"
               label="Positions"
+              item-text="name"
+              item-value="id"
             ></v-autocomplete>
             <v-spacer></v-spacer>
             <v-text-field
@@ -67,15 +69,6 @@ export default {
         { text: "Active?", value: "is_active" },
         { text: "Action", value: "action" },
       ],
-      positionList: [
-        { name: "Adminstrator", value: 1 },
-        { name: "Human Resource", value: 2 },
-        { name: "Labratory", value: 3 },
-        { name: "OPD", value: 4 },
-        { name: "Medical Directors", value: 5 },
-        { name: "Nurse and Pharmacy", value: 6 },
-        { name: "Store", value: 7 },
-      ],
     };
   },
 
@@ -90,14 +83,16 @@ export default {
 
   computed: {
     ...mapState("staff", ["staffs"]),
+    ...mapState("department", ["departments"]),
   },
 
   methods: {
     ...mapActions("staff", ["getStaffList", "getStaffListFilter"]),
+    ...mapActions("department", ["getDepartmentList"]),
 
     async loadData() {
       await this.getStaffList();
-
+      await this.getDepartmentList();
       // await this.getStaffListFilter({ key: "email", value: "email" });
     },
 

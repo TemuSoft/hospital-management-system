@@ -113,6 +113,39 @@
         </v-flex>
       </v-layout>
 
+      <v-divider />
+
+      <v-card>
+        <v-tabs vertical>
+          <v-tabs-slider color="yellow"></v-tabs-slider>
+          <div v-for="(info, i) in mainInfoTab" :key="i">
+            <v-tab
+              @click.stop="loadTab(mainInfoTab[i].value)"
+              class="text-capitalize"
+            >
+              {{ mainInfoTab[i].text }}
+            </v-tab>
+          </div>
+          <v-tabs-items style="margin-left: 3%">
+            <br />
+            <LabratoryOrder v-if="selectedTab === 1" :service_id="service_id" />
+            <ImagingOrder
+              v-else-if="selectedTab === 2"
+              :service_id="service_id"
+            />
+            <VitalSign v-else-if="selectedTab === 3" :service_id="service_id" />
+            <Appointment
+              v-else-if="selectedTab === 4"
+              :service_id="service_id"
+            />
+            <Prescription
+              v-else-if="selectedTab === 5"
+              :service_id="service_id"
+            />
+          </v-tabs-items>
+        </v-tabs>
+      </v-card>
+
       <v-dialog persistent width="700px" v-model="registerVitalSignDialog">
         <v-card flat>
           <v-toolbar color="green" dense>
@@ -223,6 +256,13 @@ import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
 import Close from "@/assets/icons/close.svg";
 
+//Main infromation about patient controler
+import LabratoryOrder from "../nurseOPD/labratoryOrder.vue";
+import ImagingOrder from "../nurseOPD/imagingOrder.vue";
+import Appointment from "../nurseOPD/appointement.vue";
+import VitalSign from "../nurseOPD/vitalSign.vue";
+import Prescription from "../nurseOPD/prescription.vue";
+
 export default {
   data() {
     return {
@@ -232,17 +272,38 @@ export default {
       update: false,
       register: false,
       registerVitalSignDialog: false,
+      editPatientVitalSignDialog: false,
       vitalSignHeaders: [
         { text: "Vital Sign Name", value: "name" },
         { text: "Description", value: "description" },
         { text: "Action", value: "action" },
       ],
       inputRules: [(v) => !!v || "This field is required"],
+      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+
+      selectedTab: 1,
+      mainInfoTab: [
+        { text: "Labratory Order", value: 1 },
+        { text: "Imaging Order", value: 2 },
+        { text: "Vital Sign", value: 3 },
+        { text: "Apponintment", value: 4 },
+        { text: "Prescription", value: 5 },
+        { text: "Mediacal History", value: 6 },
+        { text: "Referal", value: 7 },
+        { text: "Medical Certeficate", value: 8 },
+        { text: "Material Request", value: 9 },
+        { text: "Vital Certeficate", value: 10 },
+      ],
     };
   },
   components: {
     Edit,
     Close,
+    LabratoryOrder,
+    ImagingOrder,
+    VitalSign,
+    Appointment,
+    Prescription,
   },
 
   created() {
@@ -258,11 +319,20 @@ export default {
   },
 
   methods: {
-    ...mapActions("nurse", ["registerVitalSign", "updateVitalSign"]),
+    ...mapActions("nurse", [
+      "getVitalSignsList",
+      "registerVitalSign",
+      "updateVitalSign",
+    ]),
     ...mapActions("patient", ["singlePatientInfo"]),
 
     async loadData() {
+      await this.getVitalSignsList();
       await this.singlePatientInfo(this.patientId);
+    },
+
+    async loadTab(i) {
+      this.selectedTab = i;
     },
 
     async save() {

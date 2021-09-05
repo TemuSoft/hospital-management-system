@@ -11,6 +11,7 @@ export default {
     registeredImaging: false,
     labTestList: [],
     imagingTestList: [],
+    labtestcases: [],
   },
   mutations: {
     setRegisterLab(state, payload) {
@@ -35,6 +36,10 @@ export default {
 
     setImagingTestList(state, payload) {
       state.imagingTestList = payload;
+    },
+
+    setTestCaseByGroup(state, payload) {
+      state.labtestcases = payload;
     },
   },
 
@@ -67,6 +72,11 @@ export default {
     async getImagingTestList({ commit }) {
       let res = await api.getAll(path.register_imaging);
       commit("setImagingTestList", res.data);
+    },
+
+    async getTestCaseByGroup({ commit }, groupid) {
+      let res = await api.get(path.lab_test_case_by_gruop, groupid);
+      commit("setTestCaseByGroup", res.data);
     },
   },
 };

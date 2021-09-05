@@ -114,7 +114,7 @@ export default {
     },
 
     async insertLabRequestResultOutsource({ commit }, data) {
-      await api.create(path.register_outsourced_let_case, data);
+      await api.create(path.register_outsourced_test_case, data);
       commit;
     },
   },

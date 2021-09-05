@@ -15,6 +15,7 @@ import measurement from "./measurement";
 import room from "./room";
 import nurse from "./nurse";
 import mainPatientInfoManager from "./mainPatientInfoManager";
+import appointment from "./appointment";
 
 Vue.use(Vuex);
 
@@ -48,5 +49,6 @@ export default new Vuex.Store({
     room,
     nurse,
     mainPatientInfoManager,
+    appointment,
   },
 });

@@ -30,91 +30,107 @@
         <v-btn small @click="registerAppoDialog = true">Add New</v-btn>
       </v-layout>
       <br />
-
+      {{ singleAppointment }}
       <v-data-table
         :search="search"
-        :items="dataList"
+        :items="singleAppointment"
         :headers="headers"
-      ></v-data-table>
+      >
+        <template v-slot:item.date="{ item }">
+          {{ item.date }} , {{ item.time }}
+        </template>
+      </v-data-table>
     </v-card>
 
     <v-dialog v-model="registerAppoDialog" persistent width="700px">
       <v-card>
-        <v-toolbar color="green" dark>Register New Appointment </v-toolbar>
+        <v-toolbar dense color="green" dark>
+          Register New Appointment
+        </v-toolbar>
         <br />
         <v-card-text>
-          <v-layout>
-            <v-flex xs12 sm6>
-              <v-autocomplete
-                outlined
-                dense
-                :items="positionList"
-                label="Patient"
-                v-model="item.patient"
-              ></v-autocomplete>
-            </v-flex>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <v-flex xs12 sm6>
-              <v-autocomplete
-                outlined
-                dense
-                :items="positionList"
-                label="Department"
-                v-model="item.department"
-              ></v-autocomplete>
-            </v-flex>
-          </v-layout>
+          <v-form @submit.prevent="save" ref="save">
+            <v-layout>
+              <v-flex xs12 sm6>
+                <v-text-field
+                  outlined
+                  dense
+                  label="Patient"
+                  v-model="appointmentInfo.patient_id"
+                />
+              </v-flex>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <v-flex xs12 sm6>
+                <v-autocomplete
+                  outlined
+                  dense
+                  item-text="name"
+                  item-value="id"
+                  :rules="inputRules"
+                  :items="departments"
+                  label="Department"
+                  @change="staffInDepertment($event)"
+                />
+              </v-flex>
+            </v-layout>
 
-          <v-layout>
-            <v-flex xs12 sm6>
-              <v-text-field
-                label="Date"
-                dense
-                outlined
-                v-model="item.date"
-              ></v-text-field>
-            </v-flex>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <v-flex xs12 sm6>
-              <v-text-field
-                label="Time"
-                type="time"
-                dense
-                outlined
-                v-model="item.time"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
+            <v-layout>
+              <v-flex xs12 sm6>
+                <v-text-field
+                  label="Date"
+                  dense
+                  type="date"
+                  :rules="inputRules"
+                  outlined
+                  v-model="appointmentInfo.date"
+                />
+              </v-flex>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <v-flex xs12 sm6>
+                <v-text-field
+                  label="Time"
+                  type="time"
+                  :rules="inputRules"
+                  dense
+                  outlined
+                  v-model="appointmentInfo.time"
+                />
+              </v-flex>
+            </v-layout>
 
-          <v-layout>
-            <v-flex xs12 sm6>
-              <v-autocomplete
-                outlined
-                dense
-                :items="positionList"
-                label="Doctor"
-                v-model="item.doctor"
-              ></v-autocomplete>
-            </v-flex>
-          </v-layout>
+            <v-layout>
+              <v-flex xs12 sm6>
+                <v-autocomplete
+                  outlined
+                  dense
+                  item-text="first_name"
+                  item-value="id"
+                  :items="staffInDepartent"
+                  label="Staff"
+                  v-model="appointmentInfo.setted_to_user"
+                />
+              </v-flex>
+            </v-layout>
 
-          <v-layout>
-            <v-flex xs12 sm12>
-              <v-text-field
-                label="Reason / Description"
-                dense
-                outlined
-                v-model="item.description"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
+            <v-layout>
+              <v-flex xs12 sm12>
+                <v-text-field
+                  label="Reason / Description"
+                  dense
+                  outlined
+                  :rules="inputRules"
+                  v-model="appointmentInfo.description"
+                />
+              </v-flex>
+            </v-layout>
 
-          <v-layout>
-            <v-spacer></v-spacer>
-            <v-btn small @click="registerAppoDialog = false">Cancel</v-btn>
-            <v-spacer></v-spacer>
-            <v-btn small @click="save()">Save</v-btn>
-          </v-layout>
+            <v-layout>
+              <v-spacer></v-spacer>
+              <v-btn small @click="registerAppoDialog = false">Cancel</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn small @click="save()">Save</v-btn>
+            </v-layout>
+          </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -122,29 +138,84 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
-  components: {},
-  data: () => ({
-    registerAppoDialog: false,
-    search: "",
-    dataList: [],
-    item: [],
-    assignedType: ["Assigned", "Not Assigned"],
-    statusType: ["Active", "Not Active"],
-    headers: [
-      { text: "No", value: "no" },
-      { text: "Patient Detail", value: "patientDetail" },
-      { text: "Date a& Time", value: "dateTime" },
-      { text: "Department", value: "department" },
-      { text: "Doctor", value: "doctor" },
-      { text: "Reason", value: "reason" },
-      { text: "Status", value: "status" },
-      { text: "Action", value: "action" },
-    ],
-  }),
-  created() {},
+  data() {
+    return {
+      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      inputRules: [(v) => !!v || "This field is required"],
 
-  computed: {},
+      registerAppoDialog: false,
+      search: "",
+      appointmentInfo: {},
+      assignedType: ["Assigned", "Not Assigned"],
+      statusType: ["Active", "Not Active"],
+      headers: [
+        { text: "Card Number ", value: "card_number" },
+        { text: "Patient Detail", value: "patientDetail" },
+        { text: "Date a& Time", value: "date" },
+        { text: "Seated By", value: "setted_by" },
+        { text: "Staff", value: "user" },
+        { text: "Reason", value: "reason" },
+        { text: "Status", value: "status" },
+        { text: "Action", value: "action" },
+      ],
+    };
+  },
+
+  components: {},
+
+  created() {
+    this.loadData();
+  },
+
+  computed: {
+    ...mapState("department", ["departments", "staffInDepartent"]),
+    ...mapState("appointment", [
+      "appointmentLists",
+      "singleAppointment",
+      "makedAppointment",
+    ]),
+  },
+
+  methods: {
+    ...mapActions("patient", ["getPatientList"]),
+    ...mapActions("department", ["getDepartmentList", "getStaffsInDepartment"]),
+    ...mapActions("appointment", [
+      "getAppointmentList",
+      "getSingleAppointment",
+      "makeAppointment",
+    ]),
+
+    async loadData() {
+      await this.getPatientList();
+      await this.getDepartmentList();
+      // await this.getAppointmentList();
+      await this.getSingleAppointment(1);
+    },
+
+    async save() {
+      if (this.$refs.save.validate()) {
+        this.appointmentInfo.user_id = this.login_user.id;
+        await this.makeAppointment(this.appointmentInfo);
+
+        if (this.makedAppointment == true) {
+          this.registerAppoDialog = false;
+          this.loadData();
+        } else
+          this.$fire({
+            title: "Make Appointment!",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
+      }
+    },
+
+    async staffInDepertment(id) {
+      await this.getStaffsInDepartment(id);
+    },
+  },
 };
 </script>
 

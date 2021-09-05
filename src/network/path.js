@@ -29,6 +29,7 @@ const path = {
   all_lab_test_case_request: "/lab/lab_test_request",
   single_lab_test_case_request: "/lab/lab_test_history_data",
   updatae_lab_test_case_request: "/lab/enter_lab_test_history_detail",
+  register_outsourced_test_case: "/lab/outsource_lab_test",
   measurement: "/common/measurement",
   assing_patient_room: "/",
 
@@ -45,6 +46,9 @@ const path = {
   update_vital_sign: "/nurse/vital_sign_update",
   patient_vital_sign: "/nurse/patient_vital_sign",
   patient_vital_sign_read: "/nurse/patient_vital_sign_read",
+
+  make_appointemtn: "/common/appointment",
+  single_make_appointemtn: "/common/read_user_appointment",
 
   logout: "/user/logout",
   login: "/user/login",

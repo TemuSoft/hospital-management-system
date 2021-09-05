@@ -50,37 +50,6 @@
             </v-layout>
             <br />
 
-            <v-card flat v-if="Object.keys(this.checkboxWhole).length > 0">
-              <h2>Referral Information</h2>
-              <v-layout>
-                <v-text-field
-                  v-model="referTo"
-                  dense
-                  outlined
-                  label="Refer To"
-                  :rules="inputRules"
-                />
-                <v-spacer />
-
-                <v-text-field
-                  v-model="referalAddress"
-                  dense
-                  outlined
-                  label="Referral Address"
-                  :rules="inputRules"
-                />
-                <v-spacer />
-
-                <v-text-field
-                  v-model="referralCity"
-                  dense
-                  outlined
-                  label="Referral City"
-                  :rules="inputRules"
-                />
-              </v-layout>
-            </v-card>
-
             <br />
             <v-layout>
               <table>

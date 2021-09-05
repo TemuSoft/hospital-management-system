@@ -29,6 +29,7 @@ const path = {
   all_lab_test_case_request: "/lab/lab_test_request",
   single_lab_test_case_request: "/lab/lab_test_history_data",
   updatae_lab_test_case_request: "/lab/enter_lab_test_history_detail",
+  register_outsourced_test_case: "/lab/outsource_lab_test",
   measurement: "/common/measurement",
   assing_patient_room: "/",
 

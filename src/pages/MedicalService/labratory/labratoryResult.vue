@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <h3>Labratory Request</h3>
-    {{ labtestResult }}
+
     <v-data-table
       :items="labratoryRequests"
       :headers="labRequestHeaders"
@@ -180,14 +180,15 @@ export default {
         let haveR = [];
         let haveNR = [];
 
-        for (let i = 0; i < this.labtestResult.length; i++)
+        for (let i = 0; i < this.labtestResult.length; i++) {
+          delete this.labtestResult[i].datetime;
           if (this.labtestResult[i].result === "")
             haveNR.push({ id: this.labtestResult[i].id, reason: "" });
           else haveR.push(this.labtestResult[i]);
-
-        for (let i = 0; i < this.haveR.length; i++) {
-          this.haveR[i].examined_by = this.login_user.id;
-          await this.insertLabRequestResult(this.haveR[i]);
+        }
+        for (let i = 0; i < haveR.length; i++) {
+          haveR[i].examined_by = this.login_user.id;
+          await this.insertLabRequestResult(haveR[i]);
         }
 
         if (this.insertedLabRequestResult === true) {
@@ -200,7 +201,7 @@ export default {
           this.loadData();
         } else
           this.$fire({
-            title: "Inseert Labtest Case",
+            title: "Inseert Lab Test Case",
             text: "Something wrong please try again!!!",
             type: "error",
             timer: 7000,

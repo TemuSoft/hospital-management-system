@@ -12,6 +12,8 @@ import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
 import medicine from "../pages/Inventory/Pharmacy/medicine.vue";
 import labratoryTest from "../pages/MedicalService/labratory/labratoryTest.vue";
 import labratoryReport from "../pages/MedicalService/labratory/labratoryReport.vue";
+import labratoryResult from "../pages/MedicalService/labratory/labratoryResult.vue";
+
 import imagingTest from "../pages/MedicalService/imaging/imagingTest.vue";
 import imagingReport from "../pages/MedicalService/imaging/imagingReport.vue";
 import departments from "../pages/Organization/departments.vue";
@@ -78,6 +80,11 @@ const routes = [
     path: "/imagingReport",
     name: "imagingReport",
     component: imagingReport,
+  },
+  {
+    path: "/patinet/labratoryResult",
+    name: "labratoryResult",
+    component: labratoryResult,
   },
   {
     path: "/labratoryReport",

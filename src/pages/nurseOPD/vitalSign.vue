@@ -35,11 +35,7 @@
         </v-layout>
       </v-form>
 
-      <v-data-table
-        :items="patientVitalSigns"
-        :headers="patientVSHeaders"
-        :search="search"
-      >
+      <v-data-table :items="patientVitalSigns" :headers="patientVSHeaders">
         <template v-slot:item.action="{ item }">
           <Edit class="icon" @click="editPatientVitalSign(item)" />
         </template>
@@ -54,10 +50,12 @@ import Edit from "@/assets/icons/edit.svg";
 // import Close from "@/assets/icons/close.svg";
 
 export default {
+  props: ["service_id"],
   data() {
     return {
       login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
 
+      inputRules: [(v) => !!v || "This field is required"],
       patientVitalSignInfo: {},
       patientVSHeaders: [
         { text: "Vistal Name", value: "vital_sign.name" },
@@ -96,7 +94,7 @@ export default {
         this.patientVitalSignInfo.service_id = this.service_id;
         this.patientVitalSignInfo.user_id = this.login_user.id;
         await this.patientVitalSignsRegisteration(this.patientVitalSignInfo);
-        await this.getPatientVitalSigns(this.service_id);
+        await this.loadData();
       }
     },
 

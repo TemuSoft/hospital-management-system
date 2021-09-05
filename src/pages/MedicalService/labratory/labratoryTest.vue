@@ -231,8 +231,6 @@ export default {
     ]),
 
     async loadData() {
-      this.labgroupInfo.created_by = "Temesegn";
-      this.testInfo.created_by = "Temesgen";
       await this.getLabratoryGroup();
       await this.getLabTestList();
     },

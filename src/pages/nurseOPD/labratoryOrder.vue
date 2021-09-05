@@ -6,19 +6,19 @@
     <v-layout>
       <v-autocomplete
         label="Labratory Group"
-        :items="labTestCasesGroup"
+        :items="labratoryGroup"
         item-text="title"
         item-value="id"
         outlined
         dense
-        @click="loadTestCaseByGroup($event)"
+        @change="loadTestCaseByGroup($event)"
         chips
       />
       <v-spacer />
 
-      <v-autocomplete
+      <v-combobox
         label="Lab Test Case"
-        :items="labTestCases"
+        :items="labtestcases"
         item-text="title"
         item-value="id"
         outlined
@@ -45,13 +45,27 @@
     </v-layout>
 
     <v-data-table
-      :items="patientLabTestCasesData"
+      :items="patientLabTestCasesData.data"
       :search="search"
-      :headers="headersLabTestCase"
+      :headers="headersTestCase"
     >
+      <template v-slot:item.number="{ item }">
+        {{ patientLabTestCasesData.data.indexOf(item) + 1 }}
+      </template>
+
+      <template v-slot:item.status="{ item }">
+        <v-chip v-if="item.status === 0" color="yellow">Pendding</v-chip>
+        <v-chip v-else-if="item.status === 1" color="green">Done</v-chip>
+        <v-chip v-else color="blue">Outsourced</v-chip>
+      </template>
+
       <template v-slot:item.action="{ item }">
         <Edit class="icon" @click="editPatientTestCase(item)" />
-        <Delete class="icon" @click="deletePatientTestCase(item)" />
+        <Delete
+          style="margin-left: 20px"
+          class="icon"
+          @click="deletePatientTestCase(item)"
+        />
       </template>
     </v-data-table>
   </v-card>
@@ -63,15 +77,16 @@ import Delete from "@/assets/icons/delete.svg";
 import { mapActions, mapState } from "vuex";
 
 export default {
+  props: ["service_id"],
   data() {
     return {
+      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+
       headersTestCase: [
-        { text: "Number", value: "no" },
-        { text: "Group", value: "group" },
-        { text: "Test Case", value: "title" },
+        { text: "Number", value: "number" },
+        { text: "Test Case", value: "test_case_name" },
         { text: "Result", value: "result" },
         { text: "Status", value: "status" },
-        { text: "Result From", value: "result_from" },
         { text: "Action", value: "action" },
       ],
       selectedTestCaseToResgister: [],
@@ -83,18 +98,44 @@ export default {
     Delete,
   },
 
+  created() {
+    this.loadData();
+  },
+
   computed: {
+    ...mapState("medicalService", ["labratoryGroup", "labtestcases", ""]),
     ...mapState("mainPatientInfoManager", ["patientLabTestCasesData"]),
   },
 
   methods: {
+    ...mapActions("medicalService", [
+      "getLabratoryGroup",
+      "getTestCaseByGroup",
+    ]),
     ...mapActions("mainPatientInfoManager", [
       "registerPatientLabTestCase",
       "getPatientLabTestCase",
     ]),
 
+    async loadData() {
+      await this.getLabratoryGroup();
+      await this.getPatientLabTestCase(this.service_id);
+    },
+
     async sendTestCases() {
-      alert(this.selectedTestCaseToResgister.length + " Test Case");
+      let cases = [];
+      for (let i = 0; i < this.selectedTestCaseToResgister.length; i++)
+        cases.push(this.selectedTestCaseToResgister[i].id);
+      let data = {
+        data: {
+          service_id: this.service_id,
+          user_id: this.login_user.id,
+        },
+        cases: cases,
+      };
+
+      await this.registerPatientLabTestCase(data);
+      await this.getPatientLabTestCase(this.service_id);
     },
 
     async editPatientTextCase(item) {
@@ -106,10 +147,14 @@ export default {
     },
 
     async loadTestCaseByGroup(id) {
-      alert("Lab group id " + id);
+      await this.getTestCaseByGroup(id);
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.icon {
+  cursor: pointer;
+}
+</style>

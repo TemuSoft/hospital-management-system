@@ -22,7 +22,10 @@ const path = {
   update_lab_group: "/lab/update_lab_test_group",
   lab_group: "/lab_group",
   lab_test_case: "/lab/lab_test_case",
+  lab_test_case_by_gruop: "/lab/lab_test_case_in_group",
   update_lab_test_case: "/lab/update_lab_test_case",
+  patient_test_case: "/lab/lab_test_request",
+  get_patient_test_case: "/lab/lab_test_history_data",
   measurement: "/common/measurement",
   assing_patient_room: "/",
 

@@ -14,6 +14,7 @@ export default {
     labtestcases: [],
     labratoryRequests: [],
     singleLabratoryRequests: [],
+    insertedLabRequestResult: false,
   },
   mutations: {
     setRegisterLab(state, payload) {
@@ -50,6 +51,10 @@ export default {
 
     setSingleLabrtoryRequest(state, payload) {
       state.singleLabratoryRequests = payload;
+    },
+
+    setInsertLabRequestResult(state, payload) {
+      state.insertedLabRequestResult = payload;
     },
   },
 
@@ -97,6 +102,20 @@ export default {
     async getSingleLabrtoryRequest({ commit }, service_id) {
       let res = await api.get(path.single_lab_test_case_request, service_id);
       commit("setSingleLabrtoryRequest", res.data);
+    },
+
+    async insertLabRequestResult({ commit }, data) {
+      let res = await api.update(
+        path.updatae_lab_test_case_request,
+        data.id,
+        data
+      );
+      commit("setInsertLabRequestResult", res.data);
+    },
+
+    async insertLabRequestResultOutsource({ commit }, data) {
+      await api.create(path.register_outsourced_let_case, data);
+      commit;
     },
   },
 };

@@ -16,6 +16,8 @@ import labratoryResult from "../pages/MedicalService/labratory/labratoryResult.v
 
 import imagingTest from "../pages/MedicalService/imaging/imagingTest.vue";
 import imagingReport from "../pages/MedicalService/imaging/imagingReport.vue";
+import imagingResult from "../pages/MedicalService/imaging/imagingResult.vue";
+
 import departments from "../pages/Organization/departments.vue";
 import insurance from "../pages/Organization/insurance.vue";
 import insuranceDetail from "../pages/Organization/insuranceDetail.vue";
@@ -80,6 +82,11 @@ const routes = [
     path: "/imagingReport",
     name: "imagingReport",
     component: imagingReport,
+  },
+  {
+    path: "/patient/imagingResult",
+    name: "imagingResult",
+    component: imagingResult,
   },
   {
     path: "/patinet/labratoryResult",

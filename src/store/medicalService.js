@@ -10,11 +10,16 @@ export default {
     labratoryGroup: [],
     registeredImaging: false,
     labTestList: [],
-    imagingTestList: [],
+
     labtestcases: [],
     labratoryRequests: [],
     singleLabratoryRequests: [],
     insertedLabRequestResult: false,
+
+    imagingTestList: [],
+    imagingRequests: [],
+    singleImagingRequests: [],
+    insertedImagingRequestResult: [],
   },
   mutations: {
     setRegisterLab(state, payload) {
@@ -55,6 +60,18 @@ export default {
 
     setInsertLabRequestResult(state, payload) {
       state.insertedLabRequestResult = payload;
+    },
+
+    setImagingRequest(state, payload) {
+      state.imagingRequests = payload;
+    },
+
+    setSingleImagingRequest(state, payload) {
+      state.singleImagingRequests = payload;
+    },
+
+    setInsertImagingRequestResult(state, payload) {
+      state.insertImagingRequestResult = payload;
     },
   },
 
@@ -115,6 +132,33 @@ export default {
 
     async insertLabRequestResultOutsource({ commit }, data) {
       await api.create(path.register_outsourced_test_case, data);
+      commit;
+    },
+
+    async getImagingRequest({ commit }) {
+      let res = await api.getAll(path.all_imaging_test_case_request);
+      commit("setImagingRequest", res.data);
+    },
+
+    async getSingleImagingRequest({ commit }, service_id) {
+      let res = await api.get(
+        path.single_imaging_test_case_request,
+        service_id
+      );
+      commit("setSingleImagingRequest", res.data);
+    },
+
+    async insertImagingRequestResult({ commit }, data) {
+      let res = await api.update(
+        path.updatae_imaging_test_case_request,
+        data.id,
+        data
+      );
+      commit("setInsertImagingRequestResult", res.data);
+    },
+
+    async insertImagingRequestResultOutsource({ commit }, data) {
+      await api.create(path.register_outsourced_imaging_case, data);
       commit;
     },
   },

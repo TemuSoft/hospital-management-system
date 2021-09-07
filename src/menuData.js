@@ -92,6 +92,12 @@ const menusData = [
         icon: "imagingTest",
         allowedRoles: ["admin", "cutting-department"],
       },
+      {
+        title: "Imaging Result",
+        route: "imagingResult",
+        icon: "imagingResult",
+        allowedRoles: ["admin", "others"],
+      },
     ],
   },
   {

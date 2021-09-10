@@ -23,14 +23,26 @@ const core = {
   namespaced: true,
   state: {
     currentLanguage: "en",
+    activeUser: "",
   },
   mutations: {
     toggleLanguage(state) {
       state.currentLanguage = state.currentLanguage === "en" ? "am" : "en";
       i18n.locale = state.currentLanguage;
     },
+
+    setActiveUser(state, payload) {
+      state.activeUser = payload;
+    },
   },
-  action: {},
+  actions: {
+    getActiveUser({ commit }) {
+      localStorage.setItem("role", "temp");
+      let activeUser = localStorage.getItem("role");
+
+      commit("setActiveUser", activeUser);
+    },
+  },
 };
 
 export default new Vuex.Store({

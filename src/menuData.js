@@ -1,18 +1,18 @@
 const menusData = [
   {
     title: "Dashboard",
-    allowedRoles: ["admin", "cutting-department"],
+    allowedRoles: ["admin", "cutting-department", "temp"],
     route: "dashboard",
   },
   {
     title: "Patients",
-    allowedRoles: ["admin", "cutting-department"],
+    allowedRoles: ["admin", "cutting-department", "temp"],
     links: [
       {
         title: "Patients",
         route: "patinets",
         icon: "patinets",
-        allowedRoles: ["admin", "cutting-department"],
+        allowedRoles: ["admin", "cutting-department", "temp"],
       },
       {
         title: "Nurse",

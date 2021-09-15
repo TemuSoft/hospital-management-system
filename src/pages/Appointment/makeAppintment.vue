@@ -5,7 +5,7 @@
         Register New Appointment
         <v-spacer />
 
-        <Close class="icon" @click="registerAppoDialog = false" />
+        <Close class="icon" @click="dialogControl()" />
       </v-toolbar>
       <br />
       <v-card-text>
@@ -99,7 +99,7 @@ import { mapActions, mapState } from "vuex";
 import Close from "@/assets/icons/close.svg";
 
 export default {
-  props: ["appointmentInfo", "registerAppoDialog"],
+  props: ["appointmentInfo"],
   data() {
     return {
       login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
@@ -155,6 +155,10 @@ export default {
 
     async staffInDepertment(id) {
       await this.getStaffsInDepartment(id);
+    },
+
+    dialogControl() {
+      this.$emit("registerAppo", false);
     },
   },
 };

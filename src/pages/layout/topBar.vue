@@ -1,9 +1,10 @@
 <template>
   <div>
-    <v-app-bar app flat>
-      <div>::::: Hospital Managment System</div>
-
-      <v-spacer></v-spacer>
+    <v-app-bar dense app flat>
+      <div style="cursor: pointer" @click="manageNavDrawer()">
+        ::::: Hospital Managment System
+      </div>
+      <v-spacer />
 
       <v-switch
         label="አማርኛ"
@@ -38,12 +39,26 @@ export default {
   data() {
     return {};
   },
+
+  mounted() {
+    this.loadData();
+  },
+
   computed: {
-    ...mapState("core", ["currentLanguage"]),
+    ...mapState("core", ["currentLanguage", "navDrawerShow"]),
   },
 
   methods: {
+    ...mapMutations("core", ["setNavDrawerStauts"]),
     ...mapMutations("core", ["toggleLanguage"]),
+
+    async loadData() {
+      await this.setNavDrawerStauts(true);
+    },
+
+    async manageNavDrawer() {
+      await this.setNavDrawerStauts(!this.navDrawerShow);
+    },
 
     darkmode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;

@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer fixed class="navDrawerLeft" absolute expand-on-hover>
+  <v-navigation-drawer fixed absolute expand-on-hover v-show="navDrawerShow">
     <perfect-scrollbar style="overflow: hidden">
       <v-list class="profile">
         <v-list-item class="px-2">
@@ -91,7 +91,7 @@ export default {
   },
 
   computed: {
-    ...mapState("core", ["activeUser"]),
+    ...mapState("core", ["activeUser", "navDrawerShow"]),
   },
 
   methods: {
@@ -106,6 +106,8 @@ export default {
 
       if (rols.indexOf(this.activeUser) > -1) validated = true;
       else validated = false;
+
+      validated = true;
 
       return validated;
     },

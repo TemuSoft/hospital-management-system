@@ -1,7 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import finacedashboard from "../pages/Dashboard/index.vue";
+import dashboard from "../pages/Dashboard/index.vue";
+import financedashboard from "../pages/Dashboard/finance.vue";
 
 import regsiterPatinet from "../pages/patients/regsiter.vue";
 import patinetList from "../pages/patients/patinetList.vue";
@@ -9,6 +10,9 @@ import patientDetail from "../pages/patients/patientDetail.vue";
 import appointments from "../pages/Appointment/index.vue";
 import opd from "../pages/patients/opd.vue";
 import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
+import prescription from "../pages/Inventory/Pharmacy/prescription.vue";
+import prescriptionDetail from "../pages/Inventory/Pharmacy/prescriptionDetail.vue";
+
 import medicine from "../pages/Inventory/Pharmacy/medicine.vue";
 import labratoryTest from "../pages/MedicalService/labratory/labratoryTest.vue";
 import labratoryReport from "../pages/MedicalService/labratory/labratoryReport.vue";
@@ -57,6 +61,7 @@ Vue.use(VueRouter);
 
 const routes = [
   { path: "/logintry", name: "logintry", component: logintry },
+  { path: "/dashboard", name: "dashboard", component: dashboard },
   {
     path: "/regsiterPatinet",
     name: "regsiterPatinet",
@@ -67,6 +72,16 @@ const routes = [
   { path: "/appointments", name: "appointments", component: appointments },
   { path: "/opd", name: "opd", component: opd },
   { path: "/pharmacy", name: "pharmacy", component: pharmacy },
+  {
+    path: "/pharmacy/prescription",
+    name: "prescription",
+    component: prescription,
+  },
+  {
+    path: "pharmacy/prescription/Detail",
+    name: "prescriptionDetail",
+    component: prescriptionDetail,
+  },
   { path: "/medicine", name: "medicine", component: medicine },
   {
     path: "/imagingTest",
@@ -108,8 +123,8 @@ const routes = [
   { path: "/staffUpdate", name: "staffUpdate", component: staffUpdate },
   {
     path: "/finance/dashboard",
-    name: "finacedashboard",
-    component: finacedashboard,
+    name: "financedashboard",
+    component: financedashboard,
   },
   {
     path: "/payment",
@@ -209,6 +224,7 @@ const router = new VueRouter({
 
 export default router;
 
+/*
 router.beforeEach((to, from, next) => {
   const publicPages = ["/logintry"];
   const authRequired = !publicPages.includes(to.path);
@@ -220,3 +236,4 @@ router.beforeEach((to, from, next) => {
 
   next();
 });
+*/

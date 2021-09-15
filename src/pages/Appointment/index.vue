@@ -1,32 +1,29 @@
 <template>
   <div class="main">
     <h3>Appointment</h3>
+    <br />
+
     <v-card flat>
       <v-layout>
-        <v-spacer></v-spacer>
-        <v-spacer> </v-spacer
-        ><v-text-field
+        <v-text-field
           v-model="search"
           label="Enter search text ..."
           dense
           single-line
           hide-details
-        ></v-text-field>
-        <v-spacer></v-spacer>
-        <v-autocomplete
-          label="Assigned Type"
-          outlined
-          dense
-          :items="assignedType"
-        ></v-autocomplete>
-        <v-spacer></v-spacer>
+        />
+        <v-spacer />
+
         <v-autocomplete
           label="Status"
           outlined
           dense
           :items="statusType"
-        ></v-autocomplete>
-        <v-spacer></v-spacer>
+          item-text="text"
+          item-value="value"
+        />
+        <v-spacer />
+
         <v-btn small @click="registerAppoDialog = true" outlined color="green">
           Add New
         </v-btn>
@@ -60,7 +57,7 @@
     <v-dialog v-model="registerAppoDialog" persistent width="700px">
       <MakeAppointment
         :appointmentInfo="appointmentInfo"
-        :registerAppoDialog="registerAppoDialog"
+        @registerAppo="dialogControl($event)"
       />
     </v-dialog>
   </div>
@@ -77,7 +74,6 @@ export default {
       registerAppoDialog: false,
       search: "",
       appointmentInfo: {},
-      assignedType: ["Assigned", "Not Assigned"],
       headers: [
         { text: "Card Number ", value: "card_number" },
         { text: "Patient Detail", value: "patient_full_name" },
@@ -87,6 +83,11 @@ export default {
         { text: "Reason", value: "description" },
         { text: "Status", value: "status" },
         { text: "Action", value: "action" },
+      ],
+      statusType: [
+        { text: "Today", value: 1 },
+        { text: "Done", value: 2 },
+        { text: "Future", value: 3 },
       ],
     };
   },
@@ -122,6 +123,10 @@ export default {
 
     async cancelAppointment(item) {
       alert(item.id);
+    },
+
+    dialogControl(registerAppoDialog) {
+      this.registerAppoDialog = registerAppoDialog;
     },
   },
 };

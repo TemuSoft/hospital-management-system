@@ -2,15 +2,14 @@
   <v-app class="mainBody">
     <notifications position="top center" duration:5 max:3 width="300" />
     <topBar />
-
     <v-main>
-      <v-layout>
+      <v-layout v-if="navDrawerShow">
         <sideBar />
-
         <div class="mainDiv">
           <router-view />
         </div>
       </v-layout>
+      <router-view v-else />
     </v-main>
   </v-app>
 </template>
@@ -18,6 +17,7 @@
 <script>
 import topBar from "./pages/layout/topBar.vue";
 import sideBar from "./pages/layout/sideBar.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "App",
@@ -33,7 +33,9 @@ export default {
 
   created() {},
 
-  computed: {},
+  computed: {
+    ...mapState("core", ["navDrawerShow"]),
+  },
 
   methods: {
     clear() {
@@ -72,9 +74,8 @@ export default {
 <style scoped>
 .mainDiv {
   width: 100%;
-  margin-left: 5%;
+  margin-left: 2%;
   margin-right: 2%;
-  margin-top: 1%;
 }
 .logout {
   margin-left: 3%;

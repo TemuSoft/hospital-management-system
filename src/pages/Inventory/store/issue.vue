@@ -33,7 +33,14 @@
       <template v-slot:top>
         <v-layout>
           <v-spacer></v-spacer>
-          <v-btn small text outlined @click="sendIssueRequestDialog = true">
+          <v-btn
+            small
+            text
+            color="green"
+            class="text-capitalize"
+            outlined
+            @click="sendIssueRequestDialog = true"
+          >
             Send Requst
           </v-btn>
         </v-layout>
@@ -53,7 +60,7 @@
           Create New Item Issue Request
           <v-spacer />
 
-          <Close @click="confirmIssueRequestDialog = false" class="icon" />
+          <Close @click="sendIssueRequestDialog = false" class="icon" />
         </v-toolbar>
         <br />
 
@@ -62,6 +69,7 @@
             <v-layout>
               <v-textarea
                 dense
+                rows="3"
                 label="Reason"
                 v-model="issueInfo.reason"
                 :rules="inputRules"
@@ -79,7 +87,7 @@
                 @click="loadInventoryItems($event)"
                 label="Inventory"
               />
-              <v-spacer></v-spacer>
+              <v-spacer />
 
               <v-autocomplete
                 :items="inventotyItems"
@@ -93,7 +101,7 @@
                 chips
                 v-model="itemSelected"
               />
-              <v-spacer></v-spacer>
+              <v-spacer />
 
               <v-btn small text outlined @click="addIssuedItems()">Add</v-btn>
             </v-layout>
@@ -106,11 +114,9 @@
                 <th>Aveliable</th>
                 <th>Action</th>
               </tr>
-              inventory name quantity aveliable action
               <tr v-for="(item, i) in itemsIssue" :key="i">
                 <td>{{ itemsIssue[i].inventory }}</td>
                 <td>{{ itemsIssue[i].itemName }}</td>
-                <td>{{ itemsIssue[i].quantity }}</td>
                 <td>
                   <v-text-field
                     dense
@@ -119,20 +125,19 @@
                     v-model="itemsIssue[i].avaliabel"
                   />
                 </td>
+                <td>{{ itemsIssue[i].quantity }}</td>
                 <td>
                   <Delete class="icon" @click="deleteSelectedIssueItem(i)" />
                 </td>
               </tr>
             </table>
+            <br />
 
             <v-layout>
-              <v-spacer></v-spacer>
-              <v-spacer></v-spacer>
-              <v-btn small text outlined @click="sendIssueRequestDialog = false"
-                >Cancel</v-btn
-              >
-              <v-spacer></v-spacer>
-              <v-btn small text outlined @click="save()">Save</v-btn>
+              <v-spacer />
+              <v-btn small text outlined color="green" @click="save()">
+                Save
+              </v-btn>
             </v-layout>
           </v-form>
         </v-card-text>
@@ -154,6 +159,7 @@
             <v-layout>
               <v-textarea
                 dense
+                rows="3"
                 label="Reason"
                 v-model="issueInfo.reason"
                 :rules="inputRules"
@@ -162,39 +168,15 @@
               ></v-textarea>
             </v-layout>
 
-            <v-layout>
-              <v-autocomplete
-                :items="inventorys"
-                item-text="name"
-                item-value="id"
-                outlined
-                dense
-                :readonly="true"
-                label="Inventory"
-              />
-              <v-spacer></v-spacer>
-
-              <v-autocomplete
-                :items="inventotyItems"
-                item-text="name"
-                item-value="id"
-                outlined
-                dense
-                label="Item"
-                chips
-                :readonly="true"
-              />
-            </v-layout>
-
             <v-data-table
               dense
               :items="itemsIssue"
-              :headers="headersItems"
-              items-per-page="10"
+              :headers="headersIssueApproval"
+              :items-per-page="10"
             ></v-data-table>
 
-            <v-layout v-if="true">
-              <v-autocomplete
+            <v-layout>
+              <v-select
                 v-model="approvalSelected"
                 dense
                 outlined
@@ -203,12 +185,13 @@
               />
             </v-layout>
 
-            <v-layout v-else>
+            <v-layout>
               <v-text-field
                 type="password"
                 outlined
                 dense
                 v-model="whoConfrim"
+                :rules="inputRules"
                 label="Giver password"
               />
               <v-spacer />
@@ -218,6 +201,7 @@
                 outlined
                 dense
                 v-model="whoReceived"
+                :rules="inputRules"
                 label="Receiver password"
               />
             </v-layout>
@@ -253,11 +237,19 @@ export default {
       itemsIssue: [],
 
       headersIssue: [
-        { text: "Inventory", value: "inventory" },
+        { text: "Request Date", value: "request_date" },
         { text: "Name", value: "name" },
         { text: "Quantity", value: "quantity" },
         { text: "Status", value: "status" },
         { text: "Detail", value: "detail", width: "10%" },
+      ],
+
+      headersIssueApproval: [
+        { text: "Inventory", value: "inventory" },
+        { text: "Item", value: "item_name" },
+        { text: "Quantity", value: "quantity" },
+        { text: "Received", value: "received" },
+        { text: "Action", value: "action", width: "20%" },
       ],
     };
   },
@@ -327,7 +319,11 @@ export default {
       }
     },
 
-    async confirm() {},
+    async confirm() {
+      if (this.$refs.confirm.validate()) {
+        alert("INout data is valide");
+      }
+    },
   },
 };
 </script>
@@ -350,5 +346,9 @@ export default {
 
 .mainCardView {
   margin-left: 5%;
+}
+
+table {
+  width: 100%;
 }
 </style>

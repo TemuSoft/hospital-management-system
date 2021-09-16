@@ -76,12 +76,6 @@ const menusData = [
         allowedRoles: ["opd", "pharmacy"],
       },
       {
-        title: "Medicine",
-        route: "medicine",
-        icon: "medicine",
-        allowedRoles: ["pharmacy"],
-      },
-      {
         title: "Measurment Unit",
         route: "measurmentUnit",
         icon: "measurmentUnit",

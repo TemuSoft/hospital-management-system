@@ -32,13 +32,13 @@
 
     <v-layout>
       <v-card outlined class="chartDis">
-        <p>Yearly patient statistical view</p>
+        <p style="color: green">Yearly patient statistical view</p>
         <v-divider />
         <div id="chartPatient"></div>
       </v-card>
       <v-card outlined class="chartDisRight">
         <v-divider />
-        <p>Today Appointment</p>
+        <p style="color: green">Today Appointment</p>
         <v-divider />
         <v-data-table
           dense
@@ -48,7 +48,7 @@
         />
         <br />
 
-        <p>Today Patient</p>
+        <p style="color: green">Today Patient</p>
         <v-divider />
         <v-data-table
           dense

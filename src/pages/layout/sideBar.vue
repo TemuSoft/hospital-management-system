@@ -31,7 +31,7 @@
               <v-expansion-panel-header
                 v-if="menu.links && validateRole(menu.allowedRoles) === true"
               >
-                <strong class="grey--text">{{ menu.title }}</strong>
+                <strong class="grey--text">{{ $t(menu.title) }}</strong>
               </v-expansion-panel-header>
 
               <v-list-item
@@ -45,7 +45,7 @@
                   <v-icon color="red"> </v-icon>
                   <v-list-item-content>
                     <v-list-item-subtitle>
-                      <strong class="grey--text">{{ menu.title }}</strong>
+                      <strong class="grey--text">{{ $t(menu.title) }}</strong>
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item-icon>
@@ -63,7 +63,7 @@
                     <v-icon color="red">mdi-logout </v-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle>{{
-                        item.title
+                        $t(item.title)
                       }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item-icon>

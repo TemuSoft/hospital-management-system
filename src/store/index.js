@@ -44,7 +44,7 @@ const core = {
   },
   actions: {
     getActiveUser({ commit }) {
-      localStorage.setItem("role", "temp");
+      localStorage.setItem("role", "cashier");
       let activeUser = localStorage.getItem("role");
 
       commit("setActiveUser", activeUser);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <v-layout>
       <v-card class="topHeaderCard" v-for="top in topHeaders" :key="top">
         <div class="title">
@@ -71,6 +71,11 @@ export default {
 </script>
 
 <style scoped>
+.main {
+  margin: 5%;
+  margin-top: 2%;
+}
+
 .topHeaderCard {
   width: 16.25%;
   margin: 0.2%;

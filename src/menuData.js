@@ -1,6 +1,6 @@
 const menusData = [
   {
-    title: "Dashboard",
+    title: "dashboard",
     allowedRoles: [
       "admin",
       "nurse",
@@ -18,29 +18,29 @@ const menusData = [
     route: "dashboard",
   },
   {
-    title: "Patients",
+    title: "patients",
     allowedRoles: ["nurse", "opd", "reception"],
     links: [
       {
-        title: "Patients",
+        title: "patients",
         route: "patinets",
         icon: "patinets",
         allowedRoles: ["reception"],
       },
       {
-        title: "Nurse",
+        title: "nurse",
         route: "nurse",
         icon: "nurse",
         allowedRoles: ["nurse", "opd"],
       },
       {
-        title: "OPD",
+        title: "opd",
         route: "opd",
         icon: "opd",
         allowedRoles: ["opd"],
       },
       {
-        title: "Appointments",
+        title: "appointments",
         route: "appointments",
         icon: "appointments",
         allowedRoles: ["reception", "opd", "nurse"],
@@ -48,7 +48,7 @@ const menusData = [
     ],
   },
   {
-    title: "Inventory",
+    title: "inventory",
     allowedRoles: [
       "admin",
       "nurse",
@@ -64,31 +64,31 @@ const menusData = [
     ],
     links: [
       {
-        title: "Pharmacy",
+        title: "pharmacy",
         route: "pharmacy",
         icon: "pharmacy",
         allowedRoles: ["pharmacy"],
       },
       {
-        title: "Prescription",
+        title: "prescription",
         route: "prescription",
         icon: "prescription",
         allowedRoles: ["opd", "pharmacy"],
       },
       {
-        title: "Measurment Unit",
+        title: "measurment_unit",
         route: "measurmentUnit",
         icon: "measurmentUnit",
         allowedRoles: ["admin"],
       },
       {
-        title: "Store",
+        title: "store",
         route: "store",
         icon: "store",
         allowedRoles: ["store"],
       },
       {
-        title: "Issue",
+        title: "issue",
         route: "issue",
         icon: "issue",
         allowedRoles: [
@@ -108,29 +108,29 @@ const menusData = [
     ],
   },
   {
-    title: "Medical Services",
+    title: "medical_services",
     allowedRoles: ["labratory", "imaging", "labratory_head", "imaging_head"],
     links: [
       {
-        title: "Labratory Test",
+        title: "labratory_test",
         route: "labratoryTest",
         icon: "labratoryTest",
         allowedRoles: ["labratory", "labratory_head"],
       },
       {
-        title: "Labratory Result",
+        title: "labratory_result",
         route: "labratoryResult",
         icon: "labratoryResult",
         allowedRoles: ["labratory", "labratory_head"],
       },
       {
-        title: "Imaging Test",
+        title: "imaging_test",
         route: "imagingTest",
         icon: "imagingTest",
         allowedRoles: ["imaging", "imaging_head"],
       },
       {
-        title: "Imaging Result",
+        title: "imaging_result",
         route: "imagingResult",
         icon: "imagingResult",
         allowedRoles: ["imaging", "imaging_head"],
@@ -138,23 +138,23 @@ const menusData = [
     ],
   },
   {
-    title: "Organization",
+    title: "organization",
     allowedRoles: ["admin", "hrm"],
     links: [
       {
-        title: "Staff",
+        title: "staff",
         route: "staff",
         icon: "staff",
         allowedRoles: ["hrm"],
       },
       {
-        title: "Departments",
+        title: "departments",
         route: "departments",
         icon: "departments",
         allowedRoles: ["admin"],
       },
       {
-        title: "Insurance",
+        title: "insurance",
         route: "insurance",
         icon: "insurance",
         allowedRoles: ["admin", "hrm"],
@@ -162,29 +162,29 @@ const menusData = [
     ],
   },
   {
-    title: "Finance",
+    title: "finance",
     allowedRoles: ["cashier"],
     links: [
       {
-        title: "Dashboard",
+        title: "dashboard",
         route: "financedashboard",
         icon: "dashboard",
         allowedRoles: ["cashier"],
       },
       {
-        title: "Transactions",
+        title: "transactions",
         route: "transactions",
         icon: "transactions",
         allowedRoles: ["cashier"],
       },
       {
-        title: "Financial Reports",
+        title: "financial_reports",
         route: "financialReports",
         icon: "financialReports",
         allowedRoles: ["cashier"],
       },
       {
-        title: "Payment",
+        title: "payment",
         route: "payment",
         icon: "payment",
         allowedRoles: ["cashier"],
@@ -192,7 +192,7 @@ const menusData = [
     ],
   },
   {
-    title: "Setting",
+    title: "setting",
     allowedRoles: [
       "admin",
       "nurse",
@@ -209,25 +209,25 @@ const menusData = [
     ],
     links: [
       {
-        title: "Hospital Setting",
+        title: "hospital_setting",
         allowedRoles: ["admin"],
         route: "hospitalSetting",
         icon: "hospitalSetting",
       },
       {
-        title: "Role and Permission",
+        title: "role_and_permission",
         allowedRoles: ["admin"],
         route: "rolePermission",
         icon: "rolePermission",
       },
       {
-        title: "Change Password",
+        title: "change_password",
         allowedRoles: ["admin"],
         route: "changePassword",
         icon: "changePassword",
       },
       {
-        title: "Annual Report",
+        title: "annual_report",
         allowedRoles: [
           "admin",
           "nurse",
@@ -248,7 +248,7 @@ const menusData = [
     ],
   },
   {
-    title: "Others",
+    title: "others",
     allowedRoles: [
       "admin",
       "nurse",
@@ -265,7 +265,7 @@ const menusData = [
     ],
     links: [
       {
-        title: "Work Permission",
+        title: "work_permission",
         allowedRoles: [
           "admin",
           "nurse",
@@ -284,7 +284,7 @@ const menusData = [
         icon: "workPermission",
       },
       {
-        title: "Room",
+        title: "room",
         allowedRoles: ["admin"],
         route: "room",
         icon: "room",
@@ -292,7 +292,7 @@ const menusData = [
     ],
   },
   {
-    title: "Reports",
+    title: "reports",
     allowedRoles: [
       "admin",
       "nurse",
@@ -311,7 +311,7 @@ const menusData = [
     icon: "reports",
   },
   {
-    title: "Chat",
+    title: "chat",
     allowedRoles: [
       "admin",
       "nurse",

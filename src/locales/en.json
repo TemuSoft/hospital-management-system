@@ -1,4 +1,7 @@
 {
+  "hospital_managment_system": "Hospital Managment System",
+  "dark": "Dark Mode",
+  "chat": "Chat",
   "dashboard": "Dashboard",
   "patients": "Patients",
   "nurse": "Nurse",
@@ -30,6 +33,5 @@
   "others": "Others",
   "work_permission": "Wኦrk Permission",
   "room": "Room",
-  "reports": "Reports",
-  "chat": "Chat"
+  "reports": "Reports"
 }

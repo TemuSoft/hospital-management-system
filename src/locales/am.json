@@ -1,4 +1,7 @@
 {
+  "hospital_managment_system": "የሆስፒታል አስተዳደር ስርዓት",
+  "dark": "ጨለማ ሁነታ",
+  "chat": "ወሬ",
   "dashboard": "ዋና እይታ",
   "patients": "ታካሜዎች",
   "nurse": "ነርሰ",
@@ -30,6 +33,5 @@
   "others": "ሊሎች",
   "work_permission": "የሥራ ፈቃድ",
   "room": "ክፍል",
-  "reports": "ክንውኖች",
-  "chat": "ወሬ"
+  "reports": "ክንውኖች"
 }

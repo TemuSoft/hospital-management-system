@@ -42,18 +42,19 @@ export default {
       search: "",
       datalist: [],
       headers: [
-        { text: "ID", value: "id" },
-        { text: "Patinet Name", value: "patinetName" },
+        { text: "Card Number", value: "card_number" },
+        { text: "Patinet Name", value: "fullName" },
         { text: "Consultant", value: "consultant" },
         { text: "Is Active?", value: "isActive" },
         { text: "From", value: "from" },
         { text: "To", value: "to" },
+        { text: "Action", value: "action" },
       ],
     };
   },
   created() {},
   computed: {
-    ...mapState("doctor", ["stateTy"]),
+    ...mapState("doctor", [""]),
   },
 };
 </script>

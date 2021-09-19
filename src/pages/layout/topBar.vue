@@ -2,7 +2,7 @@
   <div>
     <v-app-bar dense app flat>
       <div style="cursor: pointer" @click="manageNavDrawer()">
-        ::::: Hospital Managment System
+        ::::: {{ $t("hospital_managment_system") }}
       </div>
       <v-spacer />
 
@@ -15,15 +15,17 @@
       />
 
       <v-switch
-        label="Dark"
+        :label="$t('dark')"
         color="primary"
         @change="darkmode()"
         class="ml-4 mt-5"
       />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
       <v-badge :content="7" class="chatRoom" color="red" overlap>
-        Chat
+        {{ $t("chat") }}
       </v-badge>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
       <v-btn icon @click="logout" class="logout">
         <v-icon color="red">mdi-logout </v-icon>

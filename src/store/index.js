@@ -16,6 +16,8 @@ import room from "./room";
 import nurse from "./nurse";
 import mainPatientInfoManager from "./mainPatientInfoManager";
 import appointment from "./appointment";
+import prescription from "./prescription";
+import pharmacy from "./pharmacy";
 
 Vue.use(Vuex);
 
@@ -23,14 +25,31 @@ const core = {
   namespaced: true,
   state: {
     currentLanguage: "en",
+    activeUser: "",
+    navDrawerShow: true,
   },
   mutations: {
     toggleLanguage(state) {
       state.currentLanguage = state.currentLanguage === "en" ? "am" : "en";
       i18n.locale = state.currentLanguage;
     },
+
+    setActiveUser(state, payload) {
+      state.activeUser = payload;
+    },
+
+    setNavDrawerStauts(state, payload) {
+      state.navDrawerShow = payload;
+    },
   },
-  action: {},
+  actions: {
+    getActiveUser({ commit }) {
+      localStorage.setItem("role", "cashier");
+      let activeUser = localStorage.getItem("role");
+
+      commit("setActiveUser", activeUser);
+    },
+  },
 };
 
 export default new Vuex.Store({
@@ -50,5 +69,7 @@ export default new Vuex.Store({
     nurse,
     mainPatientInfoManager,
     appointment,
+    prescription,
+    pharmacy,
   },
 });

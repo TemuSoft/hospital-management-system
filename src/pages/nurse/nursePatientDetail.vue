@@ -27,7 +27,7 @@
       <v-divider />
       <br />
 
-      <v-layout>
+      <!-- <v-layout>
         <v-flex xs12 sm1></v-flex>
         <v-flex xs12 sm5>
           <label class="titleHead">Full Name : </label>
@@ -111,7 +111,7 @@
             {{ singlePatient[0].house_number }}</label
           >
         </v-flex>
-      </v-layout>
+      </v-layout> -->
 
       <v-divider />
 

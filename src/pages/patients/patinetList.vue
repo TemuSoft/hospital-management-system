@@ -268,6 +268,9 @@
       <v-card>
         <v-toolbar dense color="green">
           Patient Assign / Send Request for Nurse
+          <v-spacer />
+
+          <Close @click="assignPatientDialog = false" class="icon" />
         </v-toolbar>
         <br />
 
@@ -319,26 +322,76 @@
 
             <v-layout>
               <v-spacer />
-              <v-spacer />
-
-              <v-btn
-                text
-                outlined
-                color="red"
-                @click="assignPatientDialog = false"
-              >
-                Cancel
-              </v-btn>
-              <v-spacer />
 
               <v-btn text outlined color="green" @click="assignRoomSave()">
                 Assign
               </v-btn>
-              <v-spacer />
+
               <v-spacer />
             </v-layout>
             <br />
             <br />
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="cardRenewalDialog" width="800" persistent>
+      <v-card>
+        <v-toolbar dense color="green">
+          Patient Card Renewal
+          <v-spacer />
+
+          <Close @click="cardRenewalDialog = false" class="icon" />
+        </v-toolbar>
+        <br />
+
+        <v-card-text>
+          <v-form @submit.prevent="cardRenewal" ref="cardRenewal">
+            <v-layout>
+              <v-flex xs12 sm1></v-flex>
+              <v-flex xs12 sm6>
+                <label class="titleHead">Full Name : </label>
+                <label class="titleCont">
+                  {{ selectedPatinet.first_name }}
+                  {{ selectedPatinet.fathers_name }}
+                  ({{ selectedPatinet.gender }})
+                </label>
+                <br />
+                <label class="titleHead">Card Number : </label>
+                <label class="titleCont">
+                  {{ selectedPatinet.card_number }}
+                </label>
+                <br />
+                <label class="titleHead">Guardian Name : </label>
+                <label class="titleCont">
+                  {{ selectedPatinet.guardian_name }}
+                </label>
+                <br />
+                <br />
+                <br />
+              </v-flex>
+
+              <v-flex xs12 sm4>
+                <v-checkbox
+                  v-model="cardRenewaCheckbox"
+                  label="Select me to send request"
+                />
+                <br />
+
+                <v-btn
+                  v-show="cardRenewaCheckbox"
+                  small
+                  outlined
+                  text
+                  color="green"
+                  @click="cardRenewal()"
+                  class="text-capitalize"
+                >
+                  Send Card Renewal Request
+                </v-btn>
+              </v-flex>
+            </v-layout>
           </v-form>
         </v-card-text>
       </v-card>
@@ -350,6 +403,7 @@
 import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
 import Detail from "@/assets/icons/eye.svg";
+import Close from "@/assets/icons/close.svg";
 import Transfer from "@/assets/icons/send.svg";
 import Payment from "@/assets/icons/payment.svg";
 
@@ -391,12 +445,16 @@ export default {
         { name: "Ethiopia", value: 1 },
         { name: "Others", value: 2 },
       ],
+
+      cardRenewaCheckbox: false,
+      cardRenewalDialog: true,
     };
   },
 
   components: {
     Edit,
     Detail,
+    Close,
     Transfer,
     Payment,
   },
@@ -437,7 +495,8 @@ export default {
     },
 
     async repaymentCardPatient(item) {
-      console.log(item);
+      this.selectedPatinet = item;
+      this.cardRenewalDialog = true;
     },
 
     async loadData() {
@@ -495,6 +554,10 @@ export default {
         key: this.tabSelected,
         value: this.filterationText,
       });
+    },
+
+    async cardRenewal() {
+      alert(this.selectedPatinet.id);
     },
   },
 };

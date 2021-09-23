@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <v-card>
       <v-tabs v-model="tab" align-with-title>
         <v-tabs-slider color="yellow"></v-tabs-slider>
@@ -64,3 +64,10 @@ export default {
   computed: {},
 };
 </script>
+
+<style scoped>
+.main {
+  margin: 3%;
+  margin-top: 0%;
+}
+</style>

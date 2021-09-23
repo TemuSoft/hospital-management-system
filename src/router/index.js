@@ -1,7 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import finacedashboard from "../pages/Dashboard/index.vue";
+import dashboard from "../pages/Dashboard/index.vue";
+import financedashboard from "../pages/Dashboard/finance.vue";
 
 import regsiterPatinet from "../pages/patients/regsiter.vue";
 import patinetList from "../pages/patients/patinetList.vue";
@@ -9,13 +10,17 @@ import patientDetail from "../pages/patients/patientDetail.vue";
 import appointments from "../pages/Appointment/index.vue";
 import opd from "../pages/patients/opd.vue";
 import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
-import medicine from "../pages/Inventory/Pharmacy/medicine.vue";
+import prescription from "../pages/Inventory/Pharmacy/prescription.vue";
+import prescriptionDetail from "../pages/Inventory/Pharmacy/prescriptionDetail.vue";
+
 import labratoryTest from "../pages/MedicalService/labratory/labratoryTest.vue";
 import labratoryReport from "../pages/MedicalService/labratory/labratoryReport.vue";
 import labratoryResult from "../pages/MedicalService/labratory/labratoryResult.vue";
 
 import imagingTest from "../pages/MedicalService/imaging/imagingTest.vue";
 import imagingReport from "../pages/MedicalService/imaging/imagingReport.vue";
+import imagingResult from "../pages/MedicalService/imaging/imagingResult.vue";
+
 import departments from "../pages/Organization/departments.vue";
 import insurance from "../pages/Organization/insurance.vue";
 import insuranceDetail from "../pages/Organization/insuranceDetail.vue";
@@ -55,6 +60,7 @@ Vue.use(VueRouter);
 
 const routes = [
   { path: "/logintry", name: "logintry", component: logintry },
+  { path: "/dashboard", name: "dashboard", component: dashboard },
   {
     path: "/regsiterPatinet",
     name: "regsiterPatinet",
@@ -65,7 +71,17 @@ const routes = [
   { path: "/appointments", name: "appointments", component: appointments },
   { path: "/opd", name: "opd", component: opd },
   { path: "/pharmacy", name: "pharmacy", component: pharmacy },
-  { path: "/medicine", name: "medicine", component: medicine },
+  {
+    path: "/pharmacy/prescription",
+    name: "prescription",
+    component: prescription,
+  },
+  {
+    path: "pharmacy/prescription/Detail",
+    name: "prescriptionDetail",
+    component: prescriptionDetail,
+  },
+
   {
     path: "/imagingTest",
     name: "imagingTest",
@@ -80,6 +96,11 @@ const routes = [
     path: "/imagingReport",
     name: "imagingReport",
     component: imagingReport,
+  },
+  {
+    path: "/patient/imagingResult",
+    name: "imagingResult",
+    component: imagingResult,
   },
   {
     path: "/patinet/labratoryResult",
@@ -101,8 +122,8 @@ const routes = [
   { path: "/staffUpdate", name: "staffUpdate", component: staffUpdate },
   {
     path: "/finance/dashboard",
-    name: "finacedashboard",
-    component: finacedashboard,
+    name: "financedashboard",
+    component: financedashboard,
   },
   {
     path: "/payment",
@@ -201,3 +222,17 @@ const router = new VueRouter({
 });
 
 export default router;
+
+/*
+router.beforeEach((to, from, next) => {
+  const publicPages = ["/logintry"];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem("user");
+
+  if (authRequired && !loggedIn) {
+    return next("/logintry");
+  }
+
+  next();
+});
+*/

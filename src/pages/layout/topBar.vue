@@ -1,9 +1,10 @@
 <template>
   <div>
-    <v-app-bar app flat>
-      <div>::::: Hospital Managment System</div>
-
-      <v-spacer></v-spacer>
+    <v-app-bar dense app flat>
+      <div style="cursor: pointer" @click="manageNavDrawer()">
+        ::::: {{ $t("hospital_managment_system") }}
+      </div>
+      <v-spacer />
 
       <v-switch
         label="አማርኛ"
@@ -14,15 +15,17 @@
       />
 
       <v-switch
-        label="Dark"
+        :label="$t('dark')"
         color="primary"
         @change="darkmode()"
         class="ml-4 mt-5"
       />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
       <v-badge :content="7" class="chatRoom" color="red" overlap>
-        Chat
+        {{ $t("chat") }}
       </v-badge>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
       <v-btn icon @click="logout" class="logout">
         <v-icon color="red">mdi-logout </v-icon>
@@ -38,12 +41,26 @@ export default {
   data() {
     return {};
   },
+
+  mounted() {
+    this.loadData();
+  },
+
   computed: {
-    ...mapState("core", ["currentLanguage"]),
+    ...mapState("core", ["currentLanguage", "navDrawerShow"]),
   },
 
   methods: {
+    ...mapMutations("core", ["setNavDrawerStauts"]),
     ...mapMutations("core", ["toggleLanguage"]),
+
+    async loadData() {
+      await this.setNavDrawerStauts(true);
+    },
+
+    async manageNavDrawer() {
+      await this.setNavDrawerStauts(!this.navDrawerShow);
+    },
 
     darkmode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;

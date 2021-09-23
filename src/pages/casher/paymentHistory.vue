@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <v-card>
+    <v-card flat>
       <v-toolbar dense flat>
         <v-btn
           text

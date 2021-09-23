@@ -1,458 +1,219 @@
 <template>
-  <div>
-    <v-form ref="form" v-model="valid" lazy-validation>
-      <v-container>
-        <h2>{{ title }}</h2>
-        <v-stepper v-model="e1" alt-labels elevation="0">
-          <v-stepper-header>
-            <v-stepper-step step="1" :complete="e1 > 1"> Info </v-stepper-step>
+  <div class="main">
+    <v-form @submit.prevent="save" ref="form">
+      <h2>Register New Patient</h2>
+      <br />
 
-            <v-divider></v-divider>
+      <v-layout row justify-center>
+        <v-select
+          dense
+          v-model="patientInfo.patient_type"
+          :items="patientTypeoptions"
+          label="Select Patinet Type"
+          :rules="inputRules"
+          item-text="name"
+          item-value="value"
+          outlined
+          single-line
+        />
+        <v-spacer />
+        <v-spacer />
+      </v-layout>
 
-            <v-stepper-step step="2" :complete="e1 > 2">
-              Contacts
-            </v-stepper-step>
+      <v-layout row>
+        <v-text-field
+          label="First Name"
+          v-model="patientInfo.first_name"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-            <v-divider></v-divider>
+        <v-text-field
+          label="Birth Date"
+          type="date"
+          v-model="patientInfo.birthdate"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-            <v-stepper-step step="3" :complete="e1 > 3">
-              Others
-            </v-stepper-step>
+        <v-text-field
+          label="Phone"
+          v-model="patientInfo.phone_number"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-            <v-divider></v-divider>
+        <v-text-field
+          label="Guardian Name"
+          v-model="patientInfo.guardian_name"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+      </v-layout>
 
-            <v-stepper-step step="4"> Overview </v-stepper-step>
-          </v-stepper-header>
-          <v-stepper-items>
-            <v-stepper-content step="1">
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-row no-gutters>
-                      <v-col cols="12">
-                        <v-text-field
-                          dense
-                          v-model="editedItem.name"
-                          outlined
-                          counter="100"
-                          label="Full Name"
-                          hint="Patient full name. E.g John Doe (Mandatory)"
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-select
-                          dense
-                          v-model="editedItem.gender"
-                          :items="genderoptions"
-                          :item-text="'name'"
-                          :item-value="'name'"
-                          label="Select Gender"
-                          :rules="[rules.required]"
-                          name="editedItem.gender"
-                          outlined
-                          persistent-hint
-                          single-line
-                        >
-                        </v-select>
-                      </v-col>
+      <v-layout row>
+        <v-text-field
+          label="Father Name"
+          v-model="patientInfo.fathers_name"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-                      <v-col cols="12">
-                        <v-text-field
-                          dense
-                          type="number"
-                          v-model="editedItem.age"
-                          outlined
-                          label="Age"
-                          hint="Patient age. E.g 34 (Mandatory)"
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          dense
-                          v-model="editedItem.guardianName"
-                          outlined
-                          counter="100"
-                          label="Guardian Name"
-                          hint="Patient close relative. E.g Alice Doe (Mandatory)"
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-row no-gutters>
-                      <v-col cols="12">
-                        <v-select
-                          dense
-                          v-model="editedItem.marriageStatus"
-                          :items="marriagestatusoptions"
-                          :item-text="'name'"
-                          label="Select Married Status"
-                          :rules="[rules.required]"
-                          name="editedItem.marriageStatus"
-                          outlined
-                          persistent-hint
-                          single-line
-                        >
-                        </v-select>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          dense
-                          v-model="editedItem.height"
-                          outlined
-                          counter="10"
-                          label="Height"
-                          hint="Patient height. e.g 170cm (Mandatory)"
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          dense
-                          v-model="editedItem.weight"
-                          outlined
-                          counter="10"
-                          label="Weight"
-                          hint="Patient weight. e.g 10Kg (Mandatory)"
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-select
-                          dense
-                          v-model="editedItem.patientType"
-                          hint="Patient type is mandatory"
-                          :items="patientTypeoptions"
-                          :item-text="'name'"
-                          label="Select Patinet Type"
-                          :rules="[rules.required]"
-                          name="editedItem.patientType"
-                          outlined
-                          single-line
-                        >
-                        </v-select>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-container>
-              <v-btn color="primary" @click="e1 = 2"> Continue </v-btn>
-            </v-stepper-content>
-            <v-stepper-content step="2">
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-row no-gutters>
-                      <v-col cols="12">
-                        <v-text-field
-                          dense
-                          v-model="editedItem.phone"
-                          outlined
-                          counter="15"
-                          label="Phone No."
-                          hint="Patient phone No. e.g +255716xxxxxx (Mandatory)"
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          dense
-                          v-model="editedItem.address"
-                          outlined
-                          counter="200"
-                          label="Home Address"
-                          hint="Address e.g 123 Hawaii, 31ST, H24KL (Mandatory)"
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-row no-gutters>
-                      <v-col cols="12">
-                        <v-text-field
-                          dense
-                          v-model="editedItem.emailAddress"
-                          outlined
-                          counter="254"
-                          label="Email address"
-                          hint="Patient Email  address. E.g example@email.com (Optional)"
-                          :rules="[rules.email]"
-                        ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-container>
-              <v-btn color="primary" @click="e1 = 3"> Continue </v-btn>
+        <v-autocomplete
+          label="Nationality"
+          v-model="patientInfo.nationality"
+          :items="nationalityList"
+          item-text="name"
+          item-id="value"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-              <v-btn text @click="e1 = e1 - 1"> Back </v-btn>
-            </v-stepper-content>
-            <v-stepper-content step="3">
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-row no-gutters>
-                      <v-col cols="12">
-                        <v-select
-                          dense
-                          v-model="editedItem.bloodGroup"
-                          :hint="` ${editedItem.bloodGroup.name}`"
-                          :items="bloodgroupoptions"
-                          label="Select Bloodgroup"
-                          item-value="value"
-                          item-text="name"
-                          :rules="[rules.required]"
-                          name="editedItem.bloodGroup"
-                          outlined
-                          persistent-hint
-                          single-line
-                        >
-                        </v-select>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          dense
-                          v-model="editedItem.bloodPressure"
-                          outlined
-                          counter="10"
-                          label="Blood pressure"
-                          hint="Patient BP. (Mandatory)"
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-row no-gutters>
-                      <v-col cols="12">
-                        <v-textarea
-                          dense
-                          label="Allergies"
-                          outlined
-                          counter="550"
-                          v-model="editedItem.symptoms"
-                          hint="Patient allergies"
-                        ></v-textarea>
-                      </v-col>
+        <v-text-field
+          label="Region"
+          v-model="patientInfo.region"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-                      <v-col cols="12">
-                        <v-textarea
-                          dense
-                          label="Note:"
-                          outlined
-                          counter="200"
-                          v-model="editedItem.note"
-                          hint="Additional note if any"
-                        ></v-textarea
-                      ></v-col>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-container>
-              <v-btn color="primary" @click="e1 = 4"> Continue </v-btn>
+        <v-text-field
+          type="number"
+          label="Guardian Contact"
+          v-model="patientInfo.guardian_contact"
+          outlined
+          dense
+        />
+      </v-layout>
 
-              <v-btn text @click="e1 = e1 - 1"> Back </v-btn>
-            </v-stepper-content>
-            <v-stepper-content step="4">
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <strong>Info</strong>
-                    <v-list>
-                      <v-list-item>
-                        <strong>Username: {{ editedItem.name }}</strong>
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>Gender: {{ editedItem.gender }}</strong>
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>Age: {{ editedItem.age }}</strong>
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>Guardian: {{ editedItem.guardianName }}</strong>
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>
-                          Status :
-                          {{ editedItem.marriageStatus }}</strong
-                        >
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>
-                          Type :
-                          {{ editedItem.patientType }}</strong
-                        >
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>Height: {{ editedItem.height }}</strong>
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>Weight: {{ editedItem.weight }}</strong>
-                      </v-list-item>
-                    </v-list>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <strong>Contacts</strong>
-                    <v-list>
-                      <v-list-item>
-                        <strong>Phone: {{ editedItem.phone }}</strong>
-                      </v-list-item>
+      <v-layout row>
+        <v-text-field
+          label="Grand Father"
+          v-model="patientInfo.last_name"
+          :rules="inputRules"
+          outlined
+          dense
+        />
+        <v-spacer />
 
-                      <v-list-item>
-                        <strong> Address: {{ editedItem.address }}</strong>
-                      </v-list-item>
+        <v-text-field label="Zone" v-model="patientInfo.zone" outlined dense />
+        <v-spacer />
 
-                      <v-list-item>
-                        <strong>Email: {{ editedItem.emailAddress }}</strong>
-                      </v-list-item>
-                    </v-list>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <strong>Contacts</strong>
-                    <v-list>
-                      <v-list-item>
-                        <strong>BG: {{ editedItem.bloodGroup }}</strong>
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>BP: {{ editedItem.bloodPressure }}</strong>
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>Allergies: {{ editedItem.symptoms }}</strong>
-                      </v-list-item>
-                      <v-list-item>
-                        <strong>Note: {{ editedItem.note }}</strong>
-                      </v-list-item>
-                    </v-list>
-                  </v-col>
-                </v-row>
-              </v-container>
-              <v-btn color="button" @click="save">Submit</v-btn>
-              <v-btn @click="e1 = e1 - 1" class="button cancel">Back</v-btn>
-            </v-stepper-content>
-          </v-stepper-items>
-        </v-stepper>
-      </v-container>
+        <v-text-field
+          label="Woreda"
+          v-model="patientInfo.woreda"
+          outlined
+          dense
+        />
+        <v-spacer />
+
+        <v-text-field
+          label="Kebele"
+          v-model="patientInfo.kebele"
+          outlined
+          dense
+        />
+      </v-layout>
+
+      <v-layout row>
+        <v-autocomplete
+          label="Gender"
+          v-model="patientInfo.gender"
+          :rules="inputRules"
+          :items="genderoptions"
+          outlined
+          dense
+        />
+        <v-spacer />
+
+        <v-text-field
+          label="House Number"
+          v-model="patientInfo.house_number"
+          outlined
+          dense
+        />
+      </v-layout>
+      <br />
+
+      <v-layout>
+        <v-btn small outlined color="green" @click="save()"> Register </v-btn>
+        <v-spacer />
+        <v-btn small outlined color="red" @click="cancel()"> Cancel </v-btn>
+        <v-spacer />
+        <v-spacer />
+      </v-layout>
     </v-form>
   </div>
 </template>
 <script>
-// import _tool_bar from "~/components/_tool_bar.vue";
+import { mapActions, mapState } from "vuex";
+
 export default {
-  components: {
-    // "tool-bar": _tool_bar
+  components: {},
+  data() {
+    return {
+      patientInfo: {},
+      inputRules: [(v) => !!v || "This field is required"],
+      genderoptions: ["Male", "Female"],
+
+      patientTypeoptions: [
+        { name: "Regular", value: 1 },
+        { name: "Credit", value: 2 },
+        { name: "Organization", value: 3 },
+        { name: "Temporary", value: 4 },
+      ],
+      nationalityList: [
+        { name: "Ethiopia", value: 1 },
+        { name: "Others", value: 2 },
+      ],
+    };
   },
-  data: () => ({
-    title: "Register New Patient",
-    formHasErrors: false,
-    valid: true,
-    e1: 1,
-    editedItem: {
-      name: "",
-      phone: "",
-      address: "",
-      emailAddress: "",
-      guardianName: "",
-      height: "",
-      weight: "",
-      bloodPressure: "",
-      age: 0,
-      bloodGroup: "",
-      gender: 0,
-      isAdmitted: false,
-      symptoms: "",
-      note: "",
-      marriageStatus: "",
-      patientType: "",
-    },
-    defaultItem: {
-      name: "",
-      phone: "",
-      address: "",
-      emailAddress: "",
-      guardianName: "",
-      height: "",
-      weight: "",
-      bloodPressure: "",
-      age: 0,
-      bloodGroup: 0,
-      gender: 0,
-      isAdmitted: false,
-      symptoms: "",
-      note: "",
-      marriageStatus: 0,
-      patientType: 1,
-    },
-    rules: {
-      required: (value) => !!value || "Required.",
-      counter: (value) => value.length <= 20 || "Max 20 characters",
-      email: (value) => {
-        const pattern =
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return value.length <= 0 || pattern.test(value) || "Invalid e-mail.";
-      },
-    },
-    genderoptions: [
-      { name: "Male", value: 1 },
-      { name: "Female", value: 2 },
-      { name: "Unspecified", value: 0 },
-    ],
-    marriagestatusoptions: [
-      { name: "Single", value: 1 },
-      { name: "Married", value: 2 },
-      { name: "Seperated", value: 3 },
-      { name: "Widowed", value: 4 },
-      { name: "Unspecified", value: 0 },
-    ],
-    patientTypeoptions: [
-      { name: "Regular", value: 1 },
-      { name: "Credit", value: 2 },
-      { name: "Instatnt", value: 3 },
-    ],
-    bloodgroupoptions: [
-      { name: "A+", value: 1 },
-      { name: "A-", value: 2 },
-      { name: "B+", value: 3 },
-      { name: "B-", value: 4 },
-      { name: "AB+", value: 5 },
-      { name: "AB-", value: 6 },
-      { name: "O+", value: 7 },
-      { name: "O-", value: 8 },
-      { name: "Unspecified", value: 0 },
-    ],
-  }),
+
+  computed: {
+    ...mapState("patient", ["registeredPatient"]),
+  },
+
+  created() {},
+
   methods: {
-    close() {
-      this.editedItem = {
-        name: "",
-        phone: "",
-        address: "",
-        emailAddress: "",
-        guardianName: "",
-        height: "",
-        weight: "",
-        bloodPressure: "",
-        age: 0,
-        bloodGroup: 0,
-        gender: 0,
-        isAdmitted: false,
-        symptoms: "",
-        note: "",
-        marriageStatus: 0,
-      };
-      this.$router.push("/patients");
-    },
-    save() {
-      console.log(this.editedItem);
-      var state = this.$refs.form.validate();
-      this.$refs.form.validate();
-      if (state) {
-        alert("Inserted data is valid");
+    ...mapActions("patient", ["registerPatient"]),
+
+    async save() {
+      if (this.$refs.form.validate()) {
+        await this.registerPatient(this.patientInfo);
+        if (this.registeredPatient === true) {
+          this.patientInfo = {};
+          this.$router.push({ name: "patinets" });
+        } else
+          this.$fire({
+            title: "Patient Registeration",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
+    },
+
+    async cancel() {
+      this.$router.push({ name: "patinets" });
     },
   },
 };
 </script>
+
+<style scoped>
+.main {
+  margin: 7%;
+  margin-top: 3%;
+}
+</style>

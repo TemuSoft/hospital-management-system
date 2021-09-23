@@ -51,6 +51,12 @@ const menusData = [
         allowedRoles: ["admin", "cutting-department"],
       },
       {
+        title: "Measurment Unit",
+        route: "measurmentUnit",
+        icon: "measurmentUnit",
+        allowedRoles: ["admin", "cutting-department"],
+      },
+      {
         title: "Store",
         route: "store",
         icon: "store",
@@ -69,15 +75,21 @@ const menusData = [
     allowedRoles: ["admin", "cutting-department"],
     links: [
       {
-        title: "Medical Services",
-        route: "medicalServices",
-        icon: "medicalServices",
+        title: "Labratory Test",
+        route: "labratoryTest",
+        icon: "labratoryTest",
         allowedRoles: ["admin", "cutting-department"],
       },
       {
-        title: "Services Category",
-        route: "servicesCategory",
-        icon: "servicesCategory",
+        title: "Labratory Result",
+        route: "labratoryResult",
+        icon: "labratoryResult",
+        allowedRoles: ["admin", "others"],
+      },
+      {
+        title: "Imaging Test",
+        route: "imagingTest",
+        icon: "imagingTest",
         allowedRoles: ["admin", "cutting-department"],
       },
     ],
@@ -173,6 +185,24 @@ const menusData = [
     ],
   },
   {
+    title: "Others",
+    allowedRoles: ["admin", "cutting-department"],
+    links: [
+      {
+        title: "Work Permission",
+        allowedRoles: ["admin", "cutting-department"],
+        route: "workPermission",
+        icon: "workPermission",
+      },
+      {
+        title: "Room",
+        allowedRoles: ["admin", "cutting-department"],
+        route: "room",
+        icon: "room",
+      },
+    ],
+  },
+  {
     title: "Reports",
     allowedRoles: ["admin", "cutting-department"],
     route: "reports",
@@ -183,6 +213,12 @@ const menusData = [
     allowedRoles: ["admin", "cutting-department"],
     route: "chat",
     icon: "chat",
+  },
+  {
+    title: "logintry",
+    allowedRoles: ["admin"],
+    route: "logintry",
+    icon: "logintry",
   },
 ];
 export { menusData };

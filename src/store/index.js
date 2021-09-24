@@ -18,6 +18,7 @@ import mainPatientInfoManager from "./mainPatientInfoManager";
 import appointment from "./appointment";
 import prescription from "./prescription";
 import pharmacy from "./pharmacy";
+import cashier from "./cashier";
 
 Vue.use(Vuex);
 
@@ -71,5 +72,6 @@ export default new Vuex.Store({
     appointment,
     prescription,
     pharmacy,
+    cashier,
   },
 });

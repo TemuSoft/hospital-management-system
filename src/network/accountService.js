@@ -9,6 +9,7 @@ const AccountService = {
     return api
       .login(email, password, path.login)
       .then((res) => {
+        console.log(res);
         if (res && res.token) {
           localStorage.setItem(ACCESS_TOKEN_KEY, res.token);
           localStorage.setItem(PROFILE_KEY, JSON.stringify(res));

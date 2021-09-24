@@ -111,7 +111,7 @@ export default {
       if (rols.indexOf(this.activeUser) > -1) validated = true;
       else validated = false;
 
-      validated = true;
+      // validated = true;
 
       return validated;
     },

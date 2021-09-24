@@ -474,8 +474,8 @@ export default {
       "getPatientFilter",
       "updatePatientInfo",
     ]),
-
     ...mapActions("room", ["getRoomsList", "assignPatientRoomRequest"]),
+    ...mapActions("cashier", ["sendCardRenewalRequest"]),
 
     async editPatient(item) {
       this.patientInfo = item;
@@ -557,7 +557,10 @@ export default {
     },
 
     async cardRenewal() {
-      alert(this.selectedPatinet.id);
+      let data = { id: this.selectedPatinet.id, user_id: this.login_user.id };
+      await this.sendCardRenewalRequest(data);
+
+      this.loadData();
     },
   },
 };

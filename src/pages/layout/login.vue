@@ -33,7 +33,7 @@
                   label="User Name"
                   outlined
                   dense
-                  v-model="user.userName"
+                  v-model="user.email"
                   type="text"
                 />
               </v-flex>
@@ -84,7 +84,9 @@ export default {
   methods: {
     login() {
       if (this.$refs.login.validate()) {
-        AccountService.login(this.user.email, this.user.password);
+        AccountService.login(this.user.email, this.user.password).then(() => {
+          this.$router.push({ name: "dashboard" });
+        });
       }
     },
   },

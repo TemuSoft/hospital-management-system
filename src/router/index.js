@@ -223,7 +223,6 @@ const router = new VueRouter({
 
 export default router;
 
-/*
 router.beforeEach((to, from, next) => {
   const publicPages = ["/logintry"];
   const authRequired = !publicPages.includes(to.path);
@@ -235,4 +234,3 @@ router.beforeEach((to, from, next) => {
 
   next();
 });
-*/

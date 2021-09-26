@@ -10,9 +10,11 @@ const AccountService = {
       .login(email, password, path.login)
       .then((res) => {
         res = res.data;
+        res.role = "cashier";
+
         console.log(res);
-        if (res && res.jwt) {
-          localStorage.setItem(ACCESS_TOKEN_KEY, res.jwt);
+        if (res && res.token) {
+          localStorage.setItem(ACCESS_TOKEN_KEY, res.token);
           localStorage.setItem(PROFILE_KEY, JSON.stringify(res));
           return Promise.resolve(true);
         }

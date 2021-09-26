@@ -26,7 +26,6 @@ const core = {
   namespaced: true,
   state: {
     currentLanguage: "en",
-    activeUser: "",
     navDrawerShow: true,
   },
   mutations: {
@@ -35,22 +34,11 @@ const core = {
       i18n.locale = state.currentLanguage;
     },
 
-    setActiveUser(state, payload) {
-      state.activeUser = payload;
-    },
-
     setNavDrawerStauts(state, payload) {
       state.navDrawerShow = payload;
     },
   },
-  actions: {
-    getActiveUser({ commit }) {
-      localStorage.setItem("role", "cashier");
-      let activeUser = localStorage.getItem("role");
-
-      commit("setActiveUser", activeUser);
-    },
-  },
+  actions: {},
 };
 
 export default new Vuex.Store({

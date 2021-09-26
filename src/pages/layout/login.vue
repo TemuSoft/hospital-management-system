@@ -85,7 +85,7 @@ export default {
     login() {
       if (this.$refs.login.validate()) {
         AccountService.login(this.user.email, this.user.password).then(() => {
-          this.$router.push({ name: "dashboard" });
+          this.$router.go();
         });
       }
     },

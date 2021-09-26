@@ -54,12 +54,14 @@ import roomDetail from "../pages/Others/RoomDetail.vue";
 //Main infrmation holder in nurse nd OPD
 import labratoryOrder from "../pages/nurseOPD/labratoryOrder.vue";
 
-import logintry from "../pages/layout/login.vue";
+import login from "../pages/layout/login.vue";
+
+import AuthService from "@/network/accountService";
 
 Vue.use(VueRouter);
 
 const routes = [
-  { path: "/logintry", name: "logintry", component: logintry },
+  { path: "/login", name: "login", component: login },
   { path: "/dashboard", name: "dashboard", component: dashboard },
   {
     path: "/regsiterPatinet",
@@ -221,16 +223,23 @@ const router = new VueRouter({
   routes,
 });
 
-export default router;
-
 router.beforeEach((to, from, next) => {
-  const publicPages = ["/logintry"];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem("user");
+  const authenticated = AuthService.isAuthenticated();
+  const userRole = AuthService.getRole();
 
-  if (authRequired && !loggedIn) {
-    return next("/logintry");
+  const { allowed } = to.meta;
+  if (allowed && allowed.length) {
+    if (!allowed.includes(userRole)) {
+      next({ name: "unauthorized" });
+    }
   }
-
-  next();
+  if (!authenticated && to.name !== "login") {
+    next({ name: "login" });
+  } else if (authenticated && to.name === "login") {
+    next({ name: "dashboard" });
+  } else {
+    next();
+  }
 });
+
+export default router;

@@ -78,8 +78,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import { menusData } from "@/menuData";
+
+import AccountService from "@/network/accountService";
 
 export default {
   name: "sideBar",
@@ -95,23 +97,17 @@ export default {
   },
 
   computed: {
-    ...mapState("core", ["activeUser", "navDrawerShow"]),
+    ...mapState("core", ["navDrawerShow"]),
   },
 
   methods: {
-    ...mapActions("core", ["getActiveUser"]),
-
-    async loadData() {
-      await this.getActiveUser();
-    },
+    async loadData() {},
 
     validateRole(rols) {
       let validated = false;
 
-      if (rols.indexOf(this.activeUser) > -1) validated = true;
+      if (rols.indexOf(AccountService.getRole()) > -1) validated = true;
       else validated = false;
-
-      // validated = true;
 
       return validated;
     },

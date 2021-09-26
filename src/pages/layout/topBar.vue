@@ -27,15 +27,14 @@
       </v-badge>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-      <v-btn icon @click="logout" class="logout">
-        <v-icon color="red">mdi-logout </v-icon>
-      </v-btn>
+      <v-btn @click="logout" color="red" text>Logout</v-btn>
     </v-app-bar>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from "vuex";
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
@@ -60,6 +59,10 @@ export default {
 
     async manageNavDrawer() {
       await this.setNavDrawerStauts(!this.navDrawerShow);
+    },
+
+    logout() {
+      AccountService.logout();
     },
 
     darkmode() {

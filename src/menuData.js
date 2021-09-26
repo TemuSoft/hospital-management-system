@@ -329,11 +329,5 @@ const menusData = [
     route: "chat",
     icon: "chat",
   },
-  {
-    title: "logintry",
-    allowedRoles: ["admin"],
-    route: "logintry",
-    icon: "logintry",
-  },
 ];
 export { menusData };

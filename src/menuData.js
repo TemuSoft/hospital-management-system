@@ -171,18 +171,18 @@ const menusData = [
         icon: "dashboard",
         allowedRoles: ["cashier"],
       },
-      {
-        title: "transactions",
-        route: "transactions",
-        icon: "transactions",
-        allowedRoles: ["cashier"],
-      },
-      {
-        title: "financial_reports",
-        route: "financialReports",
-        icon: "financialReports",
-        allowedRoles: ["cashier"],
-      },
+      // {
+      //   title: "transactions",
+      //   route: "transactions",
+      //   icon: "transactions",
+      //   allowedRoles: ["cashier"],
+      // },
+      // {
+      //   title: "financial_reports",
+      //   route: "financialReports",
+      //   icon: "financialReports",
+      //   allowedRoles: ["cashier"],
+      // },
       {
         title: "payment",
         route: "payment",

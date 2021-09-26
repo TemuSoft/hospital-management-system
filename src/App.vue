@@ -107,11 +107,4 @@ export default {
 .mainDiv::-webkit-scrollbar {
   display: none; /* for Chrome, Safari, and Opera */
 }
-
-.loginpage,
-.loginpage {
-  background-color: cadetblue;
-  width: 100%;
-  height: 100%;
-}
 </style>

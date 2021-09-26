@@ -1,5 +1,11 @@
 <template>
-  <v-navigation-drawer fixed absolute expand-on-hover v-show="navDrawerShow">
+  <v-navigation-drawer
+    fixed
+    absolute
+    expand-on-hover
+    v-show="navDrawerShow"
+    height="95vh"
+  >
     <perfect-scrollbar style="overflow: hidden">
       <v-list class="profile">
         <v-list-item class="px-2">

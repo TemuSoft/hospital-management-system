@@ -12,7 +12,6 @@ const AccountService = {
         res = res.data;
         res.role = "cashier";
 
-        console.log(res);
         if (res && res.token) {
           localStorage.setItem(ACCESS_TOKEN_KEY, res.token);
           localStorage.setItem(PROFILE_KEY, JSON.stringify(res));

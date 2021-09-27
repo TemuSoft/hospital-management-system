@@ -10,7 +10,6 @@ const AccountService = {
       .login(email, password, path.login)
       .then((res) => {
         res = res.data;
-        res.role = "cashier";
 
         if (res && res.token) {
           localStorage.setItem(ACCESS_TOKEN_KEY, res.token);

@@ -135,6 +135,22 @@
               />
             </v-flex>
             <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Role</v-flex>
+            <v-flex xs12 sm4>
+              <v-autocomplete
+                outlined
+                dense
+                :items="roles"
+                item-text="name"
+                item-value="value"
+                :rules="inputRules"
+                v-model="staffInfo.role"
+              />
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex xs12 sm1> </v-flex>
             <v-flex xs12 sm1> </v-flex>
             <v-flex xs12 sm4>
               <v-btn small outlined color="green" @click="save()"> Save </v-btn>
@@ -156,6 +172,20 @@ export default {
       staffInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
       genderoptions: ["Male", "Female"],
+
+      roles: [
+        { name: "Administrator", value: "admin" },
+        { name: "Nurse", value: "nurse" },
+        { name: "Cashier", value: "cashier" },
+        { name: "Pharmacy", value: "pharmacy" },
+        { name: "Labratory", value: "labratory" },
+        { name: "Imaging", value: "imaging" },
+        { name: "Labratory Head", value: "labratory_head" },
+        { name: "Imaging Head", value: "imaging_head" },
+        { name: "OPD", value: "opd" },
+        { name: "Store", value: "store" },
+        { name: "Reception", value: "reception" },
+      ],
     };
   },
 

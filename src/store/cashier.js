@@ -4,14 +4,31 @@ import { api, path } from "../network/index";
 
 export default {
   namespaced: true,
-  state: {},
+  state: {
+    sendCardRenewalRequested: false,
+    paymnetRequest: [],
+  },
 
-  mutations: {},
+  mutations: {
+    setSendCardRenewalRequest(state, payload) {
+      state.sendCardRenewalRequested = payload;
+    },
+
+    setPaymentRequest(state, payload) {
+      state.paymnetRequest = payload;
+    },
+  },
 
   actions: {
-    async sendCardRenewalRequest({ commit }, data) {
-      await api.create(path.cashier_card_renewal, data);
-      commit;
+    async sendCardRenewalRequest({ commit }, id) {
+      let res = await api.get(path.reception_card_renewal, id);
+      commit("setSendCardRenewalRequest", res.data.st);
+    },
+
+    async getPaymentRequest({ commit }) {
+      let res = await api.getAll(path.cashier_payment_request);
+
+      commit("setPaymentRequest", res.data);
     },
   },
 };

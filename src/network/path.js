@@ -6,6 +6,7 @@ const path = {
   update_patient: "/patient/update_patient",
   register_taff: "/user/register",
   staff: "/user/search_user",
+  staff_update: "/user/update_user",
   register_department: "/admin/register_department",
   department: "/admin/department_data",
   update_department: "/admin/update_department_data",
@@ -49,6 +50,9 @@ const path = {
 
   make_appointemtn: "/common/appointment",
   single_make_appointemtn: "/common/read_user_appointment",
+
+  reception_card_renewal: "/reception/write_card_renewal",
+  cashier_payment_request: "/cashier/payment_request",
 
   logout: "/user/logout",
   login: "/user/login",

@@ -125,19 +125,37 @@
             <v-flex xs12 sm1> Department</v-flex>
             <v-flex xs12 sm4>
               <v-autocomplete
-                :rules="inputRules"
                 outlined
                 dense
-                :items="departmentList"
+                :items="departments"
                 item-text="name"
-                item-id="value"
+                item-value="id"
+                :rules="inputRules"
                 v-model="staffInfo.department"
-              ></v-autocomplete>
+              />
             </v-flex>
+            <v-flex xs12 sm1> </v-flex>
+            <v-flex xs12 sm1> Role</v-flex>
+            <v-flex xs12 sm4>
+              <v-autocomplete
+                outlined
+                dense
+                :items="roles"
+                item-text="name"
+                item-value="value"
+                :rules="inputRules"
+                v-model="staffInfo.role"
+              />
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
             <v-flex xs12 sm1> </v-flex>
             <v-flex xs12 sm1> </v-flex>
             <v-flex xs12 sm4>
-              <v-btn small outlined color="green" @click="save()"> Save </v-btn>
+              <v-btn small outlined color="green" @click="save()">
+                Update
+              </v-btn>
             </v-flex>
           </v-layout>
         </v-form>
@@ -157,35 +175,42 @@ export default {
       staffInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
       genderoptions: ["Male", "Female"],
-      departmentList: [
-        { name: "Adminstrator", value: 1 },
-        { name: "Human Resource", value: 2 },
-        { name: "Labratory", value: 3 },
-        { name: "OPD", value: 4 },
-        { name: "Medical Directors", value: 5 },
-        { name: "Nurse and Pharmacy", value: 6 },
-        { name: "Store", value: 7 },
+
+      roles: [
+        { name: "Administrator", value: "admin" },
+        { name: "Nurse", value: "nurse" },
+        { name: "Cashier", value: "cashier" },
+        { name: "Pharmacy", value: "pharmacy" },
+        { name: "Labratory", value: "labratory" },
+        { name: "Imaging", value: "imaging" },
+        { name: "Labratory Head", value: "labratory_head" },
+        { name: "Imaging Head", value: "imaging_head" },
+        { name: "OPD", value: "opd" },
+        { name: "Store", value: "store" },
+        { name: "Reception", value: "reception" },
       ],
     };
   },
 
   computed: {
     ...mapState("staff", ["singleStaff", "updatedStaff"]),
+    ...mapState("department", ["departments"]),
   },
 
   created() {
+    const { staffId } = this.$route.params;
+    this.staffId = staffId;
+
     this.loadData();
   },
 
   methods: {
     ...mapActions("staff", ["getSingleStaff", "updateStaff"]),
+    ...mapActions("department", ["getDepartmentList"]),
 
     async loadData() {
-      const { staffId } = this.$route.params;
-      this.staffId = staffId;
-
       await this.getSingleStaff(this.staffId);
-      this.staffInfo = this.singleStaff;
+      this.staffInfo = this.singleStaff[0];
     },
 
     async save() {

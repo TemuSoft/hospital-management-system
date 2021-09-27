@@ -3,11 +3,11 @@ import authHeader from "./authHeader";
 
 class api {
   getAll(path) {
-    return http.get(`${path}`, { headers: authHeader() });
+    return http.get(`${path}`);
   }
 
   get(path, id) {
-    return http.get(`${path}/${id}/`, { headers: authHeader() });
+    return http.get(`${path}/${id}/`);
   }
 
   getPatientStatus(path, id, status) {
@@ -15,11 +15,11 @@ class api {
   }
 
   create(path, data) {
-    return http.post(`${path}`, data, { headers: authHeader() });
+    return http.post(`${path}`, data);
   }
 
   update(path, id, data) {
-    return http.patch(`${path}/${id}/`, data, { headers: authHeader() });
+    return http.patch(`${path}/${id}/`, data);
   }
 
   delete(path, id) {

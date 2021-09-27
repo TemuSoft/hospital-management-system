@@ -1,8 +1,8 @@
 <template>
   <div class="main">
     <h2>Payment Request</h2>
-
-    <v-data-table :items="dataList" :headers="headers">
+    {{ paymnetRequest }}
+    <v-data-table :items="paymnetRequest" :headers="headers">
       <template v-slot:top>
         <br />
         <v-layout>
@@ -43,19 +43,34 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
-      dataList: [],
       headers: [
-        { text: "Card No", value: "cardNo" },
-        { text: "Name", value: "name" },
+        { text: "Card No", value: "card_number" },
+        { text: "Full Name", value: "name" },
         { text: "Reason", value: "reason" },
-        { text: "Price", value: "price" },
-        { text: "Payed", value: "price" },
+        { text: "Price", value: "amount" },
         { text: "Action", value: "action" },
       ],
     };
+  },
+
+  created() {
+    this.loadData();
+  },
+
+  computed: {
+    ...mapState("cashier", ["paymnetRequest"]),
+  },
+
+  methods: {
+    ...mapActions("cashier", ["getPaymentRequest"]),
+
+    async loadData() {
+      await this.getPaymentRequest();
+    },
   },
 };
 </script>

@@ -83,7 +83,7 @@
 
                 <label class="titleHead">Amount : </label>
                 <label class="titleCont">
-                  {{ selectedPatinet.amount }}
+                  {{ this.totalPriceInService }}
                 </label>
                 <br />
                 <br />
@@ -91,7 +91,7 @@
                 <v-text-field
                   v-if="selectedPatinet.patient.patient_type != 3"
                   label="Payed By?"
-                  v-model="paymentInfo.who_payed"
+                  v-model="who_payed"
                   dense
                 />
               </v-flex>
@@ -109,10 +109,10 @@
                 item-value="value"
                 dense
                 outlined
-                @change="validatePayment"
                 chips
                 multiple
-                v-model="paymentInfo.payment_option"
+                @change="validatePayment"
+                v-model="payment_option"
               />
               <v-autocomplete
                 v-else
@@ -126,14 +126,13 @@
                 chips
                 multiple
                 @change="validatePayment"
-                v-model="paymentInfo.payment_option"
+                v-model="payment_option"
               />
             </v-layout>
 
             <h3 style="color: green">
               Imaging and Laboratory Test Payment Requests
             </h3>
-            <br />
 
             <v-layout>
               <table>
@@ -148,22 +147,22 @@
                     <checked
                       class="icon"
                       v-if="checkboxWhole[testListPayment[i].id] === true"
-                      @click="checkboxWholeProcess(testListPayment[i].id, i)"
+                      @click="checkboxWholeProcess(testListPayment[i].id)"
                     />
                     <unchecked
                       class="icon"
                       v-else
-                      @click="checkboxWholeProcess(testListPayment[i].id, i)"
+                      @click="checkboxWholeProcess(testListPayment[i].id)"
                     />
                   </td>
-                  <td>{{ testListPayment[i].test_case_name }}</td>
+                  <td>{{ testListPayment[i].name }}</td>
                   <td>{{ testListPayment[i].price }}</td>
                 </tr>
               </table>
             </v-layout>
-            <label>Total : 150</label><br />
-            <label>To Be Payed (Cash) : 20</label><br />
-            <label>Payment from Prepayment : 130</label>
+
+            <h5 style="color: red">To Be Payed (Cash) : {{ totalCash }}</h5>
+            <h5>Payment from Prepayment : {{ totalPrepayment }}</h5>
 
             <v-layout>
               <v-checkbox
@@ -175,7 +174,7 @@
 
             <v-layout>
               <v-btn
-                v-show="confirmPaymentCheckbox"
+                v-show="everyThingIsFine"
                 small
                 outlined
                 text
@@ -207,19 +206,33 @@ export default {
     return {
       inputRules: [(v) => !!v || "This field is required"],
 
-      paymentInfo: {},
+      who_payed: "",
+      payment_option: [],
+      totalPriceInService: 0,
+      totalCash: 0,
+      totalPrepayment: 0,
       confirmPaymentCheckbox: false,
+      everyThingIsFine: false,
       paymentOptionList1: [
         { name: "Pre-payment", value: 1 },
         { name: "Post-payment", value: 2 },
         { name: "Cash", value: 3 },
       ],
+
       paymentOptionList2: [
         { name: "Pre-payment", value: 1 },
         { name: "Cash", value: 3 },
       ],
 
-      testListPayment: [],
+      testListPayment: [
+        { name: "Test Case 1", price: 50, id: 1 },
+        { name: "Test Case 2", price: 150, id: 2 },
+        { name: "Test Case 3", price: 40, id: 3 },
+        { name: "Test Case 4", price: 79, id: 4 },
+        { name: "Test Case 5", price: 79, id: 5 },
+        { name: "Test Case 6", price: 4, id: 6 },
+        { name: "Test Case 7", price: 43, id: 7 },
+      ],
       checkboxWhole: {},
     };
   },
@@ -235,7 +248,11 @@ export default {
   },
 
   computed: {
-    ...mapState("cashier", ["paymnetRequest", "prepaymentAmount"]),
+    ...mapState("cashier", [
+      "paymnetRequest",
+      "prepaymentAmount",
+      "testCaseList",
+    ]),
   },
 
   mounted() {
@@ -243,10 +260,21 @@ export default {
   },
 
   methods: {
-    ...mapActions("cashier", ["getPaymentRequest", "getPrepaymentAmount"]),
+    ...mapActions("cashier", [
+      "getPaymentRequest",
+      "getPrepaymentAmount",
+      "getTestCaseList",
+    ]),
 
     async loadData() {
-      await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
+      // await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
+      // await this.getTestCaseList(this.selectedPatinet.service_id);
+
+      this.totalPriceInService = 0;
+      for (let i = 0; i < this.testListPayment.length; i++)
+        this.totalPriceInService += this.testListPayment[i].price;
+
+      this.calculatePayment();
     },
 
     async paymentDoneCard() {
@@ -255,23 +283,47 @@ export default {
       }
     },
 
-    async validatePayment() {
-      if (this.paymentInfo.payment_option === 1) {
-        this.confirmPaymentCheckbox = false;
-        if (this.prepaymentAmountHave >= this.selectedPatinet.amount) {
-          this.confirmPaymentCheckbox = true;
-        }
-      }
+    async valiDateEveryThingIsFine() {
+      this.everyThingIsFine = false;
+      if (this.totalPrepayment <= this.prepaymentAmount)
+        if (this.confirmPaymentCheckbox) this.everyThingIsFine = true;
     },
 
-    async checkboxWholeProcess(id, i) {
+    async calculatePayment() {
+      this.totalPrepayment = 0;
+      this.totalCash = 0;
+      for (let i = 0; i < this.testListPayment.length; i++) {
+        let cu = this.checkboxWhole[this.testListPayment[i].id];
+        if (cu === false || cu === undefined)
+          this.totalPrepayment += this.testListPayment[i].price;
+        else this.totalCash += this.testListPayment[i].price;
+      }
+
+      this.valiDateEveryThingIsFine();
+    },
+
+    async validatePayment() {
+      if (this.payment_option.indexOf(3) === -1) {
+        this.checkboxWhole = {};
+        this.$notify({
+          type: "danger",
+          title: "Can't checked the box!!!",
+          text: "In the payment option cash is nmot enabled!!!",
+        });
+      }
+
+      this.calculatePayment();
+    },
+
+    async checkboxWholeProcess(id) {
       this.checkboxWhole[id] = !this.checkboxWhole[id];
       if (this.checkboxWhole[id] === false) delete this.checkboxWhole[id];
-      else this.testListPayment[i].amount = "";
 
       let temp = this.checkboxWhole;
       this.checkboxWhole = {};
       this.checkboxWhole = temp;
+
+      this.validatePayment();
     },
 
     async closeDialog() {
@@ -303,6 +355,7 @@ table {
 }
 td {
   justify-content: center;
+  text-align: center;
 }
 
 tr:nth-child(even) {

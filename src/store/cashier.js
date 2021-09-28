@@ -8,6 +8,7 @@ export default {
     sendCardRenewalRequested: false,
     paymnetRequest: [],
     prepaymentAmount: 0,
+    testCaseList: [],
   },
 
   mutations: {
@@ -21,6 +22,10 @@ export default {
 
     setPrepaymentAmount(state, payload) {
       state.prepaymentAmount = payload;
+    },
+
+    setTestCaseList(state, payload) {
+      state.testCaseList = payload;
     },
   },
 
@@ -38,6 +43,11 @@ export default {
     async getPrepaymentAmount({ commit }, patient_id) {
       let res = await api.get(path.cashier_payment_request, patient_id);
       commit("setPrepaymentAmount", res.data);
+    },
+
+    async getTestCaseList({ commit }, service_id) {
+      let res = await api.get(path.lab_test_case, service_id);
+      commit("setTestCaseList", res.data);
     },
   },
 };

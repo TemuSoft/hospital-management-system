@@ -119,6 +119,8 @@
                 />
               </v-flex>
             </v-layout>
+            Prepayment Info
+            {{ prepaymentAmount }}
 
             <!-- Used to remove payment option whrn patient have insrance -->
             <v-layout v-if="selectedPatinet.patient.patient_type != 3">
@@ -241,6 +243,8 @@
                 />
               </v-flex>
             </v-layout>
+            Prepayment Info
+            {{ prepaymentAmount }}
 
             <!-- Used to remove payment option whrn patient have insrance -->
             <v-layout v-if="selectedPatinet.patient.patient_type != 3">
@@ -273,7 +277,7 @@
               <h4>Imaging and Laboratory Test Payment Requests</h4>
               <table>
                 <tr>
-                  <th>Payment Type</th>
+                  <th>Cash</th>
                   <th>Test Case</th>
                   <th>Price</th>
                   <th>Payed Amount</th>
@@ -293,6 +297,7 @@
                     />
                   </td>
                   <td>{{ testListPayment[i].test_case_name }}</td>
+                  <td>{{ testListPayment[i].price }}</td>
                   <td>
                     <v-text-field
                       class="tdCell"
@@ -302,7 +307,7 @@
                       dense
                       outlined
                     />
-                    <label v-else style="color: red">Outsourced</label>
+                    <label v-else style="color: green">Fully Covered</label>
                   </td>
                 </tr>
               </table>

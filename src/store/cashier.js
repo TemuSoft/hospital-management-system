@@ -7,6 +7,7 @@ export default {
   state: {
     sendCardRenewalRequested: false,
     paymnetRequest: [],
+    prepaymentAmount: 0,
   },
 
   mutations: {
@@ -16,6 +17,10 @@ export default {
 
     setPaymentRequest(state, payload) {
       state.paymnetRequest = payload;
+    },
+
+    setPrepaymentAmount(state, payload) {
+      state.prepaymentAmount = payload;
     },
   },
 
@@ -27,8 +32,12 @@ export default {
 
     async getPaymentRequest({ commit }) {
       let res = await api.getAll(path.cashier_payment_request);
-
       commit("setPaymentRequest", res.data);
+    },
+
+    async getPrepaymentAmount({ commit }, patient_id) {
+      let res = await api.get(path.cashier_payment_request, patient_id);
+      commit("setPrepaymentAmount", res.data);
     },
   },
 };

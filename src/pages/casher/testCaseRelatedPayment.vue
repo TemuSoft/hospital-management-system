@@ -1,14 +1,14 @@
 <template>
   <div>
     <v-dialog
-      v-model="paymentDialogCard"
+      v-model="paymentDialogOthers"
       width="1000"
       persistent
       v-if="selectedPatinet.patient"
     >
       <v-card>
         <v-toolbar dense color="green">
-          Payment Approval Card Related
+          Payment Approval Laboratory and Imaging
           <v-spacer />
 
           <Close @click="closeDialog()" class="icon" />
@@ -16,7 +16,7 @@
         <br />
 
         <v-card-text>
-          <v-form @submit.prevent="paymentDoneCard" ref="paymentDoneCard">
+          <v-form @submit.prevent="paymentDone" ref="paymentDone">
             <v-layout>
               <v-flex xs12 sm1></v-flex>
               <v-flex xs12 sm6>
@@ -26,13 +26,11 @@
                   ({{ selectedPatinet.patient.gender }})
                 </label>
                 <br />
-
                 <label class="titleHead">Card Number : </label>
                 <label class="titleCont">
                   {{ selectedPatinet.patient.card_number }}
                 </label>
                 <br />
-
                 <label class="titleHead">Guardian Name : </label>
                 <label class="titleCont">
                   {{ selectedPatinet.patient.guardian_name }}
@@ -111,7 +109,9 @@
                 item-value="value"
                 dense
                 outlined
-                @change="validatePayment()"
+                @change="validatePayment"
+                chips
+                multiple
                 v-model="paymentInfo.payment_option"
               />
               <v-autocomplete
@@ -123,16 +123,52 @@
                 item-value="value"
                 dense
                 outlined
-                @change="validatePayment()"
+                chips
+                multiple
+                @change="validatePayment"
                 v-model="paymentInfo.payment_option"
               />
             </v-layout>
+
+            <h3 style="color: green">
+              Imaging and Laboratory Test Payment Requests
+            </h3>
+            <br />
+
+            <v-layout>
+              <table>
+                <tr>
+                  <th>Cash</th>
+                  <th>Test Case</th>
+                  <th>Price</th>
+                </tr>
+
+                <tr v-for="(ltr, i) in testListPayment" :key="i">
+                  <td>
+                    <checked
+                      class="icon"
+                      v-if="checkboxWhole[testListPayment[i].id] === true"
+                      @click="checkboxWholeProcess(testListPayment[i].id, i)"
+                    />
+                    <unchecked
+                      class="icon"
+                      v-else
+                      @click="checkboxWholeProcess(testListPayment[i].id, i)"
+                    />
+                  </td>
+                  <td>{{ testListPayment[i].test_case_name }}</td>
+                  <td>{{ testListPayment[i].price }}</td>
+                </tr>
+              </table>
+            </v-layout>
+            <label>Total : 150</label><br />
+            <label>To Be Payed (Cash) : 20</label><br />
+            <label>Payment from Prepayment : 130</label>
 
             <v-layout>
               <v-checkbox
                 v-model="confirmPaymentCheckbox"
                 label="Select me to confirm payment"
-                @change="validatePayment()"
               />
               <br />
             </v-layout>
@@ -144,7 +180,7 @@
                 outlined
                 text
                 color="green"
-                @click="paymentDoneCard()"
+                @click="paymentDone()"
                 class="text-capitalize"
               >
                 Payment Done
@@ -158,11 +194,14 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
 import Close from "@/assets/icons/close.svg";
+import Checked from "@/assets/icons/checked.svg";
+import Unchecked from "@/assets/icons/unchecked.svg";
+
+import { mapActions, mapState } from "vuex";
 
 export default {
-  props: ["selectedPatinet", "paymentDialogCard"],
+  props: ["paymentDialogOthers", "selectedPatinet"],
 
   data() {
     return {
@@ -179,6 +218,9 @@ export default {
         { name: "Pre-payment", value: 1 },
         { name: "Cash", value: 3 },
       ],
+
+      testListPayment: [],
+      checkboxWhole: {},
     };
   },
 
@@ -188,6 +230,8 @@ export default {
 
   components: {
     Close,
+    Checked,
+    Unchecked,
   },
 
   computed: {
@@ -205,6 +249,12 @@ export default {
       await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
     },
 
+    async paymentDoneCard() {
+      if (this.$refs.paymentDoneCard.validate()) {
+        alert("All Input is valid");
+      }
+    },
+
     async validatePayment() {
       if (this.paymentInfo.payment_option === 1) {
         this.confirmPaymentCheckbox = false;
@@ -214,8 +264,18 @@ export default {
       }
     },
 
+    async checkboxWholeProcess(id, i) {
+      this.checkboxWhole[id] = !this.checkboxWhole[id];
+      if (this.checkboxWhole[id] === false) delete this.checkboxWhole[id];
+      else this.testListPayment[i].amount = "";
+
+      let temp = this.checkboxWhole;
+      this.checkboxWhole = {};
+      this.checkboxWhole = temp;
+    },
+
     async closeDialog() {
-      this.$emit("cardPaymentControl", false);
+      this.$emit("testCasePaymentControl", false);
     },
   },
 };
@@ -233,5 +293,23 @@ export default {
 }
 .titleCont {
   font-size: 17px;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+td {
+  justify-content: center;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.tdCell {
+  height: 50px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog
-      v-model="paymentDialogOthers"
+      v-model="paymentDialogRegular"
       width="1000"
       persistent
       v-if="selectedPatinet.patient"
@@ -88,36 +88,14 @@
                 <br />
                 <br />
 
-                <v-text-field
-                  v-if="selectedPatinet.patient.patient_type != 3"
-                  label="Payed By?"
-                  v-model="who_payed"
-                  dense
-                />
+                <v-text-field label="Payed By?" v-model="who_payed" dense />
               </v-flex>
             </v-layout>
 
-            <!-- Used to remove payment option whrn patient have insrance -->
-            <v-layout v-if="selectedPatinet.patient.patient_type != 3">
-              <!-- Used to denied permission for non-credit patient credit option-->
+            <v-layout>
               <v-autocomplete
                 label="Payment Type"
-                v-if="selectedPatinet.patient.patient_type != 2"
-                :items="paymentOptionList2"
-                :rules="inputRules"
-                item-text="name"
-                item-value="value"
-                dense
-                outlined
-                chips
-                multiple
-                @change="validatePayment"
-                v-model="payment_option"
-              />
-              <v-autocomplete
-                v-else
-                label="Payment Type"
-                :items="paymentOptionList1"
+                :items="paymentOptionList14"
                 :rules="inputRules"
                 item-text="name"
                 item-value="value"
@@ -200,7 +178,7 @@ import Unchecked from "@/assets/icons/unchecked.svg";
 import { mapActions, mapState } from "vuex";
 
 export default {
-  props: ["paymentDialogOthers", "selectedPatinet"],
+  props: ["paymentDialogRegular", "selectedPatinet"],
 
   data() {
     return {
@@ -213,13 +191,8 @@ export default {
       totalPrepayment: 0,
       confirmPaymentCheckbox: false,
       everyThingIsFine: false,
-      paymentOptionList1: [
-        { name: "Pre-payment", value: 1 },
-        { name: "Post-payment", value: 2 },
-        { name: "Cash", value: 3 },
-      ],
 
-      paymentOptionList2: [
+      paymentOptionList14: [
         { name: "Pre-payment", value: 1 },
         { name: "Cash", value: 3 },
       ],

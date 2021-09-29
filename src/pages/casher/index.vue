@@ -57,9 +57,21 @@
       @cardPaymentControl="closeDialog($event)"
     />
 
-    <TestCaseRelatedPayment
+    <RegularPayment
       :selectedPatinet="selectedPatinet"
-      :paymentDialogOthers="paymentDialogOthers"
+      :paymentDialogRegular="paymentDialogRegular"
+      @testCasePaymentControl="closeDialog($event)"
+    />
+
+    <InsurancePayment
+      :selectedPatinet="selectedPatinet"
+      :paymentDialogInsurance="paymentDialogInsurance"
+      @testCasePaymentControl="closeDialog($event)"
+    />
+
+    <CreditPayment
+      :selectedPatinet="selectedPatinet"
+      :paymentDialogCredit="paymentDialogCredit"
       @testCasePaymentControl="closeDialog($event)"
     />
   </div>
@@ -68,14 +80,18 @@
 <script>
 import { mapActions, mapState } from "vuex";
 
-import CardRelatedPayment from "./cardRelatedPayment.vue";
-import TestCaseRelatedPayment from "./testCaseRelatedPayment.vue";
+import CardRelatedPayment from "./paymentDialog/cardRelatedPayment.vue";
+import RegularPayment from "./paymentDialog/RegularPayment.vue";
+import InsurancePayment from "./paymentDialog/InsurancePayment.vue";
+import CreditPayment from "./paymentDialog/CreditPayment.vue";
 
 export default {
   data() {
     return {
       paymentDialogCard: false,
-      paymentDialogOthers: false,
+      paymentDialogRegular: false,
+      paymentDialogInsurance: false,
+      paymentDialogCredit: false,
       selectedPatinet: {},
 
       search: "",
@@ -96,7 +112,9 @@ export default {
 
   components: {
     CardRelatedPayment,
-    TestCaseRelatedPayment,
+    RegularPayment,
+    InsurancePayment,
+    CreditPayment,
   },
 
   computed: {
@@ -112,15 +130,23 @@ export default {
 
     async closeDialog() {
       this.paymentDialogCard = false;
-      this.paymentDialogOthers = false;
+      this.paymentDialogRegular = false;
+      this.paymentDialogInsurance = false;
+      this.paymentDialogCredit = false;
     },
 
     async paymentDialogProcess(item) {
       item.reason_id = 2;
+      item.patient.patient_type = 2;
+      let pt = item.patient.patient_type;
 
       if (item.reason_id === 0 || item.reason_id === 1)
         this.paymentDialogCard = true;
-      else this.paymentDialogOthers = true;
+      else {
+        if (pt === 1 || pt === 4) this.paymentDialogRegular = true;
+        else if (pt === 3) this.paymentDialogInsurance = true;
+        else this.paymentDialogCredit = true;
+      }
 
       this.selectedPatinet = item;
     },

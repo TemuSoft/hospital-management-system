@@ -13,7 +13,6 @@ const menusData = [
       "opd",
       "store",
       "reception",
-      "hrm",
     ],
     route: "dashboard",
   },
@@ -139,13 +138,13 @@ const menusData = [
   },
   {
     title: "organization",
-    allowedRoles: ["admin", "hrm"],
+    allowedRoles: ["admin"],
     links: [
       {
         title: "staff",
         route: "staff",
         icon: "staff",
-        allowedRoles: ["hrm"],
+        allowedRoles: ["admin"],
       },
       {
         title: "departments",
@@ -157,7 +156,7 @@ const menusData = [
         title: "insurance",
         route: "insurance",
         icon: "insurance",
-        allowedRoles: ["admin", "hrm"],
+        allowedRoles: ["admin"],
       },
     ],
   },
@@ -171,18 +170,18 @@ const menusData = [
         icon: "dashboard",
         allowedRoles: ["cashier"],
       },
-      {
-        title: "transactions",
-        route: "transactions",
-        icon: "transactions",
-        allowedRoles: ["cashier"],
-      },
-      {
-        title: "financial_reports",
-        route: "financialReports",
-        icon: "financialReports",
-        allowedRoles: ["cashier"],
-      },
+      // {
+      //   title: "transactions",
+      //   route: "transactions",
+      //   icon: "transactions",
+      //   allowedRoles: ["cashier"],
+      // },
+      // {
+      //   title: "financial_reports",
+      //   route: "financialReports",
+      //   icon: "financialReports",
+      //   allowedRoles: ["cashier"],
+      // },
       {
         title: "payment",
         route: "payment",
@@ -205,7 +204,6 @@ const menusData = [
       "opd",
       "store",
       "reception",
-      "hrm",
     ],
     links: [
       {
@@ -240,7 +238,6 @@ const menusData = [
           "opd",
           "store",
           "reception",
-          "hrm",
         ],
         route: "annualReport",
         icon: "annualReport",
@@ -261,7 +258,6 @@ const menusData = [
       "opd",
       "store",
       "reception",
-      "hrm",
     ],
     links: [
       {
@@ -278,7 +274,6 @@ const menusData = [
           "opd",
           "store",
           "reception",
-          "hrm",
         ],
         route: "workPermission",
         icon: "workPermission",
@@ -305,7 +300,6 @@ const menusData = [
       "opd",
       "store",
       "reception",
-      "hrm",
     ],
     route: "reports",
     icon: "reports",
@@ -324,16 +318,9 @@ const menusData = [
       "opd",
       "store",
       "reception",
-      "hrm",
     ],
     route: "chat",
     icon: "chat",
-  },
-  {
-    title: "logintry",
-    allowedRoles: ["admin"],
-    route: "logintry",
-    icon: "logintry",
   },
 ];
 export { menusData };

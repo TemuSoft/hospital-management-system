@@ -9,6 +9,8 @@ const AccountService = {
     return api
       .login(email, password, path.login)
       .then((res) => {
+        res = res.data;
+
         if (res && res.token) {
           localStorage.setItem(ACCESS_TOKEN_KEY, res.token);
           localStorage.setItem(PROFILE_KEY, JSON.stringify(res));
@@ -35,6 +37,7 @@ const AccountService = {
     Router.push({
       name: "login",
     });
+    Router.go();
   },
 
   updateToken(token) {

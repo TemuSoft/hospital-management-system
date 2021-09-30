@@ -1,5 +1,11 @@
 <template>
-  <v-navigation-drawer fixed absolute expand-on-hover v-show="navDrawerShow">
+  <v-navigation-drawer
+    fixed
+    absolute
+    expand-on-hover
+    v-show="navDrawerShow"
+    height="95vh"
+  >
     <perfect-scrollbar style="overflow: hidden">
       <v-list class="profile">
         <v-list-item class="px-2">
@@ -78,8 +84,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import { menusData } from "@/menuData";
+
+import AccountService from "@/network/accountService";
 
 export default {
   name: "sideBar",
@@ -95,23 +103,17 @@ export default {
   },
 
   computed: {
-    ...mapState("core", ["activeUser", "navDrawerShow"]),
+    ...mapState("core", ["navDrawerShow"]),
   },
 
   methods: {
-    ...mapActions("core", ["getActiveUser"]),
-
-    async loadData() {
-      await this.getActiveUser();
-    },
+    async loadData() {},
 
     validateRole(rols) {
       let validated = false;
 
-      if (rols.indexOf(this.activeUser) > -1) validated = true;
+      if (rols.indexOf(AccountService.getRole()) > -1) validated = true;
       else validated = false;
-
-      validated = true;
 
       return validated;
     },

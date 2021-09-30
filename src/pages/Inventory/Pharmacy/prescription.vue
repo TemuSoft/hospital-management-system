@@ -168,7 +168,7 @@ export default {
 
       y = y + minspa;
       y = y + minspa;
-      doc.text("Date Make : 19-09-2021", x, y);
+      doc.text("Date Make :  " + new Date(), x, y);
 
       y = y + minspa;
       y = y + minspa;
@@ -183,6 +183,7 @@ export default {
       doc.setFontSize(12);
       doc.text("Medicine List and Detail Specification", x, y);
       let col = [
+        "Number",
         "Medicine",
         "Dosage",
         "Total Quantity",
@@ -193,6 +194,7 @@ export default {
       let data = [];
       for (let i = 0; i < this.medicineList.length; i++) {
         data.push([
+          i + 1,
           this.medicineList[i].medicine,
           this.medicineList[i].dosage,
           this.medicineList[i].totalQTY,

@@ -23,7 +23,7 @@
             </v-row>
           </v-flex>
 
-          <v-form @submit.prevent="login" class="pa-3">
+          <v-form @submit.prevent="login" class="pa-3" ref="login">
             <v-alert v-if="authError" :value="true" type="error">{{
               authError
             }}</v-alert>
@@ -33,7 +33,7 @@
                   label="User Name"
                   outlined
                   dense
-                  v-model="user.userName"
+                  v-model="user.email"
                   type="text"
                 />
               </v-flex>
@@ -70,6 +70,8 @@
 </template>
 
 <script>
+import AccountService from "@/network/accountService";
+
 export default {
   name: "Login",
   data() {
@@ -80,7 +82,13 @@ export default {
     };
   },
   methods: {
-    login() {},
+    login() {
+      if (this.$refs.login.validate()) {
+        AccountService.login(this.user.email, this.user.password).then(() => {
+          this.$router.go();
+        });
+      }
+    },
   },
 };
 </script>

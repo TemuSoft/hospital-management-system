@@ -1,16 +1,22 @@
 <template>
   <v-app class="mainBody">
-    <notifications position="top center" duration:5 max:3 width="300" />
-    <topBar />
-    <v-main>
-      <v-layout v-if="navDrawerShow">
-        <sideBar />
-        <div class="mainDiv">
-          <router-view />
-        </div>
-      </v-layout>
-      <router-view v-else />
-    </v-main>
+    <div v-if="AccountService.isAuthenticated()">
+      <notifications position="top center" duration:5 max:3 width="300" />
+      <topBar />
+      <v-main>
+        <v-layout v-if="navDrawerShow">
+          <sideBar />
+          <div class="mainDiv">
+            <router-view />
+          </div>
+        </v-layout>
+        <router-view v-else />
+      </v-main>
+    </div>
+
+    <div v-else class="loginpage">
+      <login />
+    </div>
   </v-app>
 </template>
 
@@ -19,16 +25,22 @@ import topBar from "./pages/layout/topBar.vue";
 import sideBar from "./pages/layout/sideBar.vue";
 import { mapState } from "vuex";
 
+import AccountService from "@/network/accountService";
+import login from "./pages/layout/login.vue";
+
 export default {
   name: "App",
 
   data() {
-    return {};
+    return {
+      AccountService: AccountService,
+    };
   },
 
   components: {
     topBar,
     sideBar,
+    login,
   },
 
   created() {},

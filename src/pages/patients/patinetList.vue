@@ -40,7 +40,14 @@
               @click="transferPatient(item)"
               class="icon"
             />
-            <Payment v-else @click="repaymentCardPatient(item)" class="icon" />
+            <Payment
+              v-else-if="item.status === 0"
+              @click="repaymentCardPatient(item)"
+              class="icon"
+            />
+            <label v-else-if="item.status === -5" style="color: green">
+              Pendding
+            </label>
           </template>
 
           <template v-slot:item.first_name="{ item }">
@@ -447,7 +454,7 @@ export default {
       ],
 
       cardRenewaCheckbox: false,
-      cardRenewalDialog: true,
+      cardRenewalDialog: false,
     };
   },
 
@@ -466,6 +473,7 @@ export default {
   computed: {
     ...mapState("patient", ["patients", "updateResponse"]),
     ...mapState("room", ["rooms", "assignedPatientRoomRequest"]),
+    ...mapState("cashier", ["sendCardRenewalRequested"]),
   },
 
   methods: {
@@ -474,8 +482,8 @@ export default {
       "getPatientFilter",
       "updatePatientInfo",
     ]),
-
     ...mapActions("room", ["getRoomsList", "assignPatientRoomRequest"]),
+    ...mapActions("cashier", ["sendCardRenewalRequest"]),
 
     async editPatient(item) {
       this.patientInfo = item;
@@ -557,7 +565,17 @@ export default {
     },
 
     async cardRenewal() {
-      alert(this.selectedPatinet.id);
+      await this.sendCardRenewalRequest(this.selectedPatinet.id);
+      if (this.sendCardRenewalRequested === true) {
+        this.cardRenewalDialog = false;
+        this.loadData();
+      } else
+        this.$fire({
+          title: "Patient Card Renewal",
+          text: "Something wrong please try again!!!",
+          type: "error",
+          timer: 7000,
+        });
     },
   },
 };

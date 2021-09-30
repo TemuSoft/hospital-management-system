@@ -174,7 +174,6 @@ export default {
       who_payed: "",
       totalPriceInService: 0,
       totalPayment: 0,
-      totalPrepayment: 0,
       confirmPaymentCheckbox: false,
 
       testListPayment: [
@@ -237,13 +236,10 @@ export default {
     },
 
     async calculatePayment() {
-      this.totalPrepayment = 0;
       this.totalPayment = 0;
       for (let i = 0; i < this.testListPayment.length; i++) {
         let cu = this.checkboxWhole[this.testListPayment[i].id];
-        if (cu === false || cu === undefined)
-          this.totalPrepayment += this.testListPayment[i].price;
-        else this.totalPayment += this.testListPayment[i].price;
+        if (cu === true) this.totalPayment += this.testListPayment[i].price;
       }
     },
 

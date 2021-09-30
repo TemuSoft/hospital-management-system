@@ -92,22 +92,6 @@
               </v-flex>
             </v-layout>
 
-            <v-layout>
-              <v-autocomplete
-                label="Payment Type"
-                :items="paymentOptionList2"
-                :rules="inputRules"
-                item-text="name"
-                item-value="value"
-                dense
-                outlined
-                chips
-                multiple
-                @change="validatePayment"
-                v-model="payment_option"
-              />
-            </v-layout>
-
             <h3 style="color: green">
               Imaging and Laboratory Test Payment Requests
             </h3>
@@ -138,24 +122,34 @@
                 </tr>
               </table>
             </v-layout>
+            <br />
 
-            <h5 style="color: red">To Be Payed (Cash) : {{ totalCash }}</h5>
-            <h5 v-if="payment_option.indexOf(1) != -1">
-              Payment from Prepayment : {{ totalPrepayment }}
-            </h5>
+            <v-layout>
+              <v-spacer />
 
-            <h5 v-if="payment_option.indexOf(2) != -1">
-              Payment from Post payment : {{ totalPrepayment }}
-            </h5>
+              <h5>Total Payment : {{ totalPayment }}</h5>
+              <v-spacer />
+              <v-spacer />
 
-            <h5
-              v-if="
-                payment_option.indexOf(1) === -1 &&
-                payment_option.indexOf(2) === -1
-              "
-            >
-              Payment from unspecified : {{ totalPrepayment }}
-            </h5>
+              <v-text-field
+                v-model="cashPaymentAmount"
+                type="number"
+                label="Cash Payed Amount"
+                @input="calculatePayment()"
+                dense
+              />
+              <v-spacer />
+              <v-spacer />
+
+              <h5 style="color: red" v-if="postPaymentAmount > 0">
+                Post Payment Amount : {{ postPaymentAmount }}
+              </h5>
+
+              <h5 style="color: red" v-else>
+                Post Payment Amount : {{ (postPaymentAmount = 0) }}
+              </h5>
+              <v-spacer />
+            </v-layout>
 
             <v-layout>
               <v-checkbox
@@ -167,7 +161,7 @@
 
             <v-layout>
               <v-btn
-                v-show="everyThingIsFine"
+                v-show="confirmPaymentCheckbox"
                 small
                 outlined
                 text
@@ -200,18 +194,11 @@ export default {
       inputRules: [(v) => !!v || "This field is required"],
 
       who_payed: "",
-      payment_option: [2],
       totalPriceInService: 0,
-      totalCash: 0,
-      totalPrepayment: 0,
+      totalPayment: 0,
+      cashPaymentAmount: 0,
+      postPaymentAmount: 0,
       confirmPaymentCheckbox: false,
-      everyThingIsFine: false,
-
-      paymentOptionList2: [
-        { name: "Pre-payment", value: 1 },
-        { name: "Post-payment", value: 2 },
-        { name: "Cash", value: 3 },
-      ],
 
       testListPayment: [
         { name: "Test Case 1", price: 50, id: 1 },
@@ -272,41 +259,20 @@ export default {
       }
     },
 
-    async valiDateEveryThingIsFine() {
-      this.everyThingIsFine = false;
-      if (this.totalPrepayment <= this.prepaymentAmount)
-        if (this.confirmPaymentCheckbox) this.everyThingIsFine = true;
-    },
-
     async calculatePayment() {
-      this.totalPrepayment = 0;
-      this.totalCash = 0;
+      if (this.cashPaymentAmount < 0) this.cashPaymentAmount = 0;
+
+      this.totalPayment = 0;
       for (let i = 0; i < this.testListPayment.length; i++) {
         let cu = this.checkboxWhole[this.testListPayment[i].id];
-        if (cu === false || cu === undefined)
-          this.totalPrepayment += this.testListPayment[i].price;
-        else this.totalCash += this.testListPayment[i].price;
+        let cp = this.testListPayment[i].price;
+        if (cu === true) this.totalPayment += parseFloat(cp);
       }
 
-      this.valiDateEveryThingIsFine();
-    },
+      let ppa = parseFloat(this.prepaymentAmount);
+      let cpa = parseFloat(this.cashPaymentAmount);
 
-    async validatePayment() {
-      let pre = this.payment_option.indexOf(1);
-      let po = this.payment_option.indexOf(2);
-      if (pre != -1 && po != -1) {
-        this.payment_option.splice(pre, 1);
-        this.payment_option.splice(po, 1);
-        this.$notify({
-          type: "danger",
-          title: "Can't selecte both!!!",
-          text: "Both Prepayment and Postpayment can't be selected!!!",
-        });
-      }
-
-      if (this.payment_option.length === 0) this.payment_option = [2];
-
-      this.calculatePayment();
+      this.postPaymentAmount = this.totalPayment - ppa - cpa;
     },
 
     async checkboxWholeProcess(id) {
@@ -317,16 +283,7 @@ export default {
       this.checkboxWhole = {};
       this.checkboxWhole = temp;
 
-      if (this.payment_option.indexOf(3) === -1) {
-        this.checkboxWhole = {};
-        this.$notify({
-          type: "danger",
-          title: "Can't checked the box!!!",
-          text: "In the payment option cash is nmot enabled!!!",
-        });
-      }
-
-      this.validatePayment();
+      this.calculatePayment();
     },
 
     async closeDialog() {

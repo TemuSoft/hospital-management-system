@@ -115,7 +115,7 @@
             <v-layout>
               <table>
                 <tr>
-                  <th>Cash</th>
+                  <th>Payment done ?</th>
                   <th>Test Case</th>
                   <th>Price</th>
                 </tr>

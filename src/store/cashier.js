@@ -7,7 +7,7 @@ export default {
   state: {
     sendCardRenewalRequested: false,
     paymnetRequest: [],
-    prepaymentAmount: 0,
+    prepaymentAmount: 50,
     testCaseList: [],
   },
 

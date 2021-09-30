@@ -820,9 +820,7 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
-  } else {
-    next({ name: "dashboard" });
-  }
+  } else next({ name: "dashboard" });
 });
 
 export default router;

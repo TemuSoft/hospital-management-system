@@ -37,6 +37,7 @@ const AccountService = {
     Router.push({
       name: "login",
     });
+    Router.go();
   },
 
   updateToken(token) {

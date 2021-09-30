@@ -120,14 +120,14 @@
               />
               <v-spacer />
               <v-autocomplete
-                label="Category"
                 dense
+                label="Unit Of Measurment"
+                :items="measurements"
                 outlined
-                item-text="name"
+                item-text="unit"
                 item-value="id"
-                :items="medicineCategoryList"
-                v-model="medicineInfo.category"
                 :rules="inputRules"
+                v-model="medicineInfo.uofm"
               />
             </v-layout>
 
@@ -192,6 +192,7 @@ export default {
       "medicineGroupList",
       "medicineCategoryList",
     ]),
+    ...mapState("measurement", ["measurements"]),
   },
 
   methods: {
@@ -202,10 +203,13 @@ export default {
       "getMedicineCategory",
     ]),
 
+    ...mapActions("measurement", ["getMeasurementList"]),
+
     async loadData() {
       await this.getMedicineList();
       await this.getMedicineGroup();
       await this.getMedicineCategory();
+      await this.getMeasurementList();
     },
 
     async closeDialog() {

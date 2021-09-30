@@ -24,10 +24,11 @@
 
           <v-btn
             @click="registerInsuranceDialog = true"
+            outlined
+            color="green"
             small
-            prepend-icon="mdi-plus"
           >
-            <v-icon left>mdi-plus</v-icon>Add New
+            Add New
           </v-btn>
         </v-layout>
         <br />
@@ -36,7 +37,12 @@
 
     <v-dialog v-model="registerInsuranceDialog" persistent width="700px">
       <v-card>
-        <v-toolbar color="green" dark>Add New Insurane </v-toolbar>
+        <v-toolbar dense color="green" dark>
+          Add New Insurane
+          <v-spacer />
+
+          <Close class="icon" @click="cancelDialog()" />
+        </v-toolbar>
         <br />
         <v-card-text>
           <v-form @submit.prevent="save" ref="save">
@@ -82,10 +88,21 @@
             </v-layout>
 
             <v-layout>
-              <v-spacer></v-spacer>
-              <v-btn small @click="cancelDialog()">Cancel</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn small @click="save()">Save</v-btn>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Attachment</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  dense
+                  rounded
+                  type="file"
+                  v-model="insuranceInfo.attachment"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-spacer />
+              <v-btn small outlined color="green" @click="save()">Save</v-btn>
             </v-layout>
           </v-form>
         </v-card-text>
@@ -94,7 +111,12 @@
 
     <v-dialog v-model="updateInsuranceDialog" persistent width="700px">
       <v-card>
-        <v-toolbar color="green" dark>Update Insurane </v-toolbar>
+        <v-toolbar dense color="green" dark>
+          Update Insurane
+          <v-spacer />
+
+          <Close class="icon" @click="cancelDialog()" />
+        </v-toolbar>
         <br />
         <v-card-text>
           <v-form @submit.prevent="update" ref="update">
@@ -140,10 +162,23 @@
             </v-layout>
 
             <v-layout>
-              <v-spacer></v-spacer>
-              <v-btn small @click="cancelDialog()">Cancel</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn small @click="update()">Update</v-btn>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Attachment</v-flex>
+              <v-flex xs12 sm8>
+                <v-text-field
+                  dense
+                  rounded
+                  type="file"
+                  v-model="insuranceInfo.attachment"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-spacer />
+              <v-btn small outlined color="green" @click="update()">
+                Update
+              </v-btn>
             </v-layout>
           </v-form>
         </v-card-text>
@@ -155,6 +190,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
+import Close from "@/assets/icons/close.svg";
 import Detail from "@/assets/icons/eye.svg";
 
 export default {
@@ -173,6 +209,7 @@ export default {
         { text: "Description", value: "description" },
         { text: "Status", value: "status" },
         { text: "Start Date", value: "startDate" },
+        { text: "Attachment", value: "attachment" },
         { text: "Action", value: "action" },
       ],
     };
@@ -180,6 +217,7 @@ export default {
 
   components: {
     Edit,
+    Close,
     Detail,
   },
 

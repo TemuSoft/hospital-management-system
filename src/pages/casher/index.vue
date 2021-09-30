@@ -137,7 +137,7 @@ export default {
 
     async paymentDialogProcess(item) {
       item.reason_id = 2;
-      // item.patient.patient_type = 2;
+      item.patient.patient_type = 3;
       let pt = item.patient.patient_type;
 
       if (item.reason_id === 0 || item.reason_id === 1)

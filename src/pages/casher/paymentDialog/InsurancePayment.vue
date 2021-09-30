@@ -92,22 +92,6 @@
               </v-flex>
             </v-layout>
 
-            <v-layout>
-              <v-autocomplete
-                label="Payment Type"
-                :items="paymentOptionList3"
-                :rules="inputRules"
-                item-text="name"
-                item-value="value"
-                dense
-                outlined
-                chips
-                multiple
-                @change="validatePayment"
-                v-model="payment_option"
-              />
-            </v-layout>
-
             <h3 style="color: green">
               Imaging and Laboratory Test Payment Requests
             </h3>
@@ -115,7 +99,7 @@
             <v-layout>
               <table>
                 <tr>
-                  <th>Payment done ?</th>
+                  <th>Is it payable ?</th>
                   <th>Test Case</th>
                   <th>Price</th>
                 </tr>
@@ -138,9 +122,32 @@
                 </tr>
               </table>
             </v-layout>
+            <br />
 
-            <h5 style="color: red">To Be Payed (Cash) : {{ totalCash }}</h5>
-            <h5>Payment from Insurance : {{ totalPrepayment }}</h5>
+            <v-layout>
+              <v-spacer />
+              <h5>Total Payment : {{ totalPayment }}</h5>
+              <v-spacer />
+              <v-spacer />
+
+              <v-text-field
+                v-model="insurancePaymentAmount"
+                type="number"
+                label="Insurance Payed Amount"
+                @input="calculatePayment()"
+                dense
+              />
+              <v-spacer />
+              <v-spacer />
+
+              <h5 style="color: red" v-if="cashPaymentAmount > 0">
+                To Be Payed (Cash) : {{ cashPaymentAmount }}
+              </h5>
+              <h5 style="color: red" v-else>
+                To Be Payed (Cash) : {{ (cashPaymentAmount = 0) }}
+              </h5>
+              <v-spacer />
+            </v-layout>
 
             <v-layout>
               <v-checkbox
@@ -152,7 +159,7 @@
 
             <v-layout>
               <v-btn
-                v-show="everyThingIsFine"
+                v-show="confirmPaymentCheckbox"
                 small
                 outlined
                 text
@@ -185,17 +192,11 @@ export default {
       inputRules: [(v) => !!v || "This field is required"],
 
       who_payed: "",
-      payment_option: [],
       totalPriceInService: 0,
-      totalCash: 0,
-      totalPrepayment: 0,
+      totalPayment: 0,
+      insurancePaymentAmount: 0,
+      cashPaymentAmount: 0,
       confirmPaymentCheckbox: false,
-      everyThingIsFine: false,
-
-      paymentOptionList3: [
-        { name: "Cash", value: 3 },
-        { name: "Insurance", value: 4 },
-      ],
 
       testListPayment: [
         { name: "Test Case 1", price: 50, id: 1 },
@@ -256,36 +257,16 @@ export default {
       }
     },
 
-    async valiDateEveryThingIsFine() {
-      this.everyThingIsFine = false;
-      if (this.totalPrepayment <= this.prepaymentAmount)
-        if (this.confirmPaymentCheckbox) this.everyThingIsFine = true;
-    },
-
     async calculatePayment() {
-      this.totalPrepayment = 0;
-      this.totalCash = 0;
+      if (this.insurancePaymentAmount < 0) this.insurancePaymentAmount = 0;
+
+      this.totalPayment = 0;
       for (let i = 0; i < this.testListPayment.length; i++) {
         let cu = this.checkboxWhole[this.testListPayment[i].id];
-        if (cu === false || cu === undefined)
-          this.totalPrepayment += this.testListPayment[i].price;
-        else this.totalCash += this.testListPayment[i].price;
+        if (cu === true) this.totalPayment += this.testListPayment[i].price;
       }
 
-      this.valiDateEveryThingIsFine();
-    },
-
-    async validatePayment() {
-      if (this.payment_option.indexOf(3) === -1) {
-        this.checkboxWhole = {};
-        this.$notify({
-          type: "danger",
-          title: "Can't checked the box!!!",
-          text: "In the payment option cash is nmot enabled!!!",
-        });
-      }
-
-      this.calculatePayment();
+      this.cashPaymentAmount = this.totalPayment - this.insurancePaymentAmount;
     },
 
     async checkboxWholeProcess(id) {
@@ -296,7 +277,7 @@ export default {
       this.checkboxWhole = {};
       this.checkboxWhole = temp;
 
-      this.validatePayment();
+      this.calculatePayment();
     },
 
     async closeDialog() {

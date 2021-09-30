@@ -99,7 +99,7 @@
             <v-layout>
               <table>
                 <tr>
-                  <th>Payment done ?</th>
+                  <th>Is it payable ?</th>
                   <th>Test Case</th>
                   <th>Price</th>
                 </tr>

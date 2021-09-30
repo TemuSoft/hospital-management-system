@@ -99,7 +99,7 @@
             <v-layout>
               <table>
                 <tr>
-                  <th>Payment done ?</th>
+                  <th>Is it payable ?</th>
                   <th>Test Case</th>
                   <th>Price</th>
                 </tr>
@@ -123,12 +123,18 @@
               </table>
             </v-layout>
 
-            <h5>Total Payment : {{ totalPayment }}</h5>
-            <h5 style="color: red" v-if="totalPayment - prepaymentAmount > 0">
-              To Be Payed (Cash) : {{ totalPayment - prepaymentAmount }}
-            </h5>
-            <h5 style="color: red" v-else>To Be Payed (Cash) : 0</h5>
+            <v-layout>
+              <v-spacer />
+              <h5>Total Payment : {{ totalPayment }}</h5>
+              <v-spacer />
+              <v-spacer />
 
+              <h5 style="color: red" v-if="totalPayment - prepaymentAmount > 0">
+                To Be Payed (Cash) : {{ totalPayment - prepaymentAmount }}
+              </h5>
+              <h5 style="color: red" v-else>To Be Payed (Cash) : 0</h5>
+              <v-spacer />
+            </v-layout>
             <v-layout>
               <v-checkbox
                 v-model="confirmPaymentCheckbox"

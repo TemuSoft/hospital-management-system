@@ -50,12 +50,26 @@ export default {
     };
   },
 
+  created() {
+    this.loadData();
+  },
+
   computed: {
-    ...mapState("medicalService", ["registeredMedicalHistory"]),
+    ...mapState("medicalService", [
+      "registeredMedicalHistory",
+      "medicalHistorys",
+    ]),
   },
 
   methods: {
-    ...mapActions("medicalService", ["registerMedicalHistory"]),
+    ...mapActions("medicalService", [
+      "registerMedicalHistory",
+      "getMedicalHistory",
+    ]),
+
+    async loadData() {
+      await this.getMedicalHistory();
+    },
 
     async save() {
       if (this.$refs.save.validate()) {

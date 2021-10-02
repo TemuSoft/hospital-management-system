@@ -23,6 +23,7 @@ export default {
 
     verifiedTestCase: false,
     registeredMedicalHistory: false,
+    medicalHistorys: [],
   },
   mutations: {
     setRegisterLab(state, payload) {
@@ -83,6 +84,10 @@ export default {
 
     setRegisterMedicalHistory(state, payload) {
       state.registeredMedicalHistory = payload;
+    },
+
+    setMedicalHistory(state, payload) {
+      state.medicalHistorys = payload;
     },
   },
 
@@ -182,6 +187,11 @@ export default {
     async registerMedicalHistory({ commit }, data) {
       let res = await api.create(path.medical_history_list, data);
       commit("setRegisterMedicalHistory", res.data);
+    },
+
+    async getMedicalHistory({ commit }, patinet_id) {
+      let res = await api.get(path.medical_history_patient_id, patinet_id);
+      commit("setMedicalHistory", res.data);
     },
   },
 };

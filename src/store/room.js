@@ -78,6 +78,7 @@ export default {
 
     async assignPatientRoomRequest({ commit }, data) {
       let res = await api.create(path.assing_patient_room_request, data);
+
       commit("setAssignPatientRoomRequest", res.data);
     },
   },

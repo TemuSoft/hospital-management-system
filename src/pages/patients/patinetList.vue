@@ -46,7 +46,11 @@
               class="icon"
             />
             <label v-else-if="item.status === -5" style="color: green">
-              Pendding
+              Card Pendding
+            </label>
+
+            <label v-else-if="item.status === 2" style="color: blue">
+              Room Assigned
             </label>
           </template>
 

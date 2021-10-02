@@ -26,6 +26,7 @@ const path = {
   lab_test_case_by_gruop: "/lab/lab_test_case_in_group",
   update_lab_test_case: "/lab/update_lab_test_case",
   patient_test_case: "/lab/lab_test_request",
+  verification_test_case: "/lab/varify_outsource_lab_test",
   get_patient_test_case: "/lab/lab_test_history_data",
   all_lab_test_case_request: "/lab/lab_test_request",
   single_lab_test_case_request: "/lab/lab_test_history_data",

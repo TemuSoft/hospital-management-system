@@ -11,7 +11,7 @@ class api {
   }
 
   getPatientStatus(path, id, status) {
-    return http.get(`${path}/${id}/${status}/`, { headers: authHeader() });
+    return http.get(`${path}/${id}/${status}/`);
   }
 
   create(path, data) {

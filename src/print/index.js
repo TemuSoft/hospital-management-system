@@ -104,7 +104,7 @@ const Print = {
       margin: { left: 2 },
     });
 
-    doc.save("prescription for " + profile.name + new Date() + ".pdf");
+    doc.save("Prescription for " + profile.name + new Date() + ".pdf");
   },
 
   outsourcePdfMaker() {},
@@ -234,7 +234,7 @@ const Print = {
       y
     );
 
-    doc.save("referral for " + profile.name + new Date() + ".pdf");
+    doc.save("Referral for " + profile.name + new Date() + ".pdf");
   },
 
   headerFooter(doc, x, y, minspa, minimspa, tab, xin, title) {

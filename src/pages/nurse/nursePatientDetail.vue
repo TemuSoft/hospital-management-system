@@ -142,8 +142,15 @@
               v-else-if="selectedTab === 5"
               :service_id="service_id"
             />
-            <MedicalHistory
+
+            <MaterialRequest
               v-else-if="selectedTab === 6"
+              :service_id="service_id"
+              :patientId="patientId"
+            />
+
+            <MedicalHistory
+              v-else-if="selectedTab === 7"
               :service_id="service_id"
               :patientId="patientId"
             />
@@ -267,6 +274,7 @@ import ImagingOrder from "../nurseOPD/imagingOrder.vue";
 import Appointment from "../nurseOPD/appointement.vue";
 import VitalSign from "../nurseOPD/vitalSign.vue";
 import Prescription from "../nurseOPD/prescription.vue";
+import MaterialRequest from "../nurseOPD/materialRequest.vue";
 import MedicalHistory from "../nurseOPD/medicalHistory.vue";
 
 export default {
@@ -294,10 +302,10 @@ export default {
         { text: "Vital Sign", value: 3 },
         { text: "Apponintment", value: 4 },
         { text: "Prescription", value: 5 },
-        { text: "Mediacal History", value: 6 },
-        { text: "Referal", value: 7 },
-        { text: "Medical Certeficate", value: 8 },
-        { text: "Material Request", value: 9 },
+        { text: "Material Request", value: 6 },
+        { text: "Mediacal History", value: 7 },
+        { text: "Referal", value: 8 },
+        { text: "Medical Certeficate", value: 9 },
         { text: "Vital Certeficate", value: 10 },
       ],
     };
@@ -310,6 +318,7 @@ export default {
     VitalSign,
     Appointment,
     Prescription,
+    MaterialRequest,
     MedicalHistory,
   },
 

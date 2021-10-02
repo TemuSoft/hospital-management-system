@@ -182,15 +182,6 @@ export default {
       totalPayment: 0,
       confirmPaymentCheckbox: false,
 
-      // testListPayment: [
-      //   { name: "Test Case 1", price: 50, id: 1 },
-      //   { name: "Test Case 2", price: 150, id: 2 },
-      //   { name: "Test Case 3", price: 40, id: 3 },
-      //   { name: "Test Case 4", price: 79, id: 4 },
-      //   { name: "Test Case 5", price: 79, id: 5 },
-      //   { name: "Test Case 6", price: 4, id: 6 },
-      //   { name: "Test Case 7", price: 43, id: 7 },
-      // ],
       testListPayment: [],
       checkboxWhole: {},
     };

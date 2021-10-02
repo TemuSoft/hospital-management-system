@@ -11,6 +11,7 @@ const Print = {
     let tab = 0.5;
     let minspa = 0.7;
     let minimspa = 0.2;
+    let midimspa = 0.4;
     let maxspa = 1;
 
     let x = xin;
@@ -22,7 +23,16 @@ const Print = {
       format: "a4",
     });
 
-    let xy = this.headerFooter(doc, x, y, minspa, minimspa, tab, xin);
+    let xy = this.headerFooter(
+      doc,
+      x,
+      y,
+      minspa,
+      minimspa,
+      tab,
+      xin,
+      "prescription"
+    );
     x = xy.x;
     y = xy.y;
 
@@ -36,23 +46,23 @@ const Print = {
     doc.text("Prescription", x, y);
 
     y = y + maxspa;
-    doc.setFontSize(12);
+    doc.setFontSize(9);
     doc.setTextColor(100, 100, 100);
     doc.setFont();
-    doc.text("Patient Name : " + profile.name, x, y);
+    doc.text("Name Of Patient : " + profile.name, x, y);
 
-    y = y + minspa;
+    y = y + midimspa;
+    doc.text("Gender : " + profile.gender, x, y);
+
+    y = y + midimspa;
+    doc.text("Mobile Number : " + profile.mobile_number, x, y);
+
+    y = y + midimspa;
     doc.text("Date Of Birth : " + profile.birthdate, x, y);
 
-    y = y + minspa;
-    y = y + minspa;
+    y = y + midimspa;
+    y = y + midimspa;
     doc.text("Date Make :  " + new Date(), x, y);
-
-    y = y + minspa;
-    y = y + minspa;
-    doc.text("Name Of Medicine and Description :", x, y);
-    x = x + tab;
-    x = x + tab;
 
     y = y + 1;
     x = xin;
@@ -99,9 +109,135 @@ const Print = {
 
   outsourcePdfMaker() {},
 
-  referalPdfMaker() {},
+  referalPdfMaker(data, profile) {
+    let xin = 2;
+    let yin = 2;
+    let tab = 0.5;
+    let minspa = 0.7;
+    let minimspa = 0.2;
+    let midimspa = 0.4;
+    let maxspa = 1;
 
-  headerFooter(doc, x, y, minspa, minimspa, tab, xin) {
+    let x = xin;
+    let y = yin;
+
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "cm",
+      format: "a4",
+    });
+
+    let xy = this.headerFooter(
+      doc,
+      x,
+      y,
+      minspa,
+      minimspa,
+      tab,
+      xin,
+      "referral"
+    );
+    x = xy.x;
+    y = xy.y;
+
+    x = xin;
+    y = y + minspa;
+    y = y + minspa;
+
+    doc.setFont("Georgia", "bold");
+    doc.setFontSize(15);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Referral ", x, y);
+
+    y = y + maxspa;
+    doc.setFontSize(9);
+    //Gray color
+    doc.setTextColor(100, 100, 100);
+    doc.setFont();
+    doc.text("Name Of Patient : " + profile.name, x, y);
+
+    y = y + midimspa;
+    doc.text("Gender : " + profile.gender, x, y);
+
+    y = y + midimspa;
+    doc.text("Mobile Number : " + profile.mobile_number, x, y);
+
+    y = y + midimspa;
+    doc.text("Date Of Birth : " + profile.birthdate, x, y);
+
+    y = y + midimspa;
+    y = y + midimspa;
+    doc.text("Date Make :  " + new Date(), x, y);
+
+    y = y + 1;
+    x = xin;
+    //Black color
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.text("Referred to : ________________________________________", x, y);
+
+    y = y + maxspa;
+    doc.text("Reasons for referral:", x, y);
+
+    x = x + tab;
+    //Gray color
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+
+    for (let i = 0; i < data.length; i++) {
+      y = y + minspa;
+      doc.setLineWidth(0.01);
+      doc.rect(x, y - 0.25, 0.3, 0.3); //Fill and Border
+      doc.text(" " + data[i], x + midimspa, y);
+    }
+
+    y = y + minspa;
+    doc.text(
+      "Others (specify) _________________________________________________________________________________________",
+      x,
+      y
+    );
+
+    x = x - tab;
+    y = y + maxspa;
+    //Black color
+    doc.setTextColor(0, 0, 0);
+    doc.text(
+      "Comments_________________________________________________________________________________________________",
+      x,
+      y
+    );
+    y = y + minspa;
+    doc.text(
+      "__________________________________________________________________________________________________________",
+      x,
+      y
+    );
+    y = y + minspa;
+    doc.text(
+      "__________________________________________________________________________________________________________",
+      x,
+      y
+    );
+
+    y = y + 1;
+    doc.text("Referred By : _________________________________", x, y);
+    y = y + maxspa;
+    doc.text("Signature     : _________________________________", x, y);
+
+    y = y + 1;
+    doc.setFontSize(8);
+    doc.setTextColor(2500, 0, 0);
+    doc.text(
+      "Note: This report should be submitted to the CHEW/ Health Facility staff during their Monthly meetings in the 2nd week of every month",
+      x,
+      y
+    );
+
+    doc.save("referral for " + profile.name + new Date() + ".pdf");
+  },
+
+  headerFooter(doc, x, y, minspa, minimspa, tab, xin, title) {
     doc.addImage(image_url, "JPEG", x + 15, y - 0.5, 2.5, 2.5);
 
     doc.setFont("Georgia", "bold");
@@ -119,7 +255,7 @@ const Print = {
     doc.text(companyProfile[0].slogan, x, y);
 
     doc.setFont();
-    doc.setFontSize(11);
+    doc.setFontSize(10);
     y = y + minspa;
     doc.text(
       "Location : " + companyProfile[0].city + " , " + companyProfile[0].kebele,
@@ -131,16 +267,18 @@ const Print = {
     doc.text("Contact : " + companyProfile[0].mobile_number, x, y);
     y = y + minimspa;
     y = y + minimspa;
-    doc.text("Postal COde : " + companyProfile[0].postal_code, x, y);
+    doc.text("Postal Code : " + companyProfile[0].postal_code, x, y);
     y = y + minimspa;
     y = y + minimspa;
     doc.text("Email :" + companyProfile[0].email, x, y);
 
     let fy = 27.5;
     x = xin;
-    x = x + 3;
+    x = x + 2;
     doc.text(
-      "If you have any questions concerning this prescription don't' hesitate to cotact us!!!",
+      "If you have any questions concerning this " +
+        title +
+        " don't' hesitate to cotact us!!!",
       x,
       fy
     );

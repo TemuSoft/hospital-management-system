@@ -20,6 +20,8 @@ export default {
     imagingRequests: [],
     singleImagingRequests: [],
     insertedImagingRequestResult: [],
+
+    verifiedTestCase: false,
   },
   mutations: {
     setRegisterLab(state, payload) {
@@ -72,6 +74,10 @@ export default {
 
     setInsertImagingRequestResult(state, payload) {
       state.insertImagingRequestResult = payload;
+    },
+
+    setVerificationTestCase(state, payload) {
+      state.verifiedTestCase = payload;
     },
   },
 
@@ -160,6 +166,12 @@ export default {
     async insertImagingRequestResultOutsource({ commit }, data) {
       await api.create(path.register_outsourced_imaging_case, data);
       commit;
+    },
+
+    async verificationTestCase({ commit }, data) {
+      console.log(data);
+      let res = await api.create(path.verification_test_case, data);
+      commit("setVerificationTestCase", res.data);
     },
   },
 };

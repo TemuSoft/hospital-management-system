@@ -69,7 +69,7 @@
             <v-layout>
               <v-textarea
                 dense
-                rows="3"
+                rows="1"
                 label="Reason"
                 v-model="issueInfo.reason"
                 :rules="inputRules"
@@ -226,7 +226,7 @@ import Delete from "@/assets/icons/delete.svg";
 export default {
   data() {
     return {
-      confirmIssueRequestDialog: true,
+      confirmIssueRequestDialog: false,
       sendIssueRequestDialog: false,
       approvalSelected: "Approve",
 

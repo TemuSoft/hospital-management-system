@@ -36,6 +36,7 @@ const path = {
   assing_patient_room: "/",
 
   medical_history_list: "/patient/medical_history",
+  medical_history_patient_id: "/patient/read_medical_history",
 
   room: "/admin/room",
   update_room: "/admin/room_detail",

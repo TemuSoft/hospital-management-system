@@ -35,6 +35,8 @@ const path = {
   measurement: "/common/measurement",
   assing_patient_room: "/",
 
+  medical_history_list: "/patient/medical_history",
+
   room: "/admin/room",
   update_room: "/admin/room_detail",
   get_staff_deprtment: "/user/user_in_department",

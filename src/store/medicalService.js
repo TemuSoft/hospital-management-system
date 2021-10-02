@@ -22,6 +22,7 @@ export default {
     insertedImagingRequestResult: [],
 
     verifiedTestCase: false,
+    registeredMedicalHistory: false,
   },
   mutations: {
     setRegisterLab(state, payload) {
@@ -78,6 +79,10 @@ export default {
 
     setVerificationTestCase(state, payload) {
       state.verifiedTestCase = payload;
+    },
+
+    setRegisterMedicalHistory(state, payload) {
+      state.registeredMedicalHistory = payload;
     },
   },
 
@@ -172,6 +177,11 @@ export default {
       console.log(data);
       let res = await api.create(path.verification_test_case, data);
       commit("setVerificationTestCase", res.data);
+    },
+
+    async registerMedicalHistory({ commit }, data) {
+      let res = await api.create(path.medical_history_list, data);
+      commit("setRegisterMedicalHistory", res.data);
     },
   },
 };

@@ -1,6 +1,9 @@
 <template>
   <div class="main">
-    <v-btn small outlined @click="printPrescription()">Print</v-btn>
+    <v-btn small outlined @click="printPrescription()"
+      >Print prescription</v-btn
+    >
+    <v-btn small outlined @click="printReferral()">Print referral</v-btn>
     <v-card>
       <v-data-table
         :items="prescriptionList"
@@ -72,8 +75,34 @@ export default {
     },
 
     async printPrescription() {
-      let profile = { name: "Temesgen Kefie", birthdate: "04-06-1998" };
+      let profile = {
+        name: "Temesgen Kefie",
+        gender: "Male",
+        mobile_number: "0987654321",
+        birthdate: "04-06-1998",
+      };
       PrintPdf.prescriptionPdfMaker(this.medicineList, profile);
+    },
+
+    async printReferral() {
+      let profile = {
+        name: "Temesgen Kefie",
+        gender: "Male",
+        mobile_number: "0987654321",
+        birthdate: "04-06-1998",
+      };
+
+      let data = [
+        "To continue /start anti-TB treatment ",
+        "Default from treatment (TB /ARVs) ",
+        "Nutritional support ",
+        "Complications",
+        "Psycho-social support ",
+        "TB suspect(Screening)",
+        "ARVs",
+      ];
+
+      PrintPdf.referalPdfMaker(data, profile);
     },
   },
 };

@@ -152,6 +152,7 @@
             <br />
             <v-layout>
               <v-btn
+                :disabled="save_result_btn"
                 small
                 outlined
                 color="green"
@@ -163,6 +164,7 @@
               <v-spacer />
 
               <v-btn
+                :disabled="verified_btn"
                 small
                 outlined
                 color="blue"
@@ -196,6 +198,9 @@ export default {
       labtestResult: [],
       selectedResult: {},
       selectedId: "",
+
+      save_result_btn: true,
+      verified_btn: false,
 
       checkboxWhole: {},
       search: "",
@@ -319,6 +324,19 @@ export default {
       this.enterLabResultDialog = true;
       await this.getSingleLabrtoryRequest(service_id);
       this.labtestResult = this.singleLabratoryRequests.data;
+
+      for (let i = 0; i < this.labtestResult.length; i++) {
+        if (this.labtestResult[i].payment_status === 1) {
+          this.save_result_btn = true;
+          this.verified_btn = true;
+          break;
+        } else if (
+          this.labtestResult[i].status === 2 ||
+          this.labtestResult[i].verified === true
+        ) {
+          this.verified_btn = true;
+        }
+      }
     },
   },
 };

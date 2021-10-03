@@ -12,7 +12,7 @@
         </v-btn>
         <v-spacer />
 
-        <h2>Prepayment Single Patinet and Company</h2>
+        <h2>Prepayment Single Patient and/or Company</h2>
         <v-spacer />
       </v-layout>
       <v-divider></v-divider>

@@ -7,6 +7,18 @@
       <v-spacer />
 
       <v-btn
+        v-if="addMaterialRequest"
+        small
+        class="text-capitalize"
+        outlined
+        color="green"
+        @click="addMaterialRequest = !addMaterialRequest"
+        >View Lest</v-btn
+      >
+
+      <v-btn
+        v-else
+        class="text-capitalize"
         small
         outlined
         color="green"
@@ -107,7 +119,7 @@ export default {
         { text: "Name", value: "name" },
         { text: "Quantity", value: "quantity" },
         { text: "Note", value: "note" },
-        { text: "AAction", value: "action" },
+        { text: "Action", value: "action" },
       ],
     };
   },

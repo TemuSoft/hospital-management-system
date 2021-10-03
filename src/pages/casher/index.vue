@@ -52,24 +52,28 @@
     </v-data-table>
 
     <CardRelatedPayment
+      v-if="paymentDialogCard"
       :selectedPatinet="selectedPatinet"
       :paymentDialogCard="paymentDialogCard"
       @cardPaymentControl="closeDialog($event)"
     />
 
     <RegularPayment
+      v-if="paymentDialogRegular"
       :selectedPatinet="selectedPatinet"
       :paymentDialogRegular="paymentDialogRegular"
       @testCasePaymentControl="closeDialog($event)"
     />
 
     <InsurancePayment
+      v-if="paymentDialogInsurance"
       :selectedPatinet="selectedPatinet"
       :paymentDialogInsurance="paymentDialogInsurance"
       @testCasePaymentControl="closeDialog($event)"
     />
 
     <CreditPayment
+      v-if="paymentDialogCredit"
       :selectedPatinet="selectedPatinet"
       :paymentDialogCredit="paymentDialogCredit"
       @testCasePaymentControl="closeDialog($event)"
@@ -133,6 +137,7 @@ export default {
       this.paymentDialogRegular = false;
       this.paymentDialogInsurance = false;
       this.paymentDialogCredit = false;
+      this.loadData();
     },
 
     async paymentDialogProcess(item) {

@@ -10,6 +10,9 @@ export default {
     prepaymentAmount: 50,
     testCaseList: [],
     testCasePaymentDone: false,
+
+    registeredPrepayment: false,
+    prepaymentList: [],
   },
 
   mutations: {
@@ -32,6 +35,14 @@ export default {
     setTestCasePaymentRegister(state, payload) {
       state.testCasePaymentDone = payload;
     },
+
+    setRegisterPrepayment(state, payload) {
+      state.registeredPrepayment = payload;
+    },
+
+    setPrepaymentList(state, payload) {
+      state.prepaymentList = payload;
+    },
   },
 
   actions: {
@@ -46,7 +57,7 @@ export default {
     },
 
     async getPrepaymentAmount({ commit }, patient_id) {
-      let res = await api.get(path.cashier_payment_request, patient_id);
+      let res = await api.get(path.single_prepayment_load, patient_id);
       commit("setPrepaymentAmount", res.data);
     },
 
@@ -58,6 +69,16 @@ export default {
     async testCasePaymentRegister({ commit }, data) {
       let res = await api.create(path.test_case_payment_done, data);
       commit("setTestCasePaymentRegister", res.data);
+    },
+
+    async registerPrepayment({ commit }, data) {
+      let res = await api.create(path.register_prepayment, data);
+      commit("setRegisterPrepayment", res.data);
+    },
+
+    async getPrepaymentList({ commit }) {
+      let res = await api.getAll(path.get_prepayment_list);
+      commit("setPrepaymentList", res.data);
     },
   },
 };

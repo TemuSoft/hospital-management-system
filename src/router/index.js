@@ -464,7 +464,7 @@ const routes = [
     component: registerPrepayment,
     meta: {
       admin: false,
-      nurse: false,
+      nurse: true,
       cashier: true,
       pharmacy: false,
       labratory: false,

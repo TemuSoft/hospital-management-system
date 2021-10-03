@@ -213,7 +213,7 @@ export default {
     ]),
 
     async loadData() {
-      // await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
+      await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
       // await this.getTestCaseList(this.selectedPatinet.service_id);
       // alert(true);
 

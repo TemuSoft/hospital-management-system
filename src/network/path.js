@@ -58,6 +58,9 @@ const path = {
 
   reception_card_renewal: "/reception/write_card_renewal",
   cashier_payment_request: "/cashier/payment_request",
+  single_prepayment_load: "/cashier/patient_prepayment_read",
+
+  register_prepayment: "/cashier/patient_prepayment_write",
 
   logout: "/user/logout",
   login: "/user/login",

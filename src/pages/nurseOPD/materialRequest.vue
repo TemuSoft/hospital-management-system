@@ -3,51 +3,60 @@
     <h2>Material Request</h2>
     <br />
 
-    <v-form @submit.prevent="save" ref="save">
-      <table>
-        <tr>
-          <th>NO</th>
-          <th>Name</th>
-          <th>Quantity</th>
-          <th>Note</th>
-          <th>Action</th>
-        </tr>
+    <v-layout>
+      <v-spacer />
 
-        <tr v-for="(mri, i) in materialRequestInfo" :key="i">
-          <td>{{ i + 1 }}</td>
-          <td>
-            <v-text-field
-              class="tdCell"
-              v-model="materialRequestInfo[i].name"
-              :rules="inputRules"
-              dense
-              rounded
-            />
-          </td>
-          <td>
-            <v-text-field
-              class="tdCell"
-              type="Number"
-              v-model="materialRequestInfo[i].quantity"
-              :rules="inputRules"
-              dense
-              rounded
-            />
-          </td>
-          <td>
-            <v-text-field
-              class="tdCell"
-              v-model="materialRequestInfo[i].note"
-              :rules="inputRules"
-              dense
-              rounded
-            />
-          </td>
-          <td>
-            <Delete @click="removeMaterialRequestInfo(i)" class="icon" />
-          </td>
-        </tr>
-      </table>
+      <v-btn
+        small
+        outlined
+        color="green"
+        @click="addMaterialRequest = !addMaterialRequest"
+        >Add New</v-btn
+      >
+    </v-layout>
+    <v-data-table
+      v-if="!addMaterialRequest"
+      :items="singleMaterialRequets"
+      :headers="materialRequestHeader"
+      :items-per-page="10"
+    >
+    </v-data-table>
+
+    <v-form @submit.prevent="save" ref="save" v-else>
+      <v-layout v-for="(mri, i) in materialRequestInfo" :key="i">
+        <v-text-field
+          label="Material Name"
+          v-model="materialRequestInfo[i].name"
+          :rules="inputRules"
+          dense
+          rounded
+          solo
+        />
+        <v-spacer />
+
+        <v-text-field
+          label="Quantity"
+          type="Number"
+          v-model="materialRequestInfo[i].quantity"
+          :rules="inputRules"
+          dense
+          rounded
+          solo
+        />
+        <v-spacer />
+
+        <v-text-field
+          label="Note"
+          v-model="materialRequestInfo[i].note"
+          :rules="inputRules"
+          dense
+          rounded
+          solo
+        />
+        <v-spacer />
+
+        <Delete @click="removeMaterialRequestInfo(i)" class="icon" />
+      </v-layout>
       <br />
 
       <v-layout>
@@ -92,7 +101,14 @@ export default {
       inputRules: [(v) => !!v || "This field is required"],
       login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
 
+      addMaterialRequest: false,
       materialRequestInfo: [],
+      materialRequestHeader: [
+        { text: "Name", value: "name" },
+        { text: "Quantity", value: "quantity" },
+        { text: "Note", value: "note" },
+        { text: "AAction", value: "action" },
+      ],
     };
   },
 
@@ -105,14 +121,21 @@ export default {
   },
 
   computed: {
-    ...mapState("medicalService", ["doneMaterialRequest"]),
+    ...mapState("medicalService", [
+      "doneMaterialRequest",
+      "singleMaterialRequets",
+    ]),
   },
 
   methods: {
-    ...mapActions("medicalService", ["sendMaterialRequest"]),
+    ...mapActions("medicalService", [
+      "sendMaterialRequest",
+      "getSingleMaterialRequest",
+    ]),
 
     async loadData() {
       this.addMaterialRequestInfo();
+      await this.getSingleMaterialRequest(this.service_id);
     },
 
     async addMaterialRequestInfo() {
@@ -129,10 +152,24 @@ export default {
 
     async save() {
       if (this.$refs.save.validate()) {
-        await this.sendMaterialRequest(this.materialRequestInfo);
+        let data = {};
+        data.service_id = this.service_id;
+        data.request_user_id = this.login_user.id;
+        data.items = this.materialRequestInfo;
+
+        await this.sendMaterialRequest(data);
 
         if (this.doneMaterialRequest === true) {
           this.materialRequestInfo = [];
+
+          this.$fire({
+            title: "Material Request Registeration",
+            text: "Successfuly done!!!",
+            type: "sccess",
+            timer: 7000,
+          });
+
+          this.loadData();
         } else
           this.$fire({
             title: "Material Request Registeration",

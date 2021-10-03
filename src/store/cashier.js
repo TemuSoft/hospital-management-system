@@ -9,6 +9,7 @@ export default {
     paymnetRequest: [],
     prepaymentAmount: 50,
     testCaseList: [],
+    testCasePaymentDone: false,
   },
 
   mutations: {
@@ -26,6 +27,10 @@ export default {
 
     setTestCaseList(state, payload) {
       state.testCaseList = payload;
+    },
+
+    setTestCasePaymentRegister(state, payload) {
+      state.testCasePaymentDone = payload;
     },
   },
 
@@ -48,6 +53,11 @@ export default {
     async getTestCaseList({ commit }, service_id) {
       let res = await api.get(path.lab_test_case, service_id);
       commit("setTestCaseList", res.data);
+    },
+
+    async testCasePaymentRegister({ commit }, data) {
+      let res = await api.create(path.test_case_payment_done, data);
+      commit("setTestCasePaymentRegister", res.data);
     },
   },
 };

@@ -198,17 +198,25 @@ export default {
   },
 
   computed: {
-    ...mapState("cashier", ["paymnetRequest", "prepaymentAmount"]),
+    ...mapState("cashier", [
+      "paymnetRequest",
+      "prepaymentAmount",
+      "testCasePaymentDone",
+    ]),
   },
 
   methods: {
-    ...mapActions("cashier", ["getPaymentRequest", "getPrepaymentAmount"]),
+    ...mapActions("cashier", [
+      "getPaymentRequest",
+      "getPrepaymentAmount",
+      "testCasePaymentRegister",
+    ]),
 
     async loadData() {
       // await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
       // await this.getTestCaseList(this.selectedPatinet.service_id);
       // alert(true);
-      alert(true);
+
       this.testListPayment = this.selectedPatinet.test_cases;
       this.totalPriceInService = 0;
       for (let i = 0; i < this.testListPayment.length; i++)
@@ -219,7 +227,27 @@ export default {
 
     async paymentDoneCard() {
       if (this.$refs.paymentDoneCard.validate()) {
-        alert("All Input is valid");
+        let data = {};
+        data.reason_id = this.selectedPatinet.reason_id;
+        data.amount = this.selectedPatinet.amount;
+        data.cash = this.totalPayment - this.prepaymentAmount;
+        data.prepayment = this.prepaymentAmount;
+        data.credit = 0;
+        data.insurance = 0;
+        data.test_cases_id = [];
+        for (let i = 0; i < this.testListPayment.length; i++)
+          data.test_cases_id.push(this.testListPayment[i].id);
+
+        await this.testCasePaymentRegister(data);
+        if (this.testCasePaymentDone === true)
+          this.paymentDialogRegular = false;
+        else
+          this.$fire({
+            title: "Test Case Payment",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
 

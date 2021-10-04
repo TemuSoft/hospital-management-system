@@ -1,6 +1,21 @@
 <template>
   <div class="main">
     <v-layout>
+      <Admin v-if="role === 'admin'" />
+      <Cashier v-else-if="role === 'cashier'" />
+      <LaboratoryImaging
+        v-else-if="
+          role === 'imaging' ||
+          role === 'labratory' ||
+          role === 'labratory_head' ||
+          role === 'imaging_head'
+        "
+      />
+      <NurseOPD v-else-if="role === 'nurse' || role === 'opd'" />
+      <Reception v-else-if="role === 'reception'" />
+      <Pharmacy v-else-if="role === 'pharmacy'" />
+      <Store v-else-if="role === 'store'" />
+
       <v-card class="topHeaderCard" v-for="top in topHeaders" :key="top">
         <div class="title">
           <label class="suTitle">{{ top.name }}</label>
@@ -63,6 +78,14 @@
 </template>
 
 <script>
+import AccountService from "@/network/accountService";
+
+import Admin from "./collection/admin.vue";
+import Cashier from "./collection/cashier.vue";
+import LaboratoryImaging from "./collection/labratoryImaging.vue";
+import NurseOPD from "./collection/nurseOPD.vue";
+import Reception from "./collection/reception.vue";
+
 import Patient from "@/assets/icons/patient.svg";
 import Appointment from "@/assets/icons/patient.svg";
 import Doctor from "@/assets/icons/patient.svg";
@@ -75,6 +98,8 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 export default {
   data() {
     return {
+      role: "",
+
       topHeaders: [
         {
           name: "Total Staff",
@@ -116,6 +141,7 @@ export default {
         { card_number: "C-005", fullName: "Patient 5", setted_to: "Doctor 2" },
         { card_number: "C-006", fullName: "Patient 6", setted_to: "Doctor 3" },
       ],
+
       appointmentHeaders: [
         { text: "Card Number", value: "card_number" },
         { text: "Full Name", value: "fullName" },
@@ -138,7 +164,9 @@ export default {
     };
   },
 
-  created() {},
+  created() {
+    this.role = AccountService.getRole();
+  },
 
   mounted() {
     this.loadData();
@@ -149,6 +177,13 @@ export default {
     Appointment,
     Doctor,
     Staff,
+    Admin,
+    Cashier,
+    LaboratoryImaging,
+    NurseOPD,
+    Reception,
+    Pharmacy,
+    Store,
   },
 
   methods: {

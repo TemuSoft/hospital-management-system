@@ -2,7 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import dashboard from "../pages/Dashboard/index.vue";
-import financedashboard from "../pages/Dashboard/finance.vue";
 
 import regsiterPatinet from "../pages/patients/regsiter.vue";
 import patinetList from "../pages/patients/patinetList.vue";
@@ -408,24 +407,6 @@ const routes = [
     path: "/staffUpdate",
     name: "staffUpdate",
     component: staffUpdate,
-    meta: {
-      admin: true,
-      nurse: true,
-      cashier: true,
-      pharmacy: true,
-      labratory: true,
-      imaging: true,
-      labratory_head: true,
-      imaging_head: true,
-      opd: true,
-      store: true,
-      reception: true,
-    },
-  },
-  {
-    path: "/finance/dashboard",
-    name: "financedashboard",
-    component: financedashboard,
     meta: {
       admin: true,
       nurse: true,

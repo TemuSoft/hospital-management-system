@@ -164,12 +164,6 @@ const menusData = [
     title: "finance",
     allowedRoles: ["cashier"],
     links: [
-      {
-        title: "dashboard",
-        route: "financedashboard",
-        icon: "dashboard",
-        allowedRoles: ["cashier"],
-      },
       // {
       //   title: "transactions",
       //   route: "transactions",

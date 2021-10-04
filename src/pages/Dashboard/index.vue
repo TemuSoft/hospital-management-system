@@ -84,7 +84,9 @@ import Admin from "./collection/admin.vue";
 import Cashier from "./collection/cashier.vue";
 import LaboratoryImaging from "./collection/labratoryImaging.vue";
 import NurseOPD from "./collection/nurseOPD.vue";
+import Pharmacy from "./collection/pharmacy.vue";
 import Reception from "./collection/reception.vue";
+import Store from "./collection/store.vue";
 
 import Patient from "@/assets/icons/patient.svg";
 import Appointment from "@/assets/icons/patient.svg";
@@ -181,8 +183,8 @@ export default {
     Cashier,
     LaboratoryImaging,
     NurseOPD,
-    Reception,
     Pharmacy,
+    Reception,
     Store,
   },
 

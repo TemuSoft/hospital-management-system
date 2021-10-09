@@ -101,11 +101,12 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
     return {
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
       registerImagingDialog: false,
       statusList: [
         { text: "Active", value: 1 },

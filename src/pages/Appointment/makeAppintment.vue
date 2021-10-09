@@ -97,12 +97,13 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Close from "@/assets/icons/close.svg";
+import AccountService from "@/network/accountService";
 
 export default {
   props: ["appointmentInfo"],
   data() {
     return {
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
       inputRules: [(v) => !!v || "This field is required"],
       statusType: ["Active", "Not Active"],
     };

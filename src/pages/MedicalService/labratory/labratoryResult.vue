@@ -188,11 +188,12 @@ import Close from "@/assets/icons/close.svg";
 import Checked from "@/assets/icons/checked.svg";
 import Unchecked from "@/assets/icons/unchecked.svg";
 import { mapActions, mapState } from "vuex";
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
     return {
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
 
       inputRules: [(v) => !!v || "This field is required"],
       labtestResult: [],

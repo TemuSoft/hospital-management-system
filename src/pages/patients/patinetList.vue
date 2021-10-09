@@ -418,10 +418,12 @@ import Close from "@/assets/icons/close.svg";
 import Transfer from "@/assets/icons/send.svg";
 import Payment from "@/assets/icons/payment.svg";
 
+import AccountService from "@/network/accountService";
+
 export default {
   data() {
     return {
-      login_user: { id: 2, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile() ,
       assignRoom: {},
       selectedPatinet: {},
       tab: null,

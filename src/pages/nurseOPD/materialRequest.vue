@@ -104,6 +104,7 @@
 <script>
 import Delete from "@/assets/icons/delete.svg";
 import { mapActions, mapState } from "vuex";
+import AccountService from "@/network/accountService";
 
 export default {
   props: ["service_id", "patientId"],
@@ -111,7 +112,7 @@ export default {
   data() {
     return {
       inputRules: [(v) => !!v || "This field is required"],
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
 
       addMaterialRequest: false,
       materialRequestInfo: [],

@@ -277,6 +277,8 @@ import Prescription from "../nurseOPD/prescription.vue";
 import MaterialRequest from "../nurseOPD/materialRequest.vue";
 import MedicalHistory from "../nurseOPD/medicalHistory.vue";
 
+import AccountService from "@/network/accountService";
+
 export default {
   data() {
     return {
@@ -293,7 +295,7 @@ export default {
         { text: "Action", value: "action" },
       ],
       inputRules: [(v) => !!v || "This field is required"],
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
 
       selectedTab: 1,
       mainInfoTab: [

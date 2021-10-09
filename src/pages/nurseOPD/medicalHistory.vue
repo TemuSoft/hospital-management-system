@@ -38,12 +38,14 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import AccountService from "@/network/accountService";
+
 export default {
   props: ["service_id", "patientId"],
 
   data() {
     return {
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
 
       mediaclHistoryInfo: {},
       inputRules: [(v) => !!v || "This field is required"],

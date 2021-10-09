@@ -4,11 +4,19 @@
 
     <v-card flat>
       <v-data-table
-        :items="dispensaryList"
+        :items="dispensaryListsss"
         :headers="dispensaryHeaders"
         :items-per-page="10"
         :search="search"
       >
+        <template v-slot:item.total_medicine="{ item }">
+          {{ getTotalMedicine(item.meds) }}
+        </template>
+
+        <template v-slot:item.request_date="{ item }">
+          {{ new Date(item.request_date).toISOString().substr(0, 10) }}
+        </template>
+
         <template v-slot:top>
           <v-layout>
             <v-text-field
@@ -18,91 +26,70 @@
               single-line
               hide-details
             />
-            <v-spacer></v-spacer>
-            <v-btn
-              small
-              text
-              outlined
-              color="green"
-              @click="(dispensaryRegisterDialog = true), (dispensaryInfo = {})"
-            >
-              Add New
-            </v-btn>
           </v-layout>
           <br />
+        </template>
+
+        <template v-slot:item.action="{ item }">
+          <v-btn
+            v-if="item.store_user_id === -5"
+            text
+            color="green"
+            class="text-capitalize"
+            @click="dispensaryApproval(item)"
+          >
+            Approval
+          </v-btn>
         </template>
       </v-data-table>
     </v-card>
 
-    {{ dispensaryList }}
+    {{ dispensaryListsss }}
 
-    <v-dialog v-model="dispensaryRegisterDialog" width="800px" persistent>
+    <v-dialog v-model="dispensaryApprovalDialog" persistent width="1000">
       <v-card>
         <v-toolbar dense color="green">
-          Send dispensary request
+          Dispensary Approval
           <v-spacer />
 
-          <Close @click="dispensaryRegisterDialog = false" class="icon" />
+          <Close class="icon" @click="dispensaryApprovalDialog = false" />
         </v-toolbar>
         <br />
-        {{ selectedMedicines }}
+
         <v-card-text>
-          <v-form @submit.prevent="register" ref="register">
-            <table v-if="selectedMedicines.length > 0">
-              <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Action</th>
-              </tr>
+          <label class="titleHead">Medicine Name : </label>
+          <label class="titleCont">{{ selectedDispensary.name }} </label>
+          <br />
 
-              <tr v-for="(sm, i) in selectedMedicines" :key="i">
-                <td>{{ sm.name }}</td>
+          <label class="titleHead">Category : </label>
+          <label class="titleCont">{{ selectedDispensary.name }} </label>
+          <br />
 
-                <td>
-                  <v-text-field
-                    dense
-                    outlined
-                    type="number"
-                    rounded
-                    class="ml-15"
-                    :rules="inputRules"
-                    v-model="selectedMedicines[i].quantity_requested"
-                  />
-                </td>
+          <label class="titleHead">Unit Of Measurment : </label>
+          <label class="titleCont">{{ selectedDispensary.name }} </label>
+          <br />
 
-                <td style="width: 30%">
-                  <Delete class="icon" @click="deleteSelectedMedicines(i)" />
-                </td>
-              </tr>
-            </table>
+          <v-layout>
+            <label class="titleHead">Total Avaliable : </label>
+            <label class="titleCont">{{ selectedDispensary.name }} </label>
+            <v-spacer />
 
-            <v-layout>
-              <v-autocomplete
-                label="Medicine"
-                item-text="name"
-                item-value="id"
-                dense
-                outlined
-                :items="medicineList"
-                v-model="selectedMedicines"
-                multiple
-                chips
-                return-object
-                @change="medicineSleceted"
-              />
+            <label class="titleHead">Total Requested : </label>
+            <label class="titleCont">{{ selectedDispensary.name }} </label>
+            <v-spacer />
 
-              <v-spacer />
-              <v-btn
-                small
-                outlined
-                color="green"
-                class="text-capitalize"
-                @click="register()"
-              >
-                Send
-              </v-btn>
-            </v-layout>
-          </v-form>
+            <v-text-field
+              label="Accepted amount"
+              v-model="acceptedAmount"
+              dense
+              outlined
+            />
+          </v-layout>
+
+          <h3>Medicine Detail</h3>
+          <v-layout>
+            quantity buying_price selling_price manufacture_date expire_date
+          </v-layout>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -112,7 +99,6 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Close from "@/assets/icons/close.svg";
-import Delete from "@/assets/icons/delete.svg";
 import AccountService from "@/network/accountService";
 
 export default {
@@ -122,35 +108,132 @@ export default {
       inputRules: [(v) => !!v || "This field is required"],
 
       search: "",
-      selectedMedicines: [],
-      dispensaryInfo: {},
-      dispensaryRegisterDialog: false,
-      dispensaryHeaders: [
-        { text: "Who ?", value: "full_name" },
-        { text: "Total Medicine", value: "total_medicine" },
-        { text: "Date", value: "date" },
-        { text: "Action", value: "action" },
+      dispensaryListsss: [
+        {
+          id: 1,
+          user_id: 1,
+          status: 0,
+          store_user_id: -5,
+          request_date: "2021-10-09T16:36:04.468365Z",
+          name: "Solomon Alamrew",
+          meds: [
+            {
+              id: 1,
+              request_id: 1,
+              medicine_id: 7,
+              quantity_requested: "2.00",
+              quantity_accepted: "0.00",
+              medicine_name: "Medicine name",
+              balance_in_store: 42,
+            },
+          ],
+        },
+        {
+          id: 2,
+          user_id: 9,
+          status: 0,
+          store_user_id: -5,
+          request_date: "2021-10-09T16:41:23.250565Z",
+          name: "Pharmacy Pharmacy",
+          meds: [],
+        },
+        {
+          id: 3,
+          user_id: 9,
+          status: 0,
+          store_user_id: -5,
+          request_date: "2021-10-09T16:42:44.127374Z",
+          name: "Pharmacy Pharmacy",
+          meds: [
+            {
+              id: 2,
+              request_id: 3,
+              medicine_id: 7,
+              quantity_requested: "2.00",
+              quantity_accepted: "0.00",
+              medicine_name: "Medicine name",
+              balance_in_store: 42,
+            },
+          ],
+        },
+        {
+          id: 4,
+          user_id: 9,
+          status: 0,
+          store_user_id: 0,
+          request_date: "2021-10-09T17:16:59.914518Z",
+          name: "Pharmacy Pharmacy",
+          meds: [
+            {
+              id: 3,
+              request_id: 4,
+              medicine_id: 7,
+              quantity_requested: "6.00",
+              quantity_accepted: "0.00",
+              medicine_name: "Medicine name",
+              balance_in_store: 42,
+            },
+          ],
+        },
+        {
+          id: 5,
+          user_id: 9,
+          status: 0,
+          store_user_id: 0,
+          request_date: "2021-10-09T17:17:38.934756Z",
+          name: "Pharmacy Pharmacy",
+          meds: [
+            {
+              id: 4,
+              request_id: 5,
+              medicine_id: 7,
+              quantity_requested: "67.00",
+              quantity_accepted: "0.00",
+              medicine_name: "Medicine name",
+              balance_in_store: 42,
+            },
+          ],
+        },
+        {
+          id: 6,
+          user_id: 9,
+          status: 0,
+          store_user_id: 0,
+          request_date: "2021-10-09T17:18:14.193703Z",
+          name: "Pharmacy Pharmacy",
+          meds: [
+            {
+              id: 5,
+              request_id: 6,
+              medicine_id: 7,
+              quantity_requested: "8.00",
+              quantity_accepted: "0.00",
+              medicine_name: "Medicine name",
+              balance_in_store: 42,
+            },
+          ],
+        },
       ],
 
-      dispensaryMedicineHeader: [
-        { text: "", value: "name" },
-        { text: "", value: "quantity_requested" },
-        { text: "", value: "action", width: "20%" },
+      dispensaryHeaders: [
+        { text: "Who ?", value: "name" },
+        { text: "Total Medicine", value: "total_medicine" },
+        { text: "Date", value: "request_date" },
+        { text: "Action", value: "action", width: "17%" },
       ],
+
+      dispensaryApprovalDialog: false,
+      selectedDispensary: [],
+      acceptedAmount: 0,
     };
   },
 
   components: {
     Close,
-    Delete,
   },
 
   computed: {
-    ...mapState("pharmacy", [
-      "medicineList",
-      "dispensaryList",
-      "registeredDispensary",
-    ]),
+    ...mapState("pharmacy", ["dispensaryList"]),
   },
 
   created() {
@@ -158,44 +241,23 @@ export default {
   },
 
   methods: {
-    ...mapActions("pharmacy", [
-      "getMedicineList",
-      "getDispensaryList",
-      "registerDispensary",
-    ]),
+    ...mapActions("pharmacy", ["getDispensaryList"]),
 
     async loadData() {
-      await this.getMedicineList();
       await this.getDispensaryList();
     },
 
-    async register() {
-      if (this.$refs.register.validate()) {
-        this.dispensaryInfo.user_id = this.login_user.id;
-        this.dispensaryInfo.details = [];
-        for (let i = 0; i < this.selectedMedicines.length; i++)
-          this.dispensaryInfo.details.push({
-            medicine_id: this.selectedMedicines[i].id,
-            quantity_requested: this.selectedMedicines[i].quantity_requested,
-          });
+    getTotalMedicine(data) {
+      let res = 0;
+      for (let i = 0; i < data.length; i++)
+        res += parseFloat(data[i].quantity_requested);
 
-        await this.registerDispensary(this.dispensaryInfo);
-
-        if (this.registeredDispensary.st === true) {
-          this.dispensaryInfo = {};
-          this.dispensaryRegisterDialog = false;
-        } else
-          this.$fire({
-            title: "Dispensary Request",
-            text: this.registeredDispensary.msg,
-            type: "error",
-            timer: 7000,
-          });
-      }
+      return res;
     },
 
-    async deleteSelectedMedicines(i) {
-      this.selectedMedicines.splice(i, 1);
+    async dispensaryApproval(data) {
+      this.dispensaryApprovalDialog = true;
+      this.selectedDispensary = data;
     },
   },
 };
@@ -224,5 +286,14 @@ th {
 td,
 th {
   text-align: center;
+}
+
+.titleHead {
+  font-family: bold;
+  font: bold 12px/30px Georgia;
+  letter-spacing: 2px;
+}
+.titleCont {
+  font-size: 17px;
 }
 </style>

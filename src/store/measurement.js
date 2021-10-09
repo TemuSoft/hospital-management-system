@@ -8,6 +8,10 @@ export default {
     registeredMeasurement: false,
     measurements: [],
     updatedMeasurement: false,
+
+    registeredMeasurementPharmacy: false,
+    measurementsPharmacy: [],
+    updatedMeasurementPharmacy: false,
   },
 
   mutations: {
@@ -21,6 +25,19 @@ export default {
 
     setUpdateMeasurement(state, payload) {
       state.updatedMeasurement = payload;
+    },
+
+    ///Pharmacy related
+    setRegisterMeasurementPharmacy(state, payload) {
+      state.registeredMeasurementPharmacy = payload;
+    },
+
+    setMeasurementListPharmacy(state, payload) {
+      state.measurementsPharmacy = payload;
+    },
+
+    setUpdateMeasurementPharmacy(state, payload) {
+      state.updatedMeasurementPharmacy = payload;
     },
   },
 
@@ -41,6 +58,25 @@ export default {
       let res = await api.update(path.measurement, data.id, data);
 
       commit("setUpdateMeasurement", res.data);
+    },
+
+    //Pharmacy related
+    async registerMeasurementPharmacy({ commit }, data) {
+      let res = await api.create(path.measurement_pharmacy, data);
+
+      commit("setRegisterMeasurementPharmacy", res.data);
+    },
+
+    async getMeasurementListPharmacy({ commit }) {
+      let res = await api.getAll(path.measurement_pharmacy);
+
+      commit("setMeasurementListPharmacy", res.data);
+    },
+
+    async updateMeasurementPharmacy({ commit }, data) {
+      let res = await api.update(path.measurement_pharmacy, data.id, data);
+
+      commit("setUpdateMeasurementPharmacy", res.data);
     },
   },
 };

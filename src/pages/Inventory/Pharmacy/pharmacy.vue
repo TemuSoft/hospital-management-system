@@ -28,7 +28,7 @@
 </template>
 <script>
 import medicines from "./medicine.vue";
-import medicineGroup from "./medicineGroup.vue";
+import medicineGroup from "./medicineCategory.vue";
 
 export default {
   components: {
@@ -49,7 +49,7 @@ export default {
     ],
     items: [
       { id: 1, tab: "Medicines", content: "Tab 1" },
-      { id: 2, tab: "Medicine Groups", content: "Tab 2 Content" },
+      { id: 2, tab: "Medicine Category", content: "Tab 2 Content" },
     ],
   }),
   created() {},

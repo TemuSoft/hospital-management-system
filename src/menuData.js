@@ -63,9 +63,21 @@ const menusData = [
     ],
     links: [
       {
-        title: "pharmacy",
+        title: "pharmacyS",
         route: "pharmacy",
         icon: "pharmacy",
+        allowedRoles: ["pharmacy"],
+      },
+      {
+        title: "measurment_unit",
+        route: "measurmentUnitPharamcy",
+        icon: "measurmentUnitPharamcy",
+        allowedRoles: ["pharmacy"],
+      },
+      {
+        title: "dispensary",
+        route: "dispensary",
+        icon: "dispensary",
         allowedRoles: ["pharmacy"],
       },
       {

@@ -9,6 +9,9 @@ import patientDetail from "../pages/patients/patientDetail.vue";
 import appointments from "../pages/Appointment/index.vue";
 import opd from "../pages/patients/opd.vue";
 import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
+import dispensary from "../pages/Inventory/Pharmacy/Dispensary.vue";
+import measurmentUnitPharamcy from "../pages/Inventory/Pharmacy/measurmentUnitPharamcy.vue";
+
 import prescription from "../pages/Inventory/Pharmacy/prescription.vue";
 import prescriptionDetail from "../pages/Inventory/Pharmacy/prescriptionDetail.vue";
 
@@ -187,9 +190,45 @@ const routes = [
     },
   },
   {
+    path: "/dispensary",
+    name: "dispensary",
+    component: dispensary,
+    meta: {
+      admin: true,
+      nurse: true,
+      cashier: true,
+      pharmacy: true,
+      labratory: true,
+      imaging: true,
+      labratory_head: true,
+      imaging_head: true,
+      opd: true,
+      store: true,
+      reception: true,
+    },
+  },
+  {
     path: "/pharmacy",
     name: "pharmacy",
     component: pharmacy,
+    meta: {
+      admin: true,
+      nurse: true,
+      cashier: true,
+      pharmacy: true,
+      labratory: true,
+      imaging: true,
+      labratory_head: true,
+      imaging_head: true,
+      opd: true,
+      store: true,
+      reception: true,
+    },
+  },
+  {
+    path: "/pharmacy/measurmentUnitP",
+    name: "measurmentUnitPharamcy",
+    component: measurmentUnitPharamcy,
     meta: {
       admin: true,
       nurse: true,

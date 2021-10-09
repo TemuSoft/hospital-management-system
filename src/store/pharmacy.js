@@ -5,14 +5,14 @@ import { api, path } from "../network/index";
 export default {
   namespaced: true,
   state: {
-    registeredMedicine: false,
+    registeredMedicine: {},
+    addMoredMedicine: {},
+
     medicineList: [],
-
-    registeredMedicineGroup: false,
-    registeredMedicineCategory: false,
-
-    medicineGroupList: [],
+    registeredMedicineCategory: {},
     medicineCategoryList: [],
+    registeredDispensary: {},
+    dispensaryList: [],
   },
 
   mutations: {
@@ -20,16 +20,12 @@ export default {
       state.registeredMedicine = payload;
     },
 
+    setAddMoreMedicine(state, payload) {
+      state.addMoredMedicine = payload;
+    },
+
     setMedicineList(state, payload) {
       state.medicineList = payload;
-    },
-
-    setRegisterMedicineGroup(state, payload) {
-      state.registeredMedicineGroup = payload;
-    },
-
-    setMedicineGroup(state, payload) {
-      state.medicineGroupList = payload;
     },
 
     setRegisterMedicineCategory(state, payload) {
@@ -39,6 +35,14 @@ export default {
     setMedicineCategory(state, payload) {
       state.medicineCategoryList = payload;
     },
+
+    setRegisterDispensary(state, payload) {
+      state.registeredDispensary = payload;
+    },
+
+    setDispensaryList(state, payload) {
+      state.dispensaryList = payload;
+    },
   },
 
   actions: {
@@ -47,19 +51,14 @@ export default {
       commit("setRegisterMedicine", res.data);
     },
 
+    async addMoreMedicine({ commit }, data) {
+      let res = await api.create(path.medicine_detail, data);
+      commit("setAddMoreMedicine", res.data);
+    },
+
     async getMedicineList({ commit }) {
       let res = await api.getAll(path.medicine);
       commit("setMedicineList", res.data);
-    },
-
-    async registerMedicineGroup({ commit }, data) {
-      let res = await api.create(path.medicine_group, data);
-      commit("setRegisterMedicineGroup", res.data);
-    },
-
-    async getMedicineGroup({ commit }) {
-      let res = await api.getAll(path.medicine_group);
-      commit("setMedicineGroup", res.data);
     },
 
     async registerMedicineCategory({ commit }, data) {
@@ -70,6 +69,16 @@ export default {
     async getMedicineCategory({ commit }) {
       let res = await api.getAll(path.medicine_category);
       commit("setMedicineCategory", res.data);
+    },
+
+    async registerDispensary({ commit }, data) {
+      let res = await api.create(path.dispensary_request, data);
+      commit("setRegisterDispensary", res.data);
+    },
+
+    async getDispensaryList({ commit }) {
+      let res = await api.getAll(path.dispensary_request);
+      commit("setDispensaryList", res.data);
     },
   },
 };

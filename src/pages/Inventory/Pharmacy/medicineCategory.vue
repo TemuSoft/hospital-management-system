@@ -1,20 +1,20 @@
 <template>
   <div class="main">
-    <h3>Medicines Group</h3>
+    <h3>Medicines Category</h3>
 
     <v-data-table
       dense
       :headers="headers"
-      :items="medicineGroupList"
+      :items="medicineCategoryList"
       :search="search"
     >
       <template v-slot:item.action="{ item }">
-        <Detail class="icon" @click="detialMedicineGroup(item)" />
+        <Detail class="icon" @click="detialMedicineCategory(item)" />
 
         <Edit
           class="icon"
           style="margin-left: 30px"
-          @click="editMedicineGroup(item)"
+          @click="editMedicineCategory(item)"
         />
       </template>
 
@@ -33,7 +33,7 @@
             text
             outlined
             color="green"
-            @click="addMedicineGroupDialog = true"
+            @click="addMedicineCategoryDialog = true"
           >
             Add New
           </v-btn>
@@ -42,10 +42,10 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="addMedicineGroupDialog" persistent width="700px">
+    <v-dialog v-model="addMedicineCategoryDialog" persistent width="700px">
       <v-card>
         <v-toolbar dense color="green">
-          Add New Medicine Group
+          Add New
           <v-spacer />
           <Close class="icon" @click="closeDialog()" />
         </v-toolbar>
@@ -58,7 +58,7 @@
                 label="Name"
                 dense
                 outlined
-                v-model="medicineGroupInfo.name"
+                v-model="medicineCategoryInfo.name"
                 :rules="inputRules"
               />
             </v-layout>
@@ -69,7 +69,7 @@
                 rows="2"
                 dense
                 outlined
-                v-model="medicineGroupInfo.description"
+                v-model="medicineCategoryInfo.description"
                 :rules="inputRules"
               />
             </v-layout>
@@ -96,8 +96,8 @@ export default {
     return {
       inputRules: [(v) => !!v || "This field is required"],
 
-      addMedicineGroupDialog: false,
-      medicineGroupInfo: {},
+      addMedicineCategoryDialog: false,
+      medicineCategoryInfo: {},
 
       search: "",
       headers: [
@@ -115,30 +115,36 @@ export default {
   },
 
   computed: {
-    ...mapState("pharmacy", ["registeredMedicineGroup", "medicineGroupList"]),
+    ...mapState("pharmacy", [
+      "registeredMedicineCategory",
+      "medicineCategoryList",
+    ]),
   },
 
   methods: {
-    ...mapActions("pharmacy", ["registerMedicineGroup", "getMedicineGroup"]),
+    ...mapActions("pharmacy", [
+      "registerMedicineCategory",
+      "getMedicineCategory",
+    ]),
 
     async loadData() {
-      await this.getMedicineGroup();
+      await this.getMedicineCategory();
     },
 
     async closeDialog() {
-      this.addMedicineGroupDialog = false;
+      this.addMedicineCategoryDialog = false;
     },
 
     async save() {
       if (this.$refs.save.validate()) {
-        await this.registerMedicine(this.medicineGroupInfo);
+        await this.registerMedicineCategory(this.medicineCategoryInfo);
 
-        if (this.registeredMedicineGroup === true) {
-          this.addMedicineDialogGroup = false;
+        if (this.registeredMedicineCategory === true) {
+          this.addMedicineCategoryDialog = false;
           this.loadData();
         } else
           this.$fire({
-            title: "Medicine Group Registeration",
+            title: "Medicine Category Registeration",
             text: "Something wrong please try again!!!",
             type: "error",
             timer: 7000,
@@ -146,11 +152,11 @@ export default {
       }
     },
 
-    async detialMedicineGroup(item) {
+    async detialMedicineCategory(item) {
       alert(item.id);
     },
 
-    async editMedicineGroup(item) {
+    async editMedicineCategory(item) {
       alert(item.id);
     },
   },

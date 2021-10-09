@@ -13,6 +13,7 @@
     <NurseOPD v-else-if="role === 'nurse' || role === 'opd'" />
     <Reception v-else-if="role === 'reception'" />
     <Pharmacy v-else-if="role === 'pharmacy'" />
+    <PharmacyStore v-else-if="role === 'pharmacy_store'" />
     <Store v-else-if="role === 'store'" />
   </div>
 </template>
@@ -25,6 +26,7 @@ import Cashier from "./collection/cashier.vue";
 import LaboratoryImaging from "./collection/labratoryImaging.vue";
 import NurseOPD from "./collection/nurseOPD.vue";
 import Pharmacy from "./collection/pharmacys.vue";
+import PharmacyStore from "./collection/PharmacyStore.vue";
 import Reception from "./collection/reception.vue";
 import Store from "./collection/stores.vue";
 
@@ -49,6 +51,7 @@ export default {
     Pharmacy,
     Reception,
     Store,
+    PharmacyStore,
   },
 
   methods: {},

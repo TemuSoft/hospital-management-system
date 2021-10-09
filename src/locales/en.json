@@ -8,6 +8,8 @@
   "opd": "OPD",
   "appointments": "Appointments",
   "pharmacy": "Pharmacy",
+  "pharmacy_store": "Pharmacy Store",
+  "dispensary": "Dispensary",
   "prescription": "Prescription",
   "measurment_unit": "Measurment Unit",
   "inventory": "Inventory",

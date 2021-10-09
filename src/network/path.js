@@ -33,6 +33,13 @@ const path = {
   updatae_lab_test_case_request: "/lab/enter_lab_test_history_detail",
   register_outsourced_test_case: "/lab/outsource_lab_test",
   measurement: "/common/measurement",
+  measurement_pharmacy: "/pharmacy/medicine_unit_of_measurement",
+
+  medicine: "/pharmacy/medicine",
+  medicine_detail: "/pharmacy/medicine_detail",
+  medicine_category: "/pharmacy/medicine_category",
+  dispensary_request: "/pharmacy/dispensary_request",
+
   assing_patient_room: "/",
 
   medical_history_list: "/patient/medical_history",

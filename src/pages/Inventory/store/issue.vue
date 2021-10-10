@@ -24,12 +24,7 @@
       <v-spacer></v-spacer>
     </v-layout>
 
-    <v-data-table
-      :items="issues"
-      :headers="headersIssue"
-      items-per-page="10"
-      dense
-    >
+    <v-data-table :items="issues" :headers="headersIssue" dense>
       <template v-slot:top>
         <v-layout>
           <v-spacer></v-spacer>
@@ -54,7 +49,7 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="sendIssueRequestDialog" width="800px" persistent>
+    <v-dialog v-model="sendIssueRequestDialog" width="1000px" persistent>
       <v-card flat>
         <v-toolbar dense color="green">
           Create New Item Issue Request
@@ -65,7 +60,7 @@
         <br />
 
         <v-card-text>
-          <v-form @submit.prevent="save" ref="save">
+          <v-form @submit.prevent="sendRequest" ref="sendRequest">
             <v-layout>
               <v-textarea
                 dense
@@ -74,7 +69,7 @@
                 v-model="issueInfo.reason"
                 :rules="inputRules"
                 outlined
-              ></v-textarea>
+              />
             </v-layout>
 
             <v-layout>
@@ -84,13 +79,13 @@
                 item-value="id"
                 outlined
                 dense
-                @click="loadInventoryItems($event)"
+                @change="loadInventoryItems($event)"
                 label="Inventory"
               />
               <v-spacer />
 
               <v-autocomplete
-                :items="inventotyItems"
+                :items="itemsInventory"
                 item-text="name"
                 item-value="id"
                 outlined
@@ -101,42 +96,65 @@
                 chips
                 v-model="itemSelected"
               />
-              <v-spacer />
-
-              <v-btn small text outlined @click="addIssuedItems()">Add</v-btn>
             </v-layout>
 
-            <table>
-              <tr>
-                <th>Inventory</th>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Aveliable</th>
-                <th>Action</th>
-              </tr>
-              <tr v-for="(item, i) in itemsIssue" :key="i">
-                <td>{{ itemsIssue[i].inventory }}</td>
-                <td>{{ itemsIssue[i].itemName }}</td>
-                <td>
-                  <v-text-field
-                    dense
-                    rounded
-                    :rules="inputRules"
-                    v-model="itemsIssue[i].avaliabel"
-                  />
-                </td>
-                <td>{{ itemsIssue[i].quantity }}</td>
-                <td>
-                  <Delete class="icon" @click="deleteSelectedIssueItem(i)" />
-                </td>
-              </tr>
-            </table>
+            <v-layout>
+              <v-btn
+                class="text-capitalize"
+                small
+                text
+                color="green"
+                outlined
+                @click="addIssuedItems()"
+              >
+                Add
+              </v-btn>
+            </v-layout>
             <br />
+
+            {{ itemsIssue }}
+
+            <v-data-table
+              dense
+              :items="itemsIssue"
+              :headers="issueItemsHeadres"
+            >
+              <template v-slot:item.uofm="{ item }">
+                {{ getUnitOfMeasurment(item.uofm) }}
+              </template>
+
+              <template v-slot:item.quantity="{ item }">
+                <v-edit-dialog
+                  :return-value.sync="item.quantity"
+                  @save="save"
+                  @cancel="cancel"
+                  @open="open"
+                  @close="close"
+                  large
+                >
+                  {{ (item.quantity = 0) }}
+                  <template v-slot:input>
+                    <v-text-field
+                      @change="validateInput(item)"
+                      v-model="item.quantity"
+                      :rules="numberRules"
+                      type="number"
+                      label="Edit"
+                      single-line
+                    ></v-text-field>
+                  </template>
+                </v-edit-dialog>
+              </template>
+
+              <template v-slot:item.action="{ item }">
+                <Delete class="icon" @click="deleteSelectedIssueItem(item)" />
+              </template>
+            </v-data-table>
 
             <v-layout>
               <v-spacer />
-              <v-btn small text outlined color="green" @click="save()">
-                Save
+              <v-btn small text outlined color="green" @click="sendRequest()">
+                Send Request
               </v-btn>
             </v-layout>
           </v-form>
@@ -144,7 +162,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="confirmIssueRequestDialog" width="800px" persistent>
+    <v-dialog v-model="confirmIssueRequestDialog" width="900px" persistent>
       <v-card flat>
         <v-toolbar dense color="green">
           Approval Item Issue Request
@@ -165,7 +183,7 @@
                 :rules="inputRules"
                 outlined
                 :readonly="true"
-              ></v-textarea>
+              />
             </v-layout>
 
             <v-data-table
@@ -173,7 +191,7 @@
               :items="itemsIssue"
               :headers="headersIssueApproval"
               :items-per-page="10"
-            ></v-data-table>
+            />
 
             <v-layout>
               <v-select
@@ -218,19 +236,23 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
 import Close from "@/assets/icons/close.svg";
 import Delete from "@/assets/icons/delete.svg";
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
     return {
+      login_user: AccountService.getProfile(),
+
       confirmIssueRequestDialog: false,
       sendIssueRequestDialog: false,
       approvalSelected: "Approve",
 
       inputRules: [(v) => !!v || "This field is required"],
+      numberRules: [(v) => (v > 0 && !!v) || "Can't be lessthan one"],
 
       itemSelected: [],
       issueInfo: {},
@@ -242,6 +264,15 @@ export default {
         { text: "Quantity", value: "quantity" },
         { text: "Status", value: "status" },
         { text: "Detail", value: "detail", width: "10%" },
+      ],
+
+      issueItemsHeadres: [
+        { text: "Inventory", value: "inventory" },
+        { text: "Item", value: "name" },
+        { text: "UofM", value: "uofm" },
+        { text: "Avaliable", value: "available_quantity" },
+        { text: "Quantity", value: "quantity" },
+        { text: "Action", value: "action" },
       ],
 
       headersIssueApproval: [
@@ -266,26 +297,38 @@ export default {
 
   computed: {
     ...mapState("inventory", ["inventorys"]),
-    ...mapState("items", ["inventotyItems"]),
+    ...mapState("item", ["itemsInventory"]),
     ...mapState("issue", ["sendIssuedRequest", "issues"]),
+    ...mapState("measurement", ["measurements"]),
   },
 
   methods: {
     ...mapActions("inventory", ["loadInventoryList"]),
-    ...mapActions("item", ["getInventoryItems"]),
+    ...mapActions("item", ["loadItemListInventory"]),
     ...mapActions("issue", ["sendIssueRequest", "loadIssueRequest"]),
+    ...mapActions("measurement", ["getMeasurementList"]),
 
     async loadData() {
       await this.loadInventoryList();
+      await this.getMeasurementList();
       await this.loadIssueRequest();
     },
 
     async loadInventoryItems(id) {
-      await this.getInventoryItems(id);
+      await this.loadItemListInventory(id);
     },
 
-    async deleteSelectedIssueItem(i) {
-      this.itemsIssue.splice(i, 1);
+    async validateInput(item) {
+      let index = this.itemsIssue.indexOf(item);
+      let qua = parseFloat(item.quantity);
+      let ava = parseFloat(item.available_quantity);
+
+      if (qua > ava || qua < 0) this.itemsIssue[index].quantity = 0;
+    },
+
+    async deleteSelectedIssueItem(item) {
+      let index = this.itemsIssue.indexOf(item);
+      this.itemsIssue.splice(index, 1);
     },
 
     async addIssuedItems() {
@@ -299,20 +342,43 @@ export default {
         }
 
         if (exist === 0) this.itemsIssue.push(this.itemSelected[i]);
+
+        for (let k = 0; k < this.inventorys.length; k++)
+          if (this.inventorys[k].id === this.itemSelected[i].inventory_id)
+            this.itemSelected[i].inventory = this.inventorys[k].name;
       }
     },
 
-    async save() {
-      if (this.$refs.save.validate()) {
-        await this.sendIssueRequest(this.itemsIssue);
+    getUnitOfMeasurment(uofmId) {
+      let res = "";
+      for (let i = 0; i < this.measurements.length; i++)
+        if (uofmId === this.measurements[i].id) {
+          res = this.measurements[i].unit;
+          break;
+        }
+      return res;
+    },
 
-        if (this.sendIssuedRequest === true) {
+    async sendRequest() {
+      if (this.$refs.sendRequest.validate()) {
+        this.issueInfo.user_id = this.login_user.id;
+        this.issueInfo.items = [];
+
+        for (let i = 0; i < this.itemsIssue.length; i++)
+          this.issueInfo.items.push({
+            id: this.itemsIssue[i].id,
+            quantity: this.itemsIssue[i].quantity,
+          });
+
+        await this.sendIssueRequest(this.issueInfo);
+
+        if (this.sendIssuedRequest.st === true) {
           this.sendIssueRequestDialog = false;
           await this.loadData();
         } else
           this.$fire({
             title: "Item Issueing Request",
-            text: "Something wrong please try again!!!",
+            text: this.sendIssuedRequest.msg + "!!!",
             type: "error",
             timer: 7000,
           });

@@ -1,12 +1,12 @@
-import { api, path } from "../network";
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
+import { api, path } from "../network/index";
 
 export default {
   namespaced: true,
-
-  states: {
+  state: {
     registeredItem: false,
-    items: [],
-    inventotyItems: [],
+    itemsInventory: [],
   },
 
   mutations: {
@@ -14,32 +14,20 @@ export default {
       state.registeredItem = payload;
     },
 
-    setLoadItemList(state, payload) {
-      state.items = payload;
-    },
-
-    setInventoryItems(state, payload) {
-      state.inventotyItems = payload;
+    setLoadItemListInventory(state, payload) {
+      state.itemsInventory = payload;
     },
   },
 
   actions: {
     async registerItem({ commit }, data) {
       let res = await api.create(path.item, data);
-
       commit("setRegisterItem", res.data);
     },
 
-    async loadItemList({ commit }, id) {
+    async loadItemListInventory({ commit }, id) {
       let res = await api.get(path.update_item, id);
-
-      commit("setLoadItemList", res.data);
-    },
-
-    async getInventoryItems({ commit }, id) {
-      let res = await api.create(path.item, { key: "inventoryId", value: id });
-
-      commit("setInventoryItems", res.data);
+      commit("setLoadItemListInventory", res.data);
     },
   },
 };

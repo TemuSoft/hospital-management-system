@@ -2,11 +2,7 @@
   <div class="main">
     <v-card flat>
       <v-toolbar dense flat>
-        <v-btn
-          text
-          class="text-capitalize"
-          @click="$router.push({ name: 'store' })"
-        >
+        <v-btn text class="text-capitalize" @click="back()">
           <v-icon class="mx-3">mdi-arrow-left</v-icon>
           Go Back
         </v-btn>
@@ -28,7 +24,7 @@
       </p>
       <br />
 
-      <v-data-table :search="search" :items="items" :headers="headers">
+      <v-data-table :search="search" :items="itemsInventory" :headers="headers">
         <template v-slot:item.action="{ item }">
           <Edit @click="editItem(item)" class="icon" />
           &nbsp;&nbsp;&nbsp;
@@ -47,9 +43,15 @@
             ></v-text-field>
             <v-spacer></v-spacer>
 
-            <v-btn small @click="registerItemDialog = true" outlined text
-              >Add Item</v-btn
+            <v-btn
+              small
+              @click="registerItemDialog = true"
+              outlined
+              color="green"
+              class="text-capitalize"
             >
+              Add Item
+            </v-btn>
           </v-layout>
           <br />
         </template>
@@ -57,7 +59,12 @@
 
       <v-dialog v-model="registerItemDialog" persistent width="700px">
         <v-card>
-          <v-toolbar color="green" dark>Add New Item </v-toolbar>
+          <v-toolbar color="green" dense>
+            Add New Item
+            <v-spacer />
+
+            <Close @click="registerItemDialog = false" class="icon" />
+          </v-toolbar>
           <br />
           <v-card-text>
             <v-form @submit.prevent="save" ref="save">
@@ -117,10 +124,8 @@
               </v-layout>
 
               <v-layout>
-                <v-spacer></v-spacer>
-                <v-btn small @click="registerItemDialog = false">Cancel</v-btn>
-                <v-spacer></v-spacer>
-                <v-btn small @click="save()">Save</v-btn>
+                <v-spacer />
+                <v-btn small @click="save()" outlined color="green">Save</v-btn>
               </v-layout>
             </v-form>
           </v-card-text>
@@ -134,6 +139,7 @@
 import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
 import Detail from "@/assets/icons/eye.svg";
+import Close from "@/assets/icons/close.svg";
 
 export default {
   data() {
@@ -156,28 +162,31 @@ export default {
   components: {
     Edit,
     Detail,
+    Close,
   },
 
   created() {
     const { inventoryId } = this.$route.params;
     this.inventoryId = inventoryId;
+
+    if (this.inventoryId === undefined) this.back();
     this.loadData();
   },
 
   computed: {
-    ...mapState("item", ["registeredItem", "items"]),
     ...mapState("inventory", ["singleInventory"]),
+    ...mapState("item", ["registeredItem", "itemsInventory"]),
     ...mapState("measurement", ["measurements"]),
   },
 
   methods: {
-    ...mapActions("item", ["registerItem", "loadItemList"]),
     ...mapActions("inventory", ["loadSingleInvetory"]),
+    ...mapActions("item", ["registerItem", "loadItemListInventory"]),
     ...mapActions("measurement", ["getMeasurementList"]),
 
     async loadData() {
       await this.loadSingleInvetory(this.inventoryId);
-      await this.loadItemList(this.inventoryId);
+      await this.loadItemListInventory(this.inventoryId);
       await this.getMeasurementList();
     },
 
@@ -206,6 +215,10 @@ export default {
 
     async detailItem(item) {
       alert(item.id);
+    },
+
+    back() {
+      this.$router.push({ name: "store" });
     },
   },
 };

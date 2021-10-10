@@ -39,6 +39,7 @@ const path = {
   medicine_detail: "/pharmacy/medicine_detail",
   medicine_category: "/pharmacy/medicine_category",
   dispensary_request: "/pharmacy/dispensary_request",
+  dispensary_request_confirm: "/pharmacy/dispensary_request",
 
   assing_patient_room: "/",
 

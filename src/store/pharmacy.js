@@ -13,6 +13,8 @@ export default {
     medicineCategoryList: [],
     registeredDispensary: {},
     dispensaryList: [],
+    dispensarySingle: [],
+    confirmedDispensaryRequest: {},
   },
 
   mutations: {
@@ -42,6 +44,14 @@ export default {
 
     setDispensaryList(state, payload) {
       state.dispensaryList = payload;
+    },
+
+    setDispensarySingle(state, payload) {
+      state.dispensarySingle = payload;
+    },
+
+    setConfirmDispensaryRequest(state, payload) {
+      state.confirmedDispensaryRequest = payload;
     },
   },
 
@@ -79,6 +89,19 @@ export default {
     async getDispensaryList({ commit }) {
       let res = await api.getAll(path.dispensary_request);
       commit("setDispensaryList", res.data);
+    },
+
+    async getDispensarySingle({ commit }, dispensary_id) {
+      let res = await api.get(path.dispensary_request, dispensary_id);
+      commit("setDispensarySingle", res.data);
+    },
+
+    async confirmDispensaryRequest({ commit }, data) {
+      let res = await api.updateWithoutId(
+        path.dispensary_request_confirm,
+        data
+      );
+      commit("setConfirmDispensaryRequest", res.data);
     },
   },
 };

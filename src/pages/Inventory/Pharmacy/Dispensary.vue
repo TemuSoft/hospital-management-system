@@ -2,6 +2,8 @@
   <div class="main">
     <h3>Dispensary</h3>
 
+    {{ selectedDispensary }}
+
     <v-card flat>
       <v-data-table
         :items="dispensaryListsss"
@@ -87,9 +89,23 @@
           </v-layout>
 
           <h3>Medicine Detail</h3>
-          <v-layout>
-            quantity buying_price selling_price manufacture_date expire_date
-          </v-layout>
+          <v-data-table
+            :items="medicineDetial"
+            :headers="medicineDetialHeaders"
+          >
+            <template v-slot:item.checkbox="{ item }">
+              <checked
+                class="icon"
+                v-if="item.checkbox"
+                @click="checkboxWholeProcess(item, false)"
+              />
+              <unchecked
+                class="icon"
+                v-else
+                @click="checkboxWholeProcess(item, true)"
+              />
+            </template>
+          </v-data-table>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -99,6 +115,8 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Close from "@/assets/icons/close.svg";
+import Checked from "@/assets/icons/checked.svg";
+import Unchecked from "@/assets/icons/unchecked.svg";
 import AccountService from "@/network/accountService";
 
 export default {
@@ -223,13 +241,52 @@ export default {
       ],
 
       dispensaryApprovalDialog: false,
-      selectedDispensary: [],
+      selectedDispensary: {},
       acceptedAmount: 0,
+      medicineDetial: [
+        {
+          id: 1,
+          checkbox: false,
+          buying_price: "6",
+          selling_price: "8",
+          expire_date: "2022-09-12",
+          quantity: "56",
+          approved: "",
+        },
+        {
+          id: 2,
+          checkbox: false,
+          buying_price: "45",
+          selling_price: "46",
+          expire_date: "2022-09-12",
+          quantity: "78",
+          approved: "",
+        },
+        {
+          id: 3,
+          checkbox: false,
+          buying_price: "34",
+          selling_price: "35",
+          expire_date: "2022-09-12",
+          quantity: "6",
+          approved: "",
+        },
+      ],
+      medicineDetialHeaders: [
+        { text: "", value: "checkbox" },
+        { text: "Buying Price", value: "buying_price" },
+        { text: "Selling Price", value: "selling_price" },
+        { text: "Expire Date", value: "expire_date" },
+        { text: "Quantity", value: "quantity" },
+        { text: "Approved", value: "Approved" },
+      ],
     };
   },
 
   components: {
     Close,
+    Checked,
+    Unchecked,
   },
 
   computed: {
@@ -253,6 +310,11 @@ export default {
         res += parseFloat(data[i].quantity_requested);
 
       return res;
+    },
+
+    checkboxWholeProcess(item, make) {
+      let index = this.medicineDetial.indexOf(item);
+      this.medicineDetial[index].checkbox = make;
     },
 
     async dispensaryApproval(data) {

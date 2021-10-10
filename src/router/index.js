@@ -11,6 +11,7 @@ import opd from "../pages/patients/opd.vue";
 import pharmacy from "../pages/Inventory/Pharmacy/pharmacy.vue";
 import pharmacyStore from "../pages/Inventory/Pharmacy/pharmacyStore.vue";
 import dispensary from "../pages/Inventory/Pharmacy/Dispensary.vue";
+import dispensaryDetail from "../pages/Inventory/Pharmacy/DispensaryDetail.vue";
 import measurmentUnitPharamcy from "../pages/Inventory/Pharmacy/measurmentUnitPharamcy.vue";
 
 import prescription from "../pages/Inventory/Pharmacy/prescription.vue";
@@ -110,6 +111,12 @@ const routes = [
     path: "/dispensary",
     name: "dispensary",
     component: dispensary,
+    meta: {},
+  },
+  {
+    path: "/dispensaryDetail",
+    name: "dispensaryDetail",
+    component: dispensaryDetail,
     meta: {},
   },
   {

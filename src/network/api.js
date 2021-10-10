@@ -22,6 +22,10 @@ class api {
     return http.patch(`${path}/${id}/`, data);
   }
 
+  updateWithoutId(path, data) {
+    return http.patch(`${path}`, data);
+  }
+
   delete(path, id) {
     return http.delete(`${path}/${id}`, { headers: authHeader() });
   }

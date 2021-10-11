@@ -27,6 +27,7 @@ export default {
 
     async loadItemListInventory({ commit }, id) {
       let res = await api.get(path.update_item, id);
+      for (let i = 0; i < res.data.length; i++) res.data[i].quantity = 0;
       commit("setLoadItemListInventory", res.data);
     },
   },

@@ -21,14 +21,13 @@ export default {
 
   actions: {
     async sendIssueRequest({ commit }, data) {
-      console.log(data);
-      let res = await api.create(path.register_issue, data);
-      console.log(res);
+      let res = await api.create(path.issue, data);
+      console.log(res.data);
       commit("setSendIssueRequest", res.data);
     },
 
     async loadIssueRequest({ commit }) {
-      let res = await api.getAll(path.isuse);
+      let res = await api.getAll(path.issue);
       commit("setLoadIssueRequest", res.data);
     },
   },

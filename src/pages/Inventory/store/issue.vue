@@ -24,6 +24,8 @@
       <v-spacer></v-spacer>
     </v-layout>
 
+    {{ issues }}
+
     <v-data-table :items="issues" :headers="headersIssue" dense>
       <template v-slot:top>
         <v-layout>
@@ -41,11 +43,31 @@
         </v-layout>
       </template>
 
-      <template v-slot:item.action="{}">
-        <Edit class="icon" />
-        <v-btn small text color="yellow">Approval</v-btn>
-        <v-btn small text color="green">Approved</v-btn>
-        <v-btn small text color="red">Rejected</v-btn>
+      <template v-slot:item.request_date="{ item }">
+        {{ new Date(item.request_date).toDateString().substr(0, 50) }}
+      </template>
+
+      <template v-slot:item.department="{ item }">
+        {{ getDeprtmentName(item.department) }}
+      </template>
+
+      <template v-slot:item.quantity="{ item }">
+        {{ getTotalIssedQuantity(item.issue_items) }}
+      </template>
+
+      <template v-slot:item.detail="{ item }">
+        <v-layout justify-center v-if="item.status === 0">
+          <Edit class="icon" />
+          <v-btn class="ml-5" small text color="yellow"> Approval </v-btn>
+        </v-layout>
+
+        <v-layout justify-center v-else-if="item.status === 1">
+          <v-btn small text color="green">Approved</v-btn>
+        </v-layout>
+
+        <v-layout v-else-if="item.status === -1">
+          <v-btn small text color="red">Rejected</v-btn>
+        </v-layout>
       </template>
     </v-data-table>
 
@@ -112,8 +134,6 @@
             </v-layout>
             <br />
 
-            {{ itemsIssue }}
-
             <v-data-table
               dense
               :items="itemsIssue"
@@ -132,7 +152,7 @@
                   @close="close"
                   large
                 >
-                  {{ (item.quantity = 0) }}
+                  {{ item.quantity }}
                   <template v-slot:input>
                     <v-text-field
                       @change="validateInput(item)"
@@ -141,7 +161,7 @@
                       type="number"
                       label="Edit"
                       single-line
-                    ></v-text-field>
+                    />
                   </template>
                 </v-edit-dialog>
               </template>
@@ -261,9 +281,9 @@ export default {
       headersIssue: [
         { text: "Request Date", value: "request_date" },
         { text: "Name", value: "name" },
+        { text: "Department", value: "department" },
         { text: "Quantity", value: "quantity" },
-        { text: "Status", value: "status" },
-        { text: "Detail", value: "detail", width: "10%" },
+        { text: "Detail", value: "detail", width: "15%", align: "center" },
       ],
 
       issueItemsHeadres: [
@@ -277,10 +297,12 @@ export default {
 
       headersIssueApproval: [
         { text: "Inventory", value: "inventory" },
-        { text: "Item", value: "item_name" },
+        { text: "Item", value: "name" },
+        { text: "UofM", value: "uofm" },
+        { text: "Avaliable", value: "available_quantity" },
         { text: "Quantity", value: "quantity" },
-        { text: "Received", value: "received" },
-        { text: "Action", value: "action", width: "20%" },
+        { text: "Approved", value: "approved" },
+        { text: "Action", value: "action" },
       ],
     };
   },
@@ -300,6 +322,7 @@ export default {
     ...mapState("item", ["itemsInventory"]),
     ...mapState("issue", ["sendIssuedRequest", "issues"]),
     ...mapState("measurement", ["measurements"]),
+    ...mapState("department", ["departments"]),
   },
 
   methods: {
@@ -307,11 +330,13 @@ export default {
     ...mapActions("item", ["loadItemListInventory"]),
     ...mapActions("issue", ["sendIssueRequest", "loadIssueRequest"]),
     ...mapActions("measurement", ["getMeasurementList"]),
+    ...mapActions("department", ["getDepartmentList"]),
 
     async loadData() {
       await this.loadInventoryList();
       await this.getMeasurementList();
       await this.loadIssueRequest();
+      await this.getDepartmentList();
     },
 
     async loadInventoryItems(id) {
@@ -359,26 +384,57 @@ export default {
       return res;
     },
 
+    getDeprtmentName(department) {
+      let res = "";
+      for (let i = 0; i < this.departments.length; i++)
+        if (this.departments[i].id === department) {
+          res = this.departments[i].name;
+          break;
+        }
+
+      return res;
+    },
+
+    getTotalIssedQuantity(data) {
+      let total = 0;
+      for (let i = 0; i < data.length; i++)
+        total += parseFloat(data[i].quantity);
+
+      return total;
+    },
+
     async sendRequest() {
       if (this.$refs.sendRequest.validate()) {
         this.issueInfo.user_id = this.login_user.id;
         this.issueInfo.items = [];
 
-        for (let i = 0; i < this.itemsIssue.length; i++)
+        let allValid = true;
+        for (let i = 0; i < this.itemsIssue.length; i++) {
+          if (this.itemsIssue[i].quantity === 0) allValid = false;
+
           this.issueInfo.items.push({
-            id: this.itemsIssue[i].id,
+            item_id: this.itemsIssue[i].id,
             quantity: this.itemsIssue[i].quantity,
           });
+        }
 
-        await this.sendIssueRequest(this.issueInfo);
+        if (allValid) {
+          await this.sendIssueRequest(this.issueInfo);
 
-        if (this.sendIssuedRequest.st === true) {
-          this.sendIssueRequestDialog = false;
-          await this.loadData();
+          if (this.sendIssuedRequest.st === true) {
+            this.sendIssueRequestDialog = false;
+            await this.loadData();
+          } else
+            this.$fire({
+              title: "Item Issueing Request",
+              text: this.sendIssuedRequest.msg + "!!!",
+              type: "error",
+              timer: 7000,
+            });
         } else
           this.$fire({
             title: "Item Issueing Request",
-            text: this.sendIssuedRequest.msg + "!!!",
+            text: "Quantity requsted input is not valid!!!",
             type: "error",
             timer: 7000,
           });

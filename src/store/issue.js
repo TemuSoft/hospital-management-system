@@ -8,6 +8,7 @@ export default {
     sendIssuedRequest: false,
     issues: [],
     confirmIssuedRequest: {},
+    issuesPersonal: [],
   },
 
   mutations: {
@@ -21,6 +22,9 @@ export default {
 
     setConfirmIssueRequest(state, payload) {
       state.confirmIssuedRequest = payload;
+    },
+    setIssuesPersonal(state, payload) {
+      state.issuesPersonal = payload;
     },
   },
 
@@ -38,8 +42,12 @@ export default {
 
     async confirmIssueRequest({ commit }, data) {
       let res = await api.createById(path.issue_confirm, data.issue_id, data);
-      console.log(res);
       commit("setConfirmIssueRequest", res.data);
+    },
+
+    async getIssuesPersonal({ commit }, user_id) {
+      let res = await api.get(path.issue_personal, user_id);
+      commit("setIssuesPersonal", res.data);
     },
   },
 };

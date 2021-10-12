@@ -84,9 +84,12 @@ export default {
   methods: {
     login() {
       if (this.$refs.login.validate()) {
-        AccountService.login(this.user.email, this.user.password).then(() => {
-          this.$router.go();
-        });
+        AccountService.login(this.user.email, this.user.password).then(
+          (res) => {
+            this.authError = res;
+            this.$router.push({ name: "dashboard" });
+          }
+        );
       }
     },
   },

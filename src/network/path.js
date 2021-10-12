@@ -16,6 +16,7 @@ const path = {
   update_item: "/store/inventory_item_detail",
   issue: "/store/issue",
   issue_confirm: "/store/issue_detail",
+  issue_personal: "/store/user_issue_info",
   update_issue: "/store/issue_upadte",
   register_imaging: "/imaging/imaging_test_case",
   register_lab_group: "/lab/lab_test_group",

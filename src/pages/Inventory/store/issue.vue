@@ -3,75 +3,123 @@
     <h2>Issue</h2>
 
     <br />
-    <v-layout class="mainCardView">
-      <v-card outlined class="issueCard">
-        <h3>Rejected</h3>
-        <p>20</p>
-      </v-card>
-      <v-spacer></v-spacer>
 
-      <v-card outlined class="issueCard">
-        <h3>Approved</h3>
-        <p>20</p>
-      </v-card>
-      <v-spacer></v-spacer>
+    <v-tabs v-model="tab" align-with-title>
+      <v-tabs-slider color="yellow"></v-tabs-slider>
 
-      <v-card outlined class="issueCard">
-        <h3>Pendding</h3>
-        <p>20</p>
-      </v-card>
-      <v-spacer></v-spacer>
-      <v-spacer></v-spacer>
-    </v-layout>
+      <v-tab
+        v-for="item in tabData"
+        :key="item"
+        class="text-capitalize"
+        @click.stop="handleTabNavigation(item.id)"
+        >{{ item.tab }}
+      </v-tab>
+    </v-tabs>
 
-    <v-data-table :items="issues" :headers="headersIssue" dense>
-      <template v-slot:top>
-        <v-layout>
-          <v-spacer></v-spacer>
-          <v-btn
-            small
-            text
-            color="green"
-            class="text-capitalize"
-            outlined
-            @click="sendIssueRequestDialog = true"
-          >
-            Send Requst
-          </v-btn>
-        </v-layout>
-      </template>
+    <v-tabs-items v-model="tab">
+      <v-tab-item v-for="item in tabData" :key="item">
+        <div v-if="item.id === 1">
+          <v-layout>
+            <v-spacer />
+            <v-btn
+              small
+              text
+              color="green"
+              class="text-capitalize"
+              outlined
+              @click="sendIssueRequestDialog = true"
+            >
+              Send Requst
+            </v-btn>
+          </v-layout>
 
-      <template v-slot:item.request_date="{ item }">
-        {{ new Date(item.request_date).toDateString().substr(0, 50) }}
-      </template>
+          <v-data-table :items="issuesPersonal" :headers="headersIssue" dense>
+            <template v-slot:item.request_date="{ item }">
+              {{ new Date(item.request_date).toDateString().substr(0, 50) }}
+            </template>
 
-      <template v-slot:item.department="{ item }">
-        {{ getDeprtmentName(item.department) }}
-      </template>
+            <template v-slot:item.department="{ item }">
+              {{ getDeprtmentName(item.department) }}
+            </template>
 
-      <template v-slot:item.quantity="{ item }">
-        {{ getTotalIssedQuantity(item.issue_items) }}
-      </template>
+            <template v-slot:item.quantity="{ item }">
+              {{ getTotalIssedQuantity(item.issue_items) }}
+            </template>
 
-      <template v-slot:item.detail="{ item }">
-        <v-layout justify-center v-if="item.status === 0">
-          <Edit class="icon" />
-          <v-btn
-            class="ml-5 text-capitalize"
-            small
-            text
-            color="blue"
-            @click="confirmIsseRequest(item)"
-          >
-            Approval
-          </v-btn>
-        </v-layout>
+            <template v-slot:item.detail="{ item }">
+              <v-layout justify-center v-if="item.status === 0">
+                Pendding
+              </v-layout>
 
-        <v-layout justify-center v-else>
-          <v-btn small text color="green" class="text-capitalize">Detail</v-btn>
-        </v-layout>
-      </template>
-    </v-data-table>
+              <v-layout justify-center v-else>
+                <v-btn small text color="green" class="text-capitalize">
+                  Detail
+                </v-btn>
+              </v-layout>
+            </template>
+          </v-data-table>
+        </div>
+        <div v-if="item.id === 2">
+          <v-layout class="mainCardView">
+            <v-card outlined class="issueCard">
+              <h3>Rejected</h3>
+              <p>20</p>
+            </v-card>
+            <v-spacer></v-spacer>
+
+            <v-card outlined class="issueCard">
+              <h3>Approved</h3>
+              <p>20</p>
+            </v-card>
+            <v-spacer></v-spacer>
+
+            <v-card outlined class="issueCard">
+              <h3>Pendding</h3>
+              <p>20</p>
+            </v-card>
+            <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+          </v-layout>
+          <br />
+          <br />
+
+          <v-data-table :items="issues" :headers="headersIssue" dense>
+            <template v-slot:item.request_date="{ item }">
+              {{ new Date(item.request_date).toDateString().substr(0, 50) }}
+            </template>
+
+            <template v-slot:item.department="{ item }">
+              {{ getDeprtmentName(item.department) }}
+            </template>
+
+            <template v-slot:item.quantity="{ item }">
+              {{ getTotalIssedQuantity(item.issue_items) }}
+            </template>
+
+            <template v-slot:item.detail="{ item }">
+              <v-layout justify-center v-if="item.status === 0">
+                <Edit class="icon" />
+                <v-btn
+                  class="ml-5 text-capitalize"
+                  small
+                  text
+                  color="blue"
+                  @click="confirmIsseRequest(item)"
+                >
+                  Approval
+                </v-btn>
+              </v-layout>
+
+              <v-layout justify-center v-else>
+                <v-btn small text color="green" class="text-capitalize"
+                  >Detail</v-btn
+                >
+              </v-layout>
+            </template>
+          </v-data-table>
+        </div>
+      </v-tab-item>
+    </v-tabs-items>
 
     <v-dialog v-model="sendIssueRequestDialog" width="1000px" persistent>
       <v-card flat>
@@ -312,6 +360,7 @@ export default {
   data() {
     return {
       login_user: AccountService.getProfile(),
+      tab: null,
 
       confirmIssueRequestDialog: false,
       sendIssueRequestDialog: false,
@@ -356,6 +405,8 @@ export default {
       ],
 
       selectedIssueRequest: {},
+
+      tabData: [],
     };
   },
 
@@ -367,6 +418,10 @@ export default {
 
   created() {
     this.loadData();
+
+    let role = AccountService.getRole();
+    this.tabData.push({ id: 1, tab: "Personal Issue" });
+    if (role === "store") this.tabData.push({ id: 2, tab: "Requests" });
   },
 
   computed: {
@@ -375,6 +430,7 @@ export default {
     ...mapState("issue", [
       "sendIssuedRequest",
       "issues",
+      "issuesPersonal",
       "confirmIssuedRequest",
     ]),
     ...mapState("measurement", ["measurements"]),
@@ -387,6 +443,7 @@ export default {
     ...mapActions("issue", [
       "sendIssueRequest",
       "loadIssueRequest",
+      "getIssuesPersonal",
       "confirmIssueRequest",
     ]),
     ...mapActions("measurement", ["getMeasurementList"]),
@@ -397,6 +454,7 @@ export default {
       await this.getMeasurementList();
       await this.loadIssueRequest();
       await this.getDepartmentList();
+      await this.getIssuesPersonal(this.login_user.id);
     },
 
     async loadInventoryItems(id) {

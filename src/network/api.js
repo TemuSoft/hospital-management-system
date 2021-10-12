@@ -18,6 +18,10 @@ class api {
     return http.post(`${path}`, data);
   }
 
+  createById(path, id, data) {
+    return http.post(`${path}/${id}/`, data);
+  }
+
   update(path, id, data) {
     return http.patch(`${path}/${id}/`, data);
   }

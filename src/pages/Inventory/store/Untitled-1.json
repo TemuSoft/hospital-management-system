@@ -1,0 +1,192 @@
+[
+  {
+    "id": 1,
+    "user_id": 1,
+    "reason": "",
+    "status": 0,
+    "request_date": "2021-10-10T00:00:00Z",
+    "name": "Solomon Alamrew",
+    "department": 2,
+    "issue_items": [
+      {
+        "id": 4,
+        "issue_id": 1,
+        "item_id": 0,
+        "quantity": "5.00",
+        "accepted_quantity": "0.00",
+        "item_detail": {
+          "inventory_id": null,
+          "name": "",
+          "total_quantity": null,
+          "available_quantity": null,
+          "temporarily_reserved_quanitity": null,
+          "uofm": null,
+          "description": "",
+          "date_registered": null
+        }
+      },
+      {
+        "id": 5,
+        "issue_id": 1,
+        "item_id": 0,
+        "quantity": "6.00",
+        "accepted_quantity": "0.00",
+        "item_detail": {
+          "inventory_id": null,
+          "name": "",
+          "total_quantity": null,
+          "available_quantity": null,
+          "temporarily_reserved_quanitity": null,
+          "uofm": null,
+          "description": "",
+          "date_registered": null
+        }
+      },
+      {
+        "id": 6,
+        "issue_id": 1,
+        "item_id": 0,
+        "quantity": "7.00",
+        "accepted_quantity": "0.00",
+        "item_detail": {
+          "inventory_id": null,
+          "name": "",
+          "total_quantity": null,
+          "available_quantity": null,
+          "temporarily_reserved_quanitity": null,
+          "uofm": null,
+          "description": "",
+          "date_registered": null
+        }
+      },
+      {
+        "id": 7,
+        "issue_id": 1,
+        "item_id": 0,
+        "quantity": "15.00",
+        "accepted_quantity": "0.00",
+        "item_detail": {
+          "inventory_id": null,
+          "name": "",
+          "total_quantity": null,
+          "available_quantity": null,
+          "temporarily_reserved_quanitity": null,
+          "uofm": null,
+          "description": "",
+          "date_registered": null
+        }
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "user_id": 1,
+    "reason": "",
+    "status": 0,
+    "request_date": "2021-10-10T12:58:58.979119Z",
+    "name": "Solomon Alamrew",
+    "department": 2,
+    "issue_items": [
+      {
+        "id": 1,
+        "issue_id": 2,
+        "item_id": 2,
+        "quantity": "5.00",
+        "accepted_quantity": "0.00",
+        "item_detail": {
+          "id": 2,
+          "inventory_id": 4,
+          "name": "dvdf",
+          "total_quantity": "45.00",
+          "available_quantity": "45.00",
+          "temporarily_reserved_quanitity": "0.00",
+          "uofm": 1,
+          "description": "pro+ name update 2",
+          "date_registered": "2021-08-28"
+        }
+      },
+      {
+        "id": 2,
+        "issue_id": 2,
+        "item_id": 3,
+        "quantity": "6.00",
+        "accepted_quantity": "0.00",
+        "item_detail": {
+          "id": 3,
+          "inventory_id": 1,
+          "name": "rete",
+          "total_quantity": "5.00",
+          "available_quantity": "3.00",
+          "temporarily_reserved_quanitity": "1.00",
+          "uofm": 1,
+          "description": "Suliner Name",
+          "date_registered": "2021-08-29"
+        }
+      },
+      {
+        "id": 3,
+        "issue_id": 2,
+        "item_id": 4,
+        "quantity": "52.00",
+        "accepted_quantity": "0.00",
+        "item_detail": {
+          "id": 4,
+          "inventory_id": 7,
+          "name": "In item one",
+          "total_quantity": "34.00",
+          "available_quantity": "34.00",
+          "temporarily_reserved_quanitity": "34.00",
+          "uofm": 1,
+          "description": "dfsfsf",
+          "date_registered": "2021-10-10"
+        }
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "user_id": 10,
+    "reason": "",
+    "status": 0,
+    "request_date": "2021-10-11T15:11:51.854874Z",
+    "name": "Nurse Nurse",
+    "department": 5,
+    "issue_items": [
+      {
+        "id": 8,
+        "issue_id": 3,
+        "item_id": 0,
+        "quantity": "15.00",
+        "accepted_quantity": "0.00",
+        "item_detail": {
+          "inventory_id": null,
+          "name": "",
+          "total_quantity": null,
+          "available_quantity": null,
+          "temporarily_reserved_quanitity": null,
+          "uofm": null,
+          "description": "",
+          "date_registered": null
+        }
+      },
+      {
+        "id": 9,
+        "issue_id": 3,
+        "item_id": 4,
+        "quantity": "34.00",
+        "accepted_quantity": "0.00",
+        "item_detail": {
+          "id": 4,
+          "inventory_id": 7,
+          "name": "In item one",
+          "total_quantity": "34.00",
+          "available_quantity": "34.00",
+          "temporarily_reserved_quanitity": "34.00",
+          "uofm": 1,
+          "description": "dfsfsf",
+          "date_registered": "2021-10-10"
+        }
+      }
+    ]
+  }
+]

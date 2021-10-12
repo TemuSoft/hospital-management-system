@@ -37,6 +37,7 @@ export default {
 
     async getStaffList({ commit }) {
       let res = await api.getAll(path.staff);
+      console.log(res);
       commit("setStaffList", res.data);
     },
 

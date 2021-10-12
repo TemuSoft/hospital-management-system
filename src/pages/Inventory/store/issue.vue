@@ -24,8 +24,6 @@
       <v-spacer></v-spacer>
     </v-layout>
 
-    {{ issues }}
-
     <v-data-table :items="issues" :headers="headersIssue" dense>
       <template v-slot:top>
         <v-layout>
@@ -58,15 +56,19 @@
       <template v-slot:item.detail="{ item }">
         <v-layout justify-center v-if="item.status === 0">
           <Edit class="icon" />
-          <v-btn class="ml-5" small text color="yellow"> Approval </v-btn>
+          <v-btn
+            class="ml-5 text-capitalize"
+            small
+            text
+            color="blue"
+            @click="confirmIsseRequest(item)"
+          >
+            Approval
+          </v-btn>
         </v-layout>
 
-        <v-layout justify-center v-else-if="item.status === 1">
-          <v-btn small text color="green">Approved</v-btn>
-        </v-layout>
-
-        <v-layout v-else-if="item.status === -1">
-          <v-btn small text color="red">Rejected</v-btn>
+        <v-layout justify-center v-else>
+          <v-btn small text color="green" class="text-capitalize">Detail</v-btn>
         </v-layout>
       </template>
     </v-data-table>
@@ -139,6 +141,10 @@
               :items="itemsIssue"
               :headers="issueItemsHeadres"
             >
+              <template v-slot:item.inventory_id="{ item }">
+                {{ getInventoryName(item.inventory_id) }}
+              </template>
+
               <template v-slot:item.uofm="{ item }">
                 {{ getUnitOfMeasurment(item.uofm) }}
               </template>
@@ -199,7 +205,7 @@
                 dense
                 rows="3"
                 label="Reason"
-                v-model="issueInfo.reason"
+                v-model="selectedIssueRequest.reason"
                 :rules="inputRules"
                 outlined
                 :readonly="true"
@@ -208,16 +214,48 @@
 
             <v-data-table
               dense
-              :items="itemsIssue"
+              :items="selectedIssueRequest.issue_items"
               :headers="headersIssueApproval"
               :items-per-page="10"
-            />
+            >
+              <template v-slot:item.inventory_id="{ item }">
+                {{ getInventoryName(item.item_detail.inventory_id) }}
+              </template>
+
+              <template v-slot:item.uofm="{ item }">
+                {{ getUnitOfMeasurment(item.item_detail.uofm) }}
+              </template>
+
+              <template v-slot:item.accepted_quantity="{ item }">
+                <v-edit-dialog
+                  :return-value.sync="item.accepted_quantity"
+                  @save="save"
+                  @cancel="cancel"
+                  @open="open"
+                  @close="close"
+                  large
+                >
+                  {{ item.accepted_quantity }}
+                  <template v-slot:input>
+                    <v-text-field
+                      @change="validateInputConfirm(item)"
+                      v-model="item.accepted_quantity"
+                      :rules="numberRules0andabove"
+                      type="number"
+                      label="Edit"
+                      single-line
+                    />
+                  </template>
+                </v-edit-dialog>
+              </template>
+            </v-data-table>
 
             <v-layout>
               <v-select
                 v-model="approvalSelected"
                 dense
                 outlined
+                @change="approvalTypeSelected"
                 label="Approval"
                 :items="['Approve', 'Reject']"
               />
@@ -246,7 +284,15 @@
 
             <v-layout>
               <v-spacer></v-spacer>
-              <v-btn small text outlined @click="confirm()">Confirm</v-btn>
+              <v-btn
+                small
+                outlined
+                @click="confirm()"
+                color="green"
+                class="text-capitailze"
+              >
+                Confirm
+              </v-btn>
             </v-layout>
           </v-form>
         </v-card-text>
@@ -273,6 +319,7 @@ export default {
 
       inputRules: [(v) => !!v || "This field is required"],
       numberRules: [(v) => (v > 0 && !!v) || "Can't be lessthan one"],
+      numberRules0andabove: [(v) => v >= 0 || "Can't be lessthan one"],
 
       itemSelected: [],
       issueInfo: {},
@@ -287,7 +334,7 @@ export default {
       ],
 
       issueItemsHeadres: [
-        { text: "Inventory", value: "inventory" },
+        { text: "Inventory", value: "inventory_id" },
         { text: "Item", value: "name" },
         { text: "UofM", value: "uofm" },
         { text: "Avaliable", value: "available_quantity" },
@@ -296,14 +343,19 @@ export default {
       ],
 
       headersIssueApproval: [
-        { text: "Inventory", value: "inventory" },
-        { text: "Item", value: "name" },
+        { text: "Inventory", value: "inventory_id" },
+        { text: "Item", value: "item_detail.name" },
         { text: "UofM", value: "uofm" },
-        { text: "Avaliable", value: "available_quantity" },
-        { text: "Quantity", value: "quantity" },
-        { text: "Approved", value: "approved" },
-        { text: "Action", value: "action" },
+        { text: "Avaliable", value: "item_detail.available_quantity" },
+        {
+          text: "Reserved",
+          value: "item_detail.temporarily_reserved_quanitity",
+        },
+        { text: "Requested", value: "quantity" },
+        { text: "Approved", value: "accepted_quantity" },
       ],
+
+      selectedIssueRequest: {},
     };
   },
 
@@ -320,7 +372,11 @@ export default {
   computed: {
     ...mapState("inventory", ["inventorys"]),
     ...mapState("item", ["itemsInventory"]),
-    ...mapState("issue", ["sendIssuedRequest", "issues"]),
+    ...mapState("issue", [
+      "sendIssuedRequest",
+      "issues",
+      "confirmIssuedRequest",
+    ]),
     ...mapState("measurement", ["measurements"]),
     ...mapState("department", ["departments"]),
   },
@@ -328,7 +384,11 @@ export default {
   methods: {
     ...mapActions("inventory", ["loadInventoryList"]),
     ...mapActions("item", ["loadItemListInventory"]),
-    ...mapActions("issue", ["sendIssueRequest", "loadIssueRequest"]),
+    ...mapActions("issue", [
+      "sendIssueRequest",
+      "loadIssueRequest",
+      "confirmIssueRequest",
+    ]),
     ...mapActions("measurement", ["getMeasurementList"]),
     ...mapActions("department", ["getDepartmentList"]),
 
@@ -347,8 +407,18 @@ export default {
       let index = this.itemsIssue.indexOf(item);
       let qua = parseFloat(item.quantity);
       let ava = parseFloat(item.available_quantity);
+      let temp = parseFloat(item.temporarily_reserved_quanitity);
 
-      if (qua > ava || qua < 0) this.itemsIssue[index].quantity = 0;
+      if (qua > ava - temp || qua < 0) this.itemsIssue[index].quantity = 0;
+    },
+
+    async validateInputConfirm(item) {
+      let index = this.selectedIssueRequest.issue_items.indexOf(item);
+      let acc = parseFloat(item.accepted_quantity);
+      let qu = parseFloat(item.quantity);
+
+      if (acc < 0 || acc > qu)
+        this.selectedIssueRequest.issue_items[index].accepted_quantity = 0;
     },
 
     async deleteSelectedIssueItem(item) {
@@ -367,10 +437,6 @@ export default {
         }
 
         if (exist === 0) this.itemsIssue.push(this.itemSelected[i]);
-
-        for (let k = 0; k < this.inventorys.length; k++)
-          if (this.inventorys[k].id === this.itemSelected[i].inventory_id)
-            this.itemSelected[i].inventory = this.inventorys[k].name;
       }
     },
 
@@ -390,6 +456,16 @@ export default {
         if (this.departments[i].id === department) {
           res = this.departments[i].name;
           break;
+        }
+
+      return res;
+    },
+
+    getInventoryName(inventory_id) {
+      let res = "";
+      for (let i = 0; i < this.inventorys.length; i++)
+        if (inventory_id === this.inventorys[i].id) {
+          res = this.inventorys[i].name;
         }
 
       return res;
@@ -441,10 +517,48 @@ export default {
       }
     },
 
-    async confirm() {
-      if (this.$refs.confirm.validate()) {
-        alert("INout data is valide");
+    approvalTypeSelected(type) {
+      if (type === "Reject") {
+        for (let i = 0; i < this.selectedIssueRequest.issue_items.length; i++)
+          this.selectedIssueRequest.issue_items[i].accepted_quantity = 0;
       }
+    },
+
+    async confirm() {
+      this.approvalTypeSelected(this.approvalSelected);
+      if (this.$refs.confirm.validate()) {
+        let data = {
+          store_user_id: this.login_user.id,
+          issue_id: this.selectedIssueRequest.id,
+          items: [],
+        };
+
+        let t = this.selectedIssueRequest.issue_items;
+        for (let i = 0; i < t.length; i++)
+          data.items.push({
+            id: t[i].id,
+            accepted_quantity: t[i].accepted_quantity,
+          });
+
+        await this.confirmIssueRequest(data);
+
+        if (this.confirmIssuedRequest.st === true) {
+          this.selectedIssueRequest = {};
+          this.confirmIssueRequestDialog = false;
+          this.loadData();
+        } else
+          this.$fire({
+            title: "Confrom Issueing Request",
+            text: this.confirmIssueRequest.smg + "!!!",
+            type: "error",
+            timer: 7000,
+          });
+      }
+    },
+
+    async confirmIsseRequest(item) {
+      this.selectedIssueRequest = item;
+      this.confirmIssueRequestDialog = true;
     },
   },
 };

@@ -81,6 +81,10 @@ export default {
     this.loadData();
   },
 
+  mounted() {
+    this.loadData();
+  },
+
   computed: {
     ...mapState("staff", ["staffs"]),
     ...mapState("department", ["departments"]),

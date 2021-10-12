@@ -7,6 +7,7 @@ export default {
   state: {
     sendIssuedRequest: false,
     issues: [],
+    confirmIssuedRequest: {},
   },
 
   mutations: {
@@ -16,6 +17,10 @@ export default {
 
     setLoadIssueRequest(state, payload) {
       state.issues = payload;
+    },
+
+    setConfirmIssueRequest(state, payload) {
+      state.confirmIssuedRequest = payload;
     },
   },
 
@@ -29,6 +34,12 @@ export default {
     async loadIssueRequest({ commit }) {
       let res = await api.getAll(path.issue);
       commit("setLoadIssueRequest", res.data);
+    },
+
+    async confirmIssueRequest({ commit }, data) {
+      let res = await api.createById(path.issue_confirm, data.issue_id, data);
+      console.log(res);
+      commit("setConfirmIssueRequest", res.data);
     },
   },
 };

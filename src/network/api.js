@@ -43,14 +43,24 @@ class api {
   }
 
   login(email, password, path) {
-    return http.post(`${path}`, {
-      email,
-      password,
-    });
+    return http.post(`${path}`, { email, password });
   }
 
   logout(path) {
     return http.post(`${path}`);
+  }
+
+  checkFile(path, container, name) {
+    return Request.get(`${path}/${container}/files${name}`);
+  }
+
+  removeFile(container, name, path) {
+    return Request.delete(`${path}/${container}/files/${name}`);
+  }
+
+  upload(bucket, data, path) {
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    return Request.post(`${path}/${bucket}/upload`, data, config);
   }
 }
 

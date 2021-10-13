@@ -12,7 +12,11 @@
         <template v-slot:top>
           <v-layout>
             <v-spacer></v-spacer>
-            <v-btn outlined text small @click="sendRequestDialog = true">
+            <v-btn
+              class="text-capitalize green"
+              small
+              @click="sendRequestDialog = true"
+            >
               Send Request
             </v-btn>
           </v-layout>
@@ -21,7 +25,12 @@
 
       <v-dialog v-model="sendRequestDialog" width="900px" persistent>
         <v-card>
-          <v-toolbar color="green"> Send Work Permission </v-toolbar>
+          <v-toolbar dense color="green">
+            Send Work Permission
+            <v-spacer />
+
+            <Close @click="sendRequestDialog = false" class="icon" />
+          </v-toolbar>
 
           <br />
           <v-card-text>
@@ -39,7 +48,7 @@
                   label="Start Time"
                   type="time"
                   dense
-                  v-model="requestPermission.start_date"
+                  v-model="requestPermission.start_time"
                   outlined
                   :rules="inputRules"
                 />
@@ -79,19 +88,14 @@
 
               <br />
               <v-layout>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn
                   small
-                  text
-                  outlined
-                  color="red"
-                  @click="sendRequestDialog = false"
-                  >Cancel</v-btn
+                  class="text-capitalize green"
+                  @click="sendRequest()"
                 >
-                <v-spacer></v-spacer>
-                <v-btn small outlined color="green" text @click="sendRequest()"
-                  >Send</v-btn
-                >
+                  Send
+                </v-btn>
               </v-layout>
             </v-form>
           </v-card-text>
@@ -103,6 +107,8 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import Close from "@/assets/icons/close.svg";
+
 export default {
   data() {
     return {
@@ -127,6 +133,10 @@ export default {
     this.loadData();
   },
 
+  components: {
+    Close,
+  },
+
   computed: {
     ...mapState("workPermission", ["requestedPermission", "workPermissions"]),
   },
@@ -147,7 +157,13 @@ export default {
 
         if (this.requestedPermission === true) {
           this.sendRequestDialog = false;
-        } else alert("Something wrong please validate and try again!!!");
+        } else
+          this.$fire({
+            title: "Work Permission",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
   },
@@ -158,5 +174,8 @@ export default {
 .main {
   margin: 5%;
   margin-top: 3%;
+}
+.icon {
+  cursor: pointer;
 }
 </style>

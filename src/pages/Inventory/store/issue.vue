@@ -52,7 +52,13 @@
               </v-layout>
 
               <v-layout justify-center v-else>
-                <v-btn small text color="green" class="text-capitalize">
+                <v-btn
+                  small
+                  text
+                  color="green"
+                  class="text-capitalize"
+                  @click="detailIsseRequest(item)"
+                >
                   Detail
                 </v-btn>
               </v-layout>
@@ -108,12 +114,6 @@
                 >
                   Approval
                 </v-btn>
-              </v-layout>
-
-              <v-layout justify-center v-else>
-                <v-btn small text color="green" class="text-capitalize"
-                  >Detail</v-btn
-                >
               </v-layout>
             </template>
           </v-data-table>
@@ -346,6 +346,49 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="detailIssueRequestDialog" width="900px" persistent>
+      <v-card flat>
+        <v-toolbar dense color="green">
+          Approved Item Issue Request
+          <v-spacer />
+
+          <Close @click="detailIssueRequestDialog = false" class="icon" />
+        </v-toolbar>
+        <br />
+
+        <v-card-text>
+          <v-form @submit.prevent="confirm" ref="confirm">
+            <v-layout>
+              <v-textarea
+                dense
+                rows="3"
+                label="Reason"
+                v-model="selectedIssueRequestDetail.reason"
+                :rules="inputRules"
+                outlined
+                :readonly="true"
+              />
+            </v-layout>
+
+            <v-data-table
+              dense
+              :items="selectedIssueRequestDetail.issue_items"
+              :headers="headersIssueApproval"
+              :items-per-page="10"
+            >
+              <template v-slot:item.inventory_id="{ item }">
+                {{ getInventoryName(item.item_detail.inventory_id) }}
+              </template>
+
+              <template v-slot:item.uofm="{ item }">
+                {{ getUnitOfMeasurment(item.item_detail.uofm) }}
+              </template>
+            </v-data-table>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -362,6 +405,7 @@ export default {
       login_user: AccountService.getProfile(),
       tab: null,
 
+      detailIssueRequestDialog: false,
       confirmIssueRequestDialog: false,
       sendIssueRequestDialog: false,
       approvalSelected: "Approve",
@@ -405,6 +449,7 @@ export default {
       ],
 
       selectedIssueRequest: {},
+      selectedIssueRequestDetail: {},
 
       tabData: [],
     };
@@ -617,6 +662,11 @@ export default {
     async confirmIsseRequest(item) {
       this.selectedIssueRequest = item;
       this.confirmIssueRequestDialog = true;
+    },
+
+    async detailIsseRequest(item) {
+      this.selectedIssueRequestDetail = item;
+      this.detailIssueRequestDialog = true;
     },
   },
 };

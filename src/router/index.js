@@ -50,7 +50,7 @@ import store from "../pages/Inventory/store/index.vue";
 import inventoryDetail from "../pages/Inventory/store/inventoryDetail.vue";
 import issue from "../pages/Inventory/store/issue.vue";
 import measurmentUnit from "../pages/Inventory/store/measurmentUnit.vue";
-
+import annualPlan from "../pages/Others/annualPlan.vue";
 import workPermission from "../pages/Others/workPermission.vue";
 import room from "../pages/Others/Room.vue";
 import roomDetail from "../pages/Others/RoomDetail.vue";
@@ -305,6 +305,12 @@ const routes = [
     path: "Organization/insuranceDetail",
     name: "insuranceDetail",
     component: insuranceDetail,
+    meta: {},
+  },
+  {
+    path: "/Others/annualPlan",
+    name: "annualPlan",
+    component: annualPlan,
     meta: {},
   },
   {

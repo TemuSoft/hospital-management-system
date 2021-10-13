@@ -25,7 +25,7 @@
 
           <v-form @submit.prevent="login" class="pa-3" ref="login">
             <v-alert v-if="authError" :value="true" type="error">{{
-              authError
+              "Failed to login!!!"
             }}</v-alert>
             <v-layout row wrap justify-center>
               <v-flex xs12 pa-1>
@@ -86,8 +86,9 @@ export default {
       if (this.$refs.login.validate()) {
         AccountService.login(this.user.email, this.user.password).then(
           (res) => {
-            this.authError = res;
-            this.$router.push({ name: "dashboard" });
+            if (res) this.$router.go();
+            else this.authError = !res;
+            // this.$router.push({ name: "dashboard" });
           }
         );
       }

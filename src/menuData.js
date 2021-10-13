@@ -241,7 +241,7 @@ const menusData = [
         icon: "changePassword",
       },
       {
-        title: "annual_report",
+        title: "annual_plan",
         allowedRoles: [
           "admin",
           "nurse",
@@ -256,8 +256,8 @@ const menusData = [
           "store",
           "reception",
         ],
-        route: "annualReport",
-        icon: "annualReport",
+        route: "annualPlan",
+        icon: "annualPlan",
       },
     ],
   },
@@ -305,25 +305,7 @@ const menusData = [
       },
     ],
   },
-  {
-    title: "reports",
-    allowedRoles: [
-      "admin",
-      "nurse",
-      "cashier",
-      "pharmacy",
-      "pharmacy_store",
-      "labratory",
-      "imaging",
-      "labratory_head",
-      "imaging_head",
-      "opd",
-      "store",
-      "reception",
-    ],
-    route: "reports",
-    icon: "reports",
-  },
+
   {
     title: "chat",
     allowedRoles: [

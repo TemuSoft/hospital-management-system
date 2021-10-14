@@ -22,7 +22,7 @@ export default {
     insertedImagingRequestResult: [],
 
     verifiedTestCase: false,
-    registeredMedicalHistory: false,
+    registeredMedicalHistory: {},
     medicalHistorys: [],
 
     doneMaterialRequest: false,
@@ -196,6 +196,7 @@ export default {
     },
 
     async registerMedicalHistory({ commit }, data) {
+      console.log(data);
       let res = await api.create(path.medical_history_list, data);
       commit("setRegisterMedicalHistory", res.data);
     },

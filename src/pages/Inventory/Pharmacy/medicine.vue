@@ -9,29 +9,15 @@
       </template>
 
       <template v-slot:item.unit_of_measurement="{ item }">
-        <div v-for="mm in measurementsPharmacy" :key="mm">
-          <label v-if="mm.id === item.unit_of_measurement">{{ mm.unit }}</label>
-        </div>
+        {{ getMeasurementPharmacyName(item.unit_of_measurement) }}
       </template>
 
       <template v-slot:item.action="{ item }">
         <Detail class="icon" @click="detialMedicine(item)" />
 
-        <Edit
-          class="icon"
-          style="margin-left: 30px"
-          @click="editMedicine(item)"
-        />
+        <Edit class="icon ml-10" @click="editMedicine(item)" />
 
-        <v-btn
-          small
-          text
-          color="green"
-          class="text-capitalize"
-          @click="addMoreInSingleMedicine(item)"
-        >
-          Add More
-        </v-btn>
+        <Add @click="addMoreInSingleMedicine(item)" class="icon ml-10" />
       </template>
 
       <template v-slot:top>
@@ -43,7 +29,7 @@
             dense
             single-line
             hide-details
-          ></v-text-field>
+          />
           <v-spacer></v-spacer>
           <v-btn
             small
@@ -216,6 +202,92 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="unitOfMeasurmentRelationDialog" width="700px" persistent>
+      <v-card>
+        <v-toolbar dense color="green">
+          Medicine Unit Of Measurment
+          <v-spacer />
+
+          <v-btn
+            @click="registerUofMedicine = true"
+            class="text-capitalize"
+            text
+          >
+            Register
+          </v-btn>
+          <v-spacer />
+
+          <v-btn
+            @click="editMedicineRelationUofM()"
+            class="text-capitalize"
+            text
+          >
+            Edit Whole
+          </v-btn>
+          <v-spacer />
+
+          <Close class="icon" @click="unitOfMeasurmentRelationDialog = false" />
+        </v-toolbar>
+        <br />
+
+        <v-card-text>
+          <v-form @submit.prevent="registerUofM" ref="registerUofM">
+            <v-layout v-if="registerUofMedicine">
+              <v-text-field
+                dense
+                label="Outer Unit Of Measurment"
+                outlined
+                :readonly="true"
+                :rules="inputRules"
+                :value="getMeasurementPharmacyName(lastMedicineReUofM)"
+              />
+              <v-spacer />
+
+              <v-autocomplete
+                dense
+                label="Inner Unit Of Measurment"
+                :items="measurementsPharmacy"
+                outlined
+                item-text="unit"
+                item-value="id"
+                :rules="numberRules0andabove"
+                @change="validateSimilarity($event)"
+                v-model="medicineUofMRelationInfo.unit_of_measurement_sub"
+              />
+              <v-spacer />
+
+              <v-text-field
+                dense
+                label="Quantity"
+                type="number"
+                outlined
+                :rules="numberRules0andabove"
+                v-model="medicineUofMRelationInfo.quantity"
+              />
+            </v-layout>
+
+            <v-layout v-if="registerUofMedicine">
+              <v-spacer />
+              <v-btn
+                small
+                outlined
+                color="green"
+                class="text-capitalize"
+                @click="registerUofM()"
+              >
+                Register
+              </v-btn>
+            </v-layout>
+          </v-form>
+
+          <v-data-table
+            :items="medicineUofMRelationList"
+            :headers="medicineUofMRelationHeaders"
+          />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -223,6 +295,7 @@
 import Close from "@/assets/icons/close.svg";
 import Detail from "@/assets/icons/eye.svg";
 import Edit from "@/assets/icons/edit.svg";
+import Add from "@/assets/icons/add.svg";
 import { mapActions, mapState } from "vuex";
 
 import AccountService from "@/network/accountService";
@@ -232,6 +305,7 @@ export default {
     return {
       login_user: AccountService.getProfile(),
       inputRules: [(v) => !!v || "This field is required"],
+      numberRules0andabove: [(v) => v > 0 || "Can't be lessthan one"],
 
       registerMedicineDialog: false,
       addMedicineDialog: false,
@@ -244,8 +318,19 @@ export default {
         { text: "Unit Of Measurment", value: "unit_of_measurement" },
         { text: "Category", value: "category_id" },
         { text: "Store Box", value: "storeBox" },
-        { text: "Actions", value: "action" },
+        { text: "Actions", value: "action", width: "15%" },
       ],
+
+      medicineUofMRelationHeaders: [
+        { text: "Main Unit", value: "unit_of_measurement_mian" },
+        { text: "Sub Unit", value: "unit_of_measurement_sub" },
+        { text: "Quantity", value: "quantity" },
+        { text: "Action", value: "action" },
+      ],
+      lastMedicineReUofM: 0,
+      unitOfMeasurmentRelationDialog: false,
+      medicineUofMRelationInfo: {},
+      registerUofMedicine: false,
     };
   },
 
@@ -253,6 +338,7 @@ export default {
     Close,
     Detail,
     Edit,
+    Add,
   },
 
   computed: {
@@ -262,7 +348,10 @@ export default {
       "addMoredMedicine",
       "medicineCategoryList",
     ]),
-    ...mapState("measurement", ["measurementsPharmacy"]),
+    ...mapState("measurement", [
+      "measurementsPharmacy",
+      "medicineUofMRelationList",
+    ]),
   },
 
   created() {
@@ -277,7 +366,11 @@ export default {
       "getMedicineCategory",
     ]),
 
-    ...mapActions("measurement", ["getMeasurementListPharmacy"]),
+    ...mapActions("measurement", [
+      "getMeasurementListPharmacy",
+      "registerMedicineUofMRelation",
+      "getMedicineUofMRelationList",
+    ]),
 
     async loadData() {
       await this.getMedicineCategory();
@@ -327,8 +420,57 @@ export default {
       }
     },
 
+    async registerUofM() {
+      if (this.$refs.registerUofM.validate()) {
+        this.medicineUofMRelationInfo.user_id = this.login_user.id;
+        this.medicineUofMRelationInfo.unit_of_measurement_main =
+          this.lastMedicineReUofM;
+        await this.registerMedicineUofMRelation(this.medicineUofMRelationInfo);
+      }
+    },
+
+    getMeasurementPharmacyName(id) {
+      let res = "";
+      for (let i = 0; i < this.measurementsPharmacy.length; i++)
+        if (id === this.measurementsPharmacy[i].id) {
+          res = this.measurementsPharmacy[i].unit;
+          break;
+        }
+
+      return res;
+    },
+
+    validateSimilarity(selected) {
+      if (selected === this.lastMedicineReUofM)
+        this.medicineUofMRelationInfo.unit_of_measurement_sub = 0;
+
+      for (let i = 0; i < this.medicineUofMRelationList.length; i++) {
+        let main = this.medicineUofMRelationList[i].unit_of_measurement_main;
+        let sub = this.medicineUofMRelationList[i].unit_of_measurement_sub;
+
+        if (selected === main || selected === sub) {
+          this.medicineUofMRelationInfo.unit_of_measurement_sub = 0;
+          break;
+        }
+      }
+    },
+
     async detialMedicine(item) {
-      alert(item.id);
+      this.unitOfMeasurmentRelationDialog = true;
+      this.medicineUofMRelationInfo.medicine_id = item.id;
+      // await this.getMedicineUofMRelationList(item.id);
+
+      if (this.medicineUofMRelationList.length === 0)
+        this.lastMedicineReUofM = item.unit_of_measurement;
+      else {
+        let len = this.medicineUofMRelationList.length - 1;
+        this.lastMedicineReUofM =
+          this.medicineUofMRelationList[len].unit_of_measurement_main;
+      }
+    },
+
+    async editMedicineRelationUofM() {
+      alert(true);
     },
 
     async editMedicine(item) {

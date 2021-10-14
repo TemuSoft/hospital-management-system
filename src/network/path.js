@@ -46,7 +46,7 @@ const path = {
   assing_patient_room: "/",
 
   medical_history_list: "/patient/medical_history",
-  medical_history_patient_id: "/patient/read_medical_history",
+  medical_history_patient_id: "/patient/read_medical_history_history",
   send_material_request: "/nurse/material_request",
 
   room: "/admin/room",
@@ -68,6 +68,7 @@ const path = {
 
   reception_card_renewal: "/reception/write_card_renewal",
   cashier_payment_request: "/cashier/payment_request",
+  card_renewal_payment: "/cashier/payment_approval",
   single_prepayment_load: "/cashier/patient_prepayment_read",
 
   register_prepayment: "/cashier/patient_prepayment_write",

@@ -7,12 +7,13 @@ export default {
   state: {
     sendCardRenewalRequested: false,
     paymnetRequest: [],
-    prepaymentAmount: 50,
+    prepaymentAmount: 200,
     testCaseList: [],
     testCasePaymentDone: false,
 
     registeredPrepayment: false,
     prepaymentList: [],
+    registeredCardrenewalPayment: {},
   },
 
   mutations: {
@@ -42,6 +43,10 @@ export default {
 
     setPrepaymentList(state, payload) {
       state.prepaymentList = payload;
+    },
+
+    setRegisterCardrenewalPayment(state, payload) {
+      state.registeredCardrenewalPayment = payload;
     },
   },
 
@@ -79,6 +84,15 @@ export default {
     async getPrepaymentList({ commit }) {
       let res = await api.getAll(path.get_prepayment_list);
       commit("setPrepaymentList", res.data);
+    },
+
+    async registerCardrenewalPayment({ commit }, data) {
+      let res = await api.createById(
+        path.card_renewal_payment,
+        data[1],
+        data[0]
+      );
+      commit("setRegisterCardrenewalPayment", res.data);
     },
   },
 };

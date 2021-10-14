@@ -11,10 +11,15 @@
           Go Back
         </v-btn>
         <v-spacer />
-        Room Detail about :
+        Room :
         <h2>{{ singleRoomInfo.room_number }}</h2>
         <v-spacer />
-        <v-btn text small outlined @click="assignRoomStaffDialog = true">
+        <v-btn
+          class="text-capitalize green"
+          small
+          outlined
+          @click="assignRoomStaffDialog = true"
+        >
           Add New
         </v-btn>
       </v-toolbar>
@@ -26,6 +31,10 @@
         :headers="headers"
         dense
       >
+        <template v-slot:item.department="{ item }">
+          {{ getDeprtmentName(item.department) }}
+        </template>
+
         <template v-slot:item.action="{ item }">
           <Edit @click="editStaffInRoom(item)" class="icon" />
         </template>
@@ -34,7 +43,12 @@
 
     <v-dialog v-model="assignRoomStaffDialog" persistent width="500px">
       <v-card>
-        <v-toolbar dense color="green"> Assign Staff To Room </v-toolbar>
+        <v-toolbar dense color="green">
+          Assign Staff To Room
+          <v-spacer />
+
+          <Close @click="assignRoomStaffDialog = false" class="icon" />
+        </v-toolbar>
         <br />
 
         <v-card-text>
@@ -89,12 +103,8 @@
 
             <v-layout>
               <v-spacer />
-              <v-btn text small outlined color="red" @click="cancel()">
-                Cancel
-              </v-btn>
-              <v-spacer />
 
-              <v-btn text small outlined color="green" @click="assignStaff()">
+              <v-btn class="text-capitalize green" small @click="assignStaff()">
                 Save
               </v-btn>
             </v-layout>
@@ -108,6 +118,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
+import Close from "@/assets/icons/close.svg";
 
 export default {
   data() {
@@ -118,8 +129,9 @@ export default {
       roomId: "",
       inputRules: [(v) => !!v || "This field is required"],
       headers: [
-        { text: "Full Name", value: "full_name" },
+        { text: "Full Name", value: "fullname" },
         { text: "Gender", value: "gender" },
+        { text: "Department", value: "department" },
         { text: "Action", value: "action" },
       ],
       statusList: [
@@ -131,6 +143,7 @@ export default {
 
   components: {
     Edit,
+    Close,
   },
 
   created() {
@@ -184,6 +197,17 @@ export default {
       await this.getStaffsInDepartment(id);
     },
 
+    getDeprtmentName(department) {
+      let res = "";
+      for (let i = 0; i < this.departments.length; i++)
+        if (this.departments[i].id === department) {
+          res = this.departments[i].name;
+          break;
+        }
+
+      return res;
+    },
+
     async cancel() {
       this.assignRoomStaffDialog = false;
       this.roomInfo = {};
@@ -205,5 +229,9 @@ export default {
 .main {
   margin: 7%;
   margin-top: 3%;
+}
+
+.icon {
+  cursor: pointer;
 }
 </style>

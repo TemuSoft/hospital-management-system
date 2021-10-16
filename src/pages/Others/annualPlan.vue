@@ -14,7 +14,7 @@
     </v-layout>
     <v-divider />
 
-    <v-card class="pb-4" flat v-for="(data, i) in 3" :key="i">
+    <v-card class="pb-4" flat v-for="(data, i) in 1" :key="i">
       <v-card elevation="5" outlined class="pa-3">
         <h3>Year and date / Title</h3>
         <v-divider />
@@ -27,6 +27,7 @@
         </v-layout>
       </v-card>
     </v-card>
+    {{ annualPlans }}
 
     <v-dialog v-model="registerAnnualPlanDialog" persistent width="700px">
       <v-card>
@@ -48,12 +49,7 @@
               :rules="inputRules"
             />
 
-            <v-text-field
-              rounded
-              type="file"
-              @change="onFileSelected"
-              label="Attachment files"
-            />
+            <input type="file" @change="onFileUpload" :rules="inputRules" />
 
             <v-layout>
               <v-spacer />
@@ -87,7 +83,7 @@ export default {
 
       inputRules: [(v) => !!v || "This field is required!!"],
 
-      selectedFile: "",
+      selectedFile: null,
       fileSelected: false,
     };
   },
@@ -112,29 +108,36 @@ export default {
     ]),
 
     async loadData() {
-      await this.getAnnualReports(this.login_user.id);
+      await this.getAnnualReports();
     },
 
     async sendAnnualPlan() {
-      if (this.$refs.sendAnnualPlan.validate()) {
-        this.uploadPicture(this.selectedFile);
+      if (this.$refs.sendAnnualPlan.validate() && this.fileSelected) {
+        let id = this.login_user.id;
+        this.annaulPlanInfo.user_id = id;
 
-        alert(true);
+        const formData = new FormData();
+        let name = new Date().toISOString().substr(0, 10) + "-ID-" + id;
+        formData.append("attachment", this.selectedFile, name);
+        formData.append("data", JSON.stringify(this.annaulPlanInfo));
+
+        await this.registerAnnualReport(formData);
+        if (this.registeredAnnualReport.st === true) {
+          this.registerAnnualPlanDialog = false;
+          this.loadData();
+        } else
+          this.$fire({
+            title: "Annual Plan",
+            text: this.registeredAnnualReport.msg,
+            type: "error",
+            timer: 7000,
+          });
       }
     },
 
-    onFileSelected(event) {
+    onFileUpload(event) {
       this.selectedFile = event.target.files[0];
       this.fileSelected = true;
-    },
-
-    async uploadPicture(file) {
-      const formData = new FormData();
-      let name = new Date().toISOString().substr(0, 10) + this.login_user.id;
-
-      this.annaulPlanInfo.filename = name;
-      formData.append("Image", file, name);
-      //   await api.upload("folder", formData, "path");
     },
   },
 };

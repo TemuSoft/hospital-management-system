@@ -31,7 +31,8 @@ export default {
 
   actions: {
     async sendReuqestPermission({ commit }, data) {
-      let res = await api.create(path.register_work_permission, data);
+      console.log(data);
+      let res = await api.createWithFile(path.work_permission, data);
       commit("setRegisterPatient", res.data);
     },
 
@@ -41,12 +42,12 @@ export default {
     },
 
     async registerAnnualReport({ commit }, data) {
-      let res = await api.create(path.annual_plan, data);
+      let res = await api.createWithFile(path.annual_plan, data);
       commit("setRegisterAnnualReport", res.data);
     },
 
-    async getAnnualReports({ commit }, user_id) {
-      let res = api.get(path.annual_plan, user_id);
+    async getAnnualReports({ commit }) {
+      let res = api.get(path.annual_plan_unseen);
       commit("setAnnualReports", res.data);
     },
   },

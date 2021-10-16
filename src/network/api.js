@@ -58,9 +58,8 @@ class api {
     return Request.delete(`${path}/${container}/files/${name}`);
   }
 
-  upload(bucket, data, path) {
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    return Request.post(`${path}/${bucket}/upload`, data, config);
+  createWithFile(path, data) {
+    return http.post(`${path}`, data, {});
   }
 }
 

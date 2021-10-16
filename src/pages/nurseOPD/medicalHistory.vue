@@ -4,34 +4,6 @@
       <h2>Medical History</h2>
       <br />
 
-      <v-tabs>
-        <v-tabs-slider color="yellow"></v-tabs-slider>
-        <div v-for="(info, i) in medicalHistorys" :key="i">
-          <v-tab @click.stop="loadMedicalHistory(info)" class="text-capitalize">
-            {{ new Date(info.date_time).toISOString().substr(0, 10) }}
-          </v-tab>
-        </div>
-        <v-tabs-items style="margin-left: 3%">
-          <h2 class="text green mb-3">
-            Served Physician : {{ selectedMedicalHistory.served_physician }}
-          </h2>
-          <v-card class="pa-5 mb-5" elevation="5" outlined>
-            <h3>Chief Complain</h3>
-            {{ selectedMedicalHistory.chief_complain }}
-          </v-card>
-
-          <v-card class="pa-5 mb-5" elevation="5" outlined>
-            <h3>Assesment</h3>
-            {{ selectedMedicalHistory.assesment }}
-          </v-card>
-
-          <v-card class="pa-5 mb-5" elevation="" outlined>
-            <h3>Treatment</h3>
-            {{ selectedMedicalHistory.treatment }}
-          </v-card>
-        </v-tabs-items>
-      </v-tabs>
-
       <v-card flat v-if="!currentMedicalHistoryRegister">
         <v-form @submit.prevent="save" ref="save">
           <v-textarea
@@ -62,6 +34,37 @@
 
         <v-btn small outlined color="green" @click="save">Save</v-btn>
       </v-card>
+
+      <v-tabs v-if="medicalHistorys.length > 0">
+        <v-tabs-slider color="yellow"></v-tabs-slider>
+        <v-tab
+          v-for="info in medicalHistorys"
+          :key="info"
+          @click.stop="loadMedicalHistory(info)"
+          class="text-capitalize"
+        >
+          {{ new Date(info.date_time).toISOString().substr(0, 10) }}
+        </v-tab>
+        <v-tabs-items style="margin-left: 3%">
+          <h2 class="text green mb-3">
+            Served Physician : {{ selectedMedicalHistory.served_physician }}
+          </h2>
+          <v-card class="pa-5 mb-5" elevation="5" outlined>
+            <h3>Chief Complain</h3>
+            {{ selectedMedicalHistory.chief_complain }}
+          </v-card>
+
+          <v-card class="pa-5 mb-5" elevation="5" outlined>
+            <h3>Assesment</h3>
+            {{ selectedMedicalHistory.assesment }}
+          </v-card>
+
+          <v-card class="pa-5 mb-5" elevation="" outlined>
+            <h3>Treatment</h3>
+            {{ selectedMedicalHistory.treatment }}
+          </v-card>
+        </v-tabs-items>
+      </v-tabs>
     </v-card>
   </div>
 </template>

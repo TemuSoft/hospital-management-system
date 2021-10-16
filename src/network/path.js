@@ -73,10 +73,13 @@ const path = {
 
   register_prepayment: "/cashier/patient_prepayment_write",
 
+  annual_plan: "/common/annual_plan",
+  annual_plan_unseen: "/common/read_unseen_annual_plan",
+
   logout: "/user/logout",
   login: "/user/login",
 
-  register_work_permission: "/register_work_permission",
+  work_permission: "/common/work_permission",
   imaging_test_case: "/imaging_test",
   insurance: "/insurance",
 };

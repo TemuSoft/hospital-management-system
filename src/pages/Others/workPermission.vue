@@ -48,7 +48,7 @@
                   label="Start Time"
                   type="time"
                   dense
-                  v-model="requestPermission.start_time"
+                  v-model="start_time"
                   outlined
                   :rules="inputRules"
                 />
@@ -65,7 +65,7 @@
                   label="End Time"
                   type="time"
                   dense
-                  v-model="requestPermission.end_time"
+                  v-model="end_time"
                   outlined
                   :rules="inputRules"
                 />
@@ -79,12 +79,7 @@
                 :rules="inputRules"
               />
 
-              <v-text-field
-                rounded
-                dense
-                type="file"
-                label="Attachment if neccessary"
-              />
+              <input type="file" @change="onFileUpload" :rules="inputRules" />
 
               <br />
               <v-layout>
@@ -126,6 +121,11 @@ export default {
         { text: "Attachment", value: "attachment" },
         { text: "Action", value: "action" },
       ],
+
+      start_time: "",
+      end_time: "",
+      selectedFile: null,
+      fileSelected: false,
     };
   },
 
@@ -153,18 +153,39 @@ export default {
 
     async sendRequest() {
       if (this.$refs.sendRequest.validate()) {
-        await this.sendReuqestPermission(this.requestPermission);
+        let sd = this.requestPermission.start_date;
+        sd = sd + "T" + this.start_time + ":00.000Z";
 
-        if (this.requestedPermission === true) {
+        let ed = this.requestPermission.end_date;
+        ed = ed + "T" + this.end_time + ":00.000Z";
+
+        this.requestPermission.start_date = sd;
+        this.requestPermission.end_date = ed;
+
+        let id = this.login_user.id;
+        this.requestPermission.user_id = id;
+
+        const formData = new FormData();
+        let name = new Date().toISOString().substr(0, 10) + "-ID-" + id;
+        formData.append("attachment", this.selectedFile, name);
+        formData.append("data", JSON.stringify(this.requestPermission));
+
+        await this.sendReuqestPermission(formData);
+        if (this.requestedPermission.st === true) {
           this.sendRequestDialog = false;
         } else
           this.$fire({
             title: "Work Permission",
-            text: "Something wrong please try again!!!",
+            text: this.requestPermission.msg,
             type: "error",
             timer: 7000,
           });
       }
+    },
+
+    onFileUpload(event) {
+      this.selectedFile = event.target.files[0];
+      this.fileSelected = true;
     },
   },
 };

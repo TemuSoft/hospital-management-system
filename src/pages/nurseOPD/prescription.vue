@@ -20,132 +20,37 @@
       <v-card flat v-if="addPrescription">
         <v-form @submit.prevent="save" ref="save">
           <v-layout>
-            <v-flex xs12 sm1>Medicine</v-flex>
+            <v-autocomplete
+              v-model="prescriptionInfo.medicine"
+              dense
+              outlined
+              label="Medicine"
+              :items="medicineList"
+              item-text="name"
+              item-value="id"
+              @change="loadUnitOfMeasurment"
+              :rules="inputRules"
+            />
+            <v-spacer />
 
-            <v-flex xs12 sm11>
-              <v-text-field
-                outlined
-                dense
-                v-model="prescriptionInfo.medicine"
-                :rules="inputRules"
-              />
-            </v-flex>
-          </v-layout>
+            <v-autocomplete
+              v-model="prescriptionInfo.unit_of_measurement"
+              dense
+              outlined
+              label="Unit Of Measurment"
+              :items="singleMedicineUofM"
+              :rules="inputRules"
+            />
+            <v-spacer />
 
-          <v-layout>
-            <v-flex xs12 sm1>Dosage</v-flex>
-            &nbsp;&nbsp;
-
-            <v-flex xs12 sm3>
-              <v-text-field
-                outlined
-                type="number"
-                dense
-                v-model="prescriptionInfo.dosage"
-                :rules="inputRules"
-              />
-            </v-flex>
-
-            <v-flex xs12 sm1></v-flex>
-
-            <v-flex xs12 sm3>
-              <v-autocomplete
-                outlined
-                dense
-                :items="['mg', 'Tablet']"
-                v-model="prescriptionInfo.dosageUse"
-                :rules="inputRules"
-              />
-            </v-flex>
-
-            <v-flex xs12 sm1></v-flex>
-
-            <v-flex xs12 sm1> Frequency </v-flex>
-
-            <v-flex xs12 sm3>
-              <v-autocomplete
-                outlined
-                dense
-                :items="['Morning', 'Night', 'Afternoon', 'Midenight']"
-                v-model="prescriptionInfo.frequency"
-                :rules="inputRules"
-              />
-            </v-flex>
-          </v-layout>
-
-          <v-layout>
-            <v-flex xs12 sm1> No. of Days</v-flex>
-            &nbsp;&nbsp;
-
-            <v-flex xs12 sm3>
-              <v-text-field
-                outlined
-                type="number"
-                dense
-                v-model="prescriptionInfo.noDays"
-                :rules="inputRules"
-              />
-            </v-flex>
-
-            <v-flex xs12 sm1></v-flex>
-
-            <v-flex xs12 sm3>
-              <v-autocomplete
-                outlined
-                dense
-                :items="['Day', 'Week', 'Month', 'Year']"
-                v-model="prescriptionInfo.days"
-                :rules="inputRules"
-              />
-            </v-flex>
-
-            <v-flex xs12 sm1></v-flex>
-
-            <v-flex xs12 sm1> Food Rela. </v-flex>
-
-            <v-flex xs12 sm3>
-              <v-autocomplete
-                outlined
-                dense
-                :items="['After', 'Before', 'With', 'Without']"
-                v-model="prescriptionInfo.foodRelation"
-                :rules="inputRules"
-              />
-            </v-flex>
-          </v-layout>
-
-          <v-layout>
-            <v-flex xs12 sm1>Route</v-flex>
-
-            <v-flex xs12 sm11>
-              <v-autocomplete
-                outlined
-                dense
-                :items="[
-                  'Oral',
-                  'Ophthamic',
-                  'Topical',
-                  'Eye Drop',
-                  'Vaginal',
-                  'Arm',
-                ]"
-                v-model="prescriptionInfo.dosageUse"
-                :rules="inputRules"
-              />
-            </v-flex>
-          </v-layout>
-
-          <v-layout>
-            <v-flex xs12 sm1>Instraction</v-flex>
-
-            <v-flex xs12 sm11>
-              <v-text-field
-                outlined
-                dense
-                v-model="prescriptionInfo.instraction"
-                :rules="inputRules"
-              />
-            </v-flex>
+            <v-text-field
+              v-model="prescriptionInfo.quantity"
+              dense
+              outlined
+              type="number"
+              label="Quantity"
+              :rules="numberRules0andabove"
+            />
           </v-layout>
 
           <v-btn small text outlined color="green" @click="save()">
@@ -155,6 +60,9 @@
       </v-card>
 
       <v-data-table :items="prescriptionNew" :headers="prescriptionHeaders">
+        <template v-slot:item.action="{ item }">
+          <Edit @click="editPrescription(item)" class="icon" />
+        </template>
       </v-data-table>
     </v-card>
   </div>
@@ -162,6 +70,8 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import Edit from "@/assets/icons/edit.svg";
+
 export default {
   data() {
     return {
@@ -171,14 +81,13 @@ export default {
       prescriptionNew: [],
 
       inputRules: [(v) => !!v || "This field is required"],
+      numberRules0andabove: [(v) => v > 0 || "Can't be lessthan one"],
 
       prescriptionHeaders: [
         { text: "Medicine", value: "medicine" },
-        { text: "Dosage", value: "dosage" },
-        { text: "Frequency", value: "frequency" },
-        { text: "Duration", value: "duration" },
-        { text: "Route", value: "route" },
-        { text: "Total Quantity", value: "QTY" },
+        { text: "Unit Of Measurment", value: "unit_of_measurement" },
+        { text: "Quantity", value: "quantity" },
+        { text: "Action", value: "action" },
       ],
     };
   },
@@ -187,11 +96,17 @@ export default {
     this.loadData();
   },
 
+  components: {
+    Edit,
+  },
+
   computed: {
     ...mapState("mainPatientInfoManager", [
       "prescriptions",
       "registeredPrescription",
     ]),
+
+    ...mapState("pharmacy", ["medicineList", "singleMedicineUofM"]),
   },
 
   methods: {
@@ -200,9 +115,16 @@ export default {
       "registerPrescription",
     ]),
 
+    ...mapActions("pharmacy", ["getMedicineList", "getSingleMedicineUofM"]),
+
     async loadData() {
+      await this.getMedicineList();
       await this.getPrescriptions();
       this.prescriptionNew = this.prescriptions;
+    },
+
+    async loadUnitOfMeasurment(medicine_id) {
+      await this.getSingleMedicineUofM(medicine_id);
     },
 
     async save() {
@@ -221,8 +143,16 @@ export default {
           });
       }
     },
+
+    editPrescription(item) {
+      alert(item.id);
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.icon {
+  cursor: pointer;
+}
+</style>

@@ -15,6 +15,8 @@ export default {
     dispensaryList: [],
     dispensarySingle: [],
     confirmedDispensaryRequest: {},
+
+    singleMedicineUofM: [],
   },
 
   mutations: {
@@ -52,6 +54,10 @@ export default {
 
     setConfirmDispensaryRequest(state, payload) {
       state.confirmedDispensaryRequest = payload;
+    },
+
+    setSingleMedicineUofM(state, payload) {
+      state.singleMedicineUofM = payload;
     },
   },
 
@@ -102,6 +108,11 @@ export default {
         data
       );
       commit("setConfirmDispensaryRequest", res.data);
+    },
+
+    async getSingleMedicineUofM({ commit }, medicine_id) {
+      let res = await api.get(path.measurement_pharmacy, medicine_id);
+      commit("getSingleMedicineUofM", res.data);
     },
   },
 };

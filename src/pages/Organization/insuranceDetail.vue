@@ -33,14 +33,31 @@
       >
       </v-data-taable>
     </v-card>
+
+    <v-dialog persistent v-model="registerStaffDialog" width="100px">
+      <v-card>
+        <v-toolbar dense color="green">
+          Register Insurance List
+          <v-spacer />
+
+          <Close class="icon" @click="registerStaffDialog = false" />
+        </v-toolbar>
+
+        <v-card-text> </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import AccountService from "@/network/accountService";
 import { mapActions, mapState } from "vuex";
+
 export default {
   data() {
     return {
+      login_user: AccountService.getProfile(),
+      registerStaffDialog: false,
       insuranceId: "",
       search: "",
       headers: [

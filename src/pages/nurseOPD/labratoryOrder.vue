@@ -76,7 +76,7 @@ import { mapActions, mapState } from "vuex";
 import AccountService from "@/network/accountService";
 
 export default {
-  props: ["service_id"],
+  props: ["service_id", "patientId"],
   data() {
     return {
       login_user: AccountService.getProfile(),

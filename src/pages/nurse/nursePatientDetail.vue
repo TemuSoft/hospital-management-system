@@ -69,6 +69,12 @@
               :service_id="service_id"
               :patientId="patientId"
             />
+
+            <ClearPatient
+              v-else-if="selectedTab === 13"
+              :service_id="service_id"
+              :patientId="patientId"
+            />
           </v-tabs-items>
         </v-tabs>
       </v-card>
@@ -191,6 +197,7 @@ import VitalSign from "../nurseOPD/vitalSign.vue";
 import Prescription from "../nurseOPD/prescription.vue";
 import MaterialRequest from "../nurseOPD/materialRequest.vue";
 import MedicalHistory from "../nurseOPD/medicalHistory.vue";
+import ClearPatient from "../nurseOPD/clearPatient.vue";
 
 import AccountService from "@/network/accountService";
 
@@ -217,13 +224,16 @@ export default {
         { text: "Labratory Order", value: 1 },
         { text: "Imaging Order", value: 2 },
         { text: "Vital Sign", value: 3 },
-        { text: "Apponintment", value: 4 },
+        // { text: "Apponintment", value: 4 },
         { text: "Prescription", value: 5 },
         { text: "Material Request", value: 6 },
         { text: "Mediacal History", value: 7 },
         { text: "Referal", value: 8 },
         { text: "Medical Certeficate", value: 9 },
         { text: "Vital Certeficate", value: 10 },
+        { text: "OPD", value: 11 },
+        { text: "Surgical Order", value: 12 },
+        { text: "Clear Patient", value: 13 },
       ],
     };
   },
@@ -237,6 +247,7 @@ export default {
     Prescription,
     MaterialRequest,
     MedicalHistory,
+    ClearPatient,
   },
 
   created() {

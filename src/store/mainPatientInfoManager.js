@@ -10,6 +10,9 @@ export default {
 
     prescriptions: [],
     registeredPrescription: {},
+
+    registeredClearPatient: {},
+    clearedPatientInfo: [],
   },
 
   mutations: {
@@ -23,6 +26,14 @@ export default {
 
     setRegisterPrescription(state, payload) {
       state.registeredPrescription = payload;
+    },
+
+    setRegisterClearPatient(state, payload) {
+      state.registeredClearPatient = payload;
+    },
+
+    setClearPatientInfo(state, payload) {
+      state.clearedPatientInfo = payload;
     },
   },
 
@@ -45,6 +56,16 @@ export default {
     async registerPrescription({ commit }, data) {
       let res = await api.create(path.prescription, data);
       commit("setRegisterPrescription", res.data);
+    },
+
+    async registerClearPatient({ commit }, data) {
+      let res = await api.create(path.clear_patient, data);
+      commit("setRegisterClearPatient", res.data);
+    },
+
+    async getClearPatientInfo({ commit }, service_id) {
+      let res = await api.get(path.clear_patient, service_id);
+      commit("setClearPatientInfo", res.data);
     },
   },
 };

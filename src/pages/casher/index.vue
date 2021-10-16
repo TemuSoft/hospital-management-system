@@ -1,6 +1,5 @@
 <template>
   <div class="main">
-    {{ paymnetRequest }}
     <h2>Payment Request</h2>
     <v-data-table :items="paymnetRequest" :headers="headers">
       <template v-slot:top>

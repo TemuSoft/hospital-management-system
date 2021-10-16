@@ -423,7 +423,7 @@ import AccountService from "@/network/accountService";
 export default {
   data() {
     return {
-      login_user: AccountService.getProfile() ,
+      login_user: AccountService.getProfile(),
       assignRoom: {},
       selectedPatinet: {},
       tab: null,
@@ -524,7 +524,7 @@ export default {
         this.assignRoom.reception_user_id = this.login_user.id;
         await this.assignPatientRoomRequest(this.assignRoom);
 
-        if (this.assignedPatientRoomRequest.status === 1) {
+        if (this.assignedPatientRoomRequest.st === true) {
           this.assignPatientDialog = false;
           this.loadData();
         } else if (this.assignedPatientRoomRequest.type === -101)

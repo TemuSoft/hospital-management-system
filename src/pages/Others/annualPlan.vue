@@ -1,33 +1,112 @@
 <template>
   <div class="main">
-    <v-layout>
-      <h2 class="m-5">Annaul Plan</h2>
-      <v-spacer />
+    <h2 class="m-5">Annaul Plan</h2>
+    <v-spacer />
 
-      <v-btn
-        small
-        class="text-capitalize green"
-        @click="registerAnnualPlanDialog = true"
-      >
-        Add Annaul Plan
-      </v-btn>
-    </v-layout>
-    <v-divider />
+    <v-tabs v-model="tab" align-with-title>
+      <v-tabs-slider color="yellow"></v-tabs-slider>
 
-    <v-card class="pb-4" flat v-for="(data, i) in 1" :key="i">
-      <v-card elevation="5" outlined class="pa-3">
-        <h3>Year and date / Title</h3>
-        <v-divider />
-        <br />
+      <v-tab v-for="item in tabData" :key="item" class="text-capitalize">
+        {{ item.tab }}
+      </v-tab>
+    </v-tabs>
 
-        <v-layout>
-          <p>Description</p>
-          <v-spacer />
-          <Filedownload class="icon mr-5" />
-        </v-layout>
-      </v-card>
-    </v-card>
-    {{ annualPlans }}
+    <v-tabs-items v-model="tab">
+      <v-tab-item v-for="item in tabData" :key="item">
+        <div v-if="item.id === 1">
+          <v-layout>
+            <v-spacer />
+            <v-btn
+              small
+              class="text-capitalize green"
+              @click="registerAnnualPlanDialog = true"
+            >
+              Add New
+            </v-btn>
+          </v-layout>
+
+          <v-card
+            class="pb-4"
+            flat
+            v-for="(data, i) in annualPlanSingle"
+            :key="i"
+          >
+            <v-card
+              elevation="5"
+              outlined
+              class="pa-3"
+              :style="getBackgroundColor(data.seen_status)"
+            >
+              <h3>{{ data.datetime.substr(0, 10) }}</h3>
+              <v-divider />
+              <br />
+
+              <v-layout>
+                <p>{{ data.description }}</p>
+                <v-spacer />
+                <v-btn
+                  color="green"
+                  text
+                  class="text-capitalize"
+                  @click="downloadAttachment(data, 'persenal')"
+                >
+                  Download
+                </v-btn>
+
+                <v-btn
+                  color="green"
+                  text
+                  class="text-capitalize"
+                  @click="openAttachment(data, 'persenal')"
+                >
+                  View
+                </v-btn>
+              </v-layout>
+            </v-card>
+          </v-card>
+        </div>
+
+        <div v-if="item.id === 2">
+          <v-card class="pb-4" flat v-for="(data, i) in annualPlans" :key="i">
+            <v-card
+              elevation="5"
+              outlined
+              class="pa-3"
+              :style="getBackgroundColor(data.seen_status)"
+            >
+              <h3>{{ data.datetime.substr(0, 10) }}</h3>
+              <v-divider />
+              <br />
+
+              <v-layout>
+                <p>{{ data.description }}</p>
+                <v-spacer />
+                <v-btn
+                  color="green"
+                  text
+                  class="text-capitalize"
+                  @click="downloadAttachment(data, 'admin')"
+                >
+                  Download
+                </v-btn>
+
+                <v-btn
+                  color="green"
+                  text
+                  class="text-capitalize"
+                  @click="openAttachment(data, 'admin')"
+                >
+                  View
+                </v-btn>
+                <v-btn color="green" text class="text-capitalize mr-3">
+                  Action
+                </v-btn>
+              </v-layout>
+            </v-card>
+          </v-card>
+        </div>
+      </v-tab-item>
+    </v-tabs-items>
 
     <v-dialog v-model="registerAnnualPlanDialog" persistent width="700px">
       <v-card>
@@ -49,7 +128,12 @@
               :rules="inputRules"
             />
 
-            <input type="file" @change="onFileUpload" :rules="inputRules" />
+            <input
+              type="file"
+              @change="onFileUpload"
+              :rules="inputRules"
+              accept="application/pdf"
+            />
 
             <v-layout>
               <v-spacer />
@@ -69,14 +153,16 @@
 </template>
 
 <script>
+import { API_ROOT } from "@/network/root";
+
 import Close from "@/assets/icons/close.svg";
-import Filedownload from "@/assets/icons/filedownload.svg";
 import { mapActions, mapState } from "vuex";
 import AccountService from "@/network/accountService";
 
 export default {
   data() {
     return {
+      role: AccountService.getRole(),
       login_user: AccountService.getProfile(),
       registerAnnualPlanDialog: false,
       annaulPlanInfo: {},
@@ -85,30 +171,48 @@ export default {
 
       selectedFile: null,
       fileSelected: false,
+
+      domain: API_ROOT,
+
+      tab: null,
+      tabData: [],
     };
   },
 
   created() {
+    let temp = "";
+    for (let i = 0; i < this.domain.length - 4; i++) temp += this.domain[i];
+    this.domain = temp;
+
     this.loadData();
+
+    this.tabData.push({ id: 1, tab: "Personal" });
+    if (this.role === "admin") this.tabData.push({ id: 2, tab: "Requests" });
   },
 
   components: {
     Close,
-    Filedownload,
   },
 
   computed: {
-    ...mapState("workPermission", ["registeredAnnualReport", "annualPlans"]),
+    ...mapState("workPermission", [
+      "registeredAnnualPlan",
+      "annualPlanSingle",
+      "annualPlans",
+    ]),
   },
 
   methods: {
     ...mapActions("workPermission", [
-      "registerAnnualReport",
-      "getAnnualReports",
+      "registerAnnualPlan",
+      "getAnnualPlans",
+      "getAnnualPlanSingle",
+      "makeSeenAnnualPlan",
     ]),
 
     async loadData() {
-      await this.getAnnualReports();
+      if (this.role === "admin") await this.getAnnualPlans();
+      await this.getAnnualPlanSingle(this.login_user.id);
     },
 
     async sendAnnualPlan() {
@@ -117,18 +221,18 @@ export default {
         this.annaulPlanInfo.user_id = id;
 
         const formData = new FormData();
-        let name = new Date().toISOString().substr(0, 10) + "-ID-" + id;
-        formData.append("attachment", this.selectedFile, name);
+        let name = new Date().toISOString().substr(0, 16) + "-ID-" + id;
+        formData.append("attachment", this.selectedFile, name + ".pdf");
         formData.append("data", JSON.stringify(this.annaulPlanInfo));
 
-        await this.registerAnnualReport(formData);
-        if (this.registeredAnnualReport.st === true) {
+        await this.registerAnnualPlan(formData);
+        if (this.registeredAnnualPlan.st === true) {
           this.registerAnnualPlanDialog = false;
           this.loadData();
         } else
           this.$fire({
             title: "Annual Plan",
-            text: this.registeredAnnualReport.msg,
+            text: this.registeredAnnualPlan.msg,
             type: "error",
             timer: 7000,
           });
@@ -138,6 +242,33 @@ export default {
     onFileUpload(event) {
       this.selectedFile = event.target.files[0];
       this.fileSelected = true;
+    },
+
+    async downloadAttachment(item, who) {
+      if (who === "admin") await this.makeSeenAnnualPlan(item.id);
+
+      var link = document.createElement("a");
+      link.setAttribute("download", "Attachment.pdf");
+      link.href = this.domain + item.attachment;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      this.loadData();
+    },
+
+    async openAttachment(item, who) {
+      if (who === "admin") await this.makeSeenAnnualPlan(item.id);
+      window.open(this.domain + item.attachment, "_blank").focus();
+
+      this.loadData();
+    },
+
+    getBackgroundColor(seen) {
+      if (seen === 0)
+        return {
+          backgroundColor: "lightblue",
+        };
     },
   },
 };

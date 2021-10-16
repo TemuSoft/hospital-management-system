@@ -75,11 +75,15 @@ const path = {
 
   annual_plan: "/common/annual_plan",
   annual_plan_unseen: "/common/read_unseen_annual_plan",
+  annual_plan_make_read: "/common/mark_annual_plan_as_seen",
+  annual_plan_persenal: "/common/read_user_annual_plan_history",
 
   logout: "/user/logout",
   login: "/user/login",
 
-  work_permission: "/common/work_permission",
+  work_permission: "/common/work_permmision",
+  work_permission_unseen: "/common/read_waiting_work_permmisions",
+  work_permission_single: "/common/read_my_permmision_history",
   imaging_test_case: "/imaging_test",
   insurance: "/insurance",
 };

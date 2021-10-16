@@ -7,9 +7,11 @@ export default {
   state: {
     requestedPermission: false,
     workPermissions: [],
+    workPermissionSingle: [],
 
-    registeredAnnualReport: {},
+    registeredAnnualPlan: {},
     annualPlans: [],
+    annualPlanSingle: [],
   },
   mutations: {
     setRegisterPatient(state, payload) {
@@ -20,12 +22,20 @@ export default {
       state.workPermissions = payload;
     },
 
-    setRegisterAnnualReport(state, payload) {
-      state.registeredAnnualReport = payload;
+    setWorkPermissionSingle(state, payload) {
+      state.workPermissionSingle = payload;
     },
 
-    setAnnualReports(state, payload) {
+    setRegisterAnnualPlan(state, payload) {
+      state.registeredAnnualPlan = payload;
+    },
+
+    setAnnualPlans(state, payload) {
       state.annualPlans = payload;
+    },
+
+    setAnnualPlanSingle(state, payload) {
+      state.annualPlanSingle = payload;
     },
   },
 
@@ -37,18 +47,33 @@ export default {
     },
 
     async getWorkPermission({ commit }) {
-      let res = await api.getAll(path.work_permission);
+      let res = await api.getAll(path.work_permission_unseen);
       commit("setWorkPermission", res.data);
     },
 
-    async registerAnnualReport({ commit }, data) {
-      let res = await api.createWithFile(path.annual_plan, data);
-      commit("setRegisterAnnualReport", res.data);
+    async getWorkPermissionSingle({ commit }, user_id) {
+      let res = await api.get(path.work_permission_single, user_id);
+      commit("setWorkPermissionSingle", res.data);
     },
 
-    async getAnnualReports({ commit }) {
-      let res = api.get(path.annual_plan_unseen);
-      commit("setAnnualReports", res.data);
+    async registerAnnualPlan({ commit }, data) {
+      let res = await api.createWithFile(path.annual_plan, data);
+      commit("setRegisterAnnualPlan", res.data);
+    },
+
+    async getAnnualPlans({ commit }) {
+      let res = await api.getAll(path.annual_plan_unseen);
+      commit("setAnnualPlans", res.data);
+    },
+
+    async getAnnualPlanSingle({ commit }, user_id) {
+      let res = await api.get(path.annual_plan_persenal, user_id);
+      commit("setAnnualPlanSingle", res.data);
+    },
+
+    async makeSeenAnnualPlan({ commit }, annual_plan_id) {
+      await api.update(path.annual_plan_make_read, annual_plan_id);
+      commit;
     },
   },
 };

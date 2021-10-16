@@ -1,3 +1,4 @@
 const API_ROOT = process.env.VUE_APP_BASE_URL;
+const API_ROOT_DOWNLOAD = process.env.VUE_APP_BASE_URL_DOWNLOAD;
 
-export { API_ROOT };
+export { API_ROOT, API_ROOT_DOWNLOAD };

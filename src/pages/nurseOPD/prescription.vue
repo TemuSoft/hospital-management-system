@@ -5,22 +5,16 @@
 
       <v-layout>
         <v-spacer />
-        <v-btn
-          small
-          outlined
-          text
-          color="green"
-          @click="addPrescription = !addPrescription"
-        >
+        <v-btn small outlined text color="green" @click="addNewPrescription()">
           Add New
         </v-btn>
       </v-layout>
       <br />
 
       <v-card flat v-if="addPrescription">
-        <v-form @submit.prevent="save" ref="save">
+        <v-form @submit.prevent="Add" ref="Add">
           <v-layout>
-            <v-autocomplete
+            <v-combobox
               v-model="prescriptionInfo.medicine"
               dense
               outlined
@@ -28,15 +22,17 @@
               :items="medicineList"
               item-text="name"
               item-value="id"
+              chips
               @change="loadUnitOfMeasurment"
               :rules="inputRules"
             />
             <v-spacer />
 
-            <v-autocomplete
+            <v-combobox
               v-model="prescriptionInfo.unit_of_measurement"
               dense
               outlined
+              chips
               label="Unit Of Measurment"
               :items="singleMedicineUofM"
               :rules="inputRules"
@@ -53,17 +49,35 @@
             />
           </v-layout>
 
-          <v-btn small text outlined color="green" @click="save()">
-            Save
-          </v-btn>
+          <v-layout>
+            <v-text-field
+              v-model="prescriptionInfo.note"
+              dense
+              outlined
+              label="Note"
+              :rules="inputRules"
+            />
+          </v-layout>
+
+          <v-btn small text outlined color="green" @click="Add()"> Add </v-btn>
         </v-form>
       </v-card>
 
-      <v-data-table :items="prescriptionNew" :headers="prescriptionHeaders">
+      <v-data-table :items="allPrescriptionInfo" :headers="prescriptionHeaders">
         <template v-slot:item.action="{ item }">
           <Edit @click="editPrescription(item)" class="icon" />
         </template>
       </v-data-table>
+      <v-btn
+        small
+        text
+        outlined
+        color="green"
+        v-if="allPrescriptionInfo.length > 0"
+        @click="submitAll()"
+      >
+        Submit All
+      </v-btn>
     </v-card>
   </div>
 </template>
@@ -78,6 +92,7 @@ export default {
       addPrescription: false,
       addPrescriptionDialog: false,
       prescriptionInfo: {},
+      allPrescriptionInfo: [],
       prescriptionNew: [],
 
       inputRules: [(v) => !!v || "This field is required"],
@@ -123,13 +138,35 @@ export default {
       this.prescriptionNew = this.prescriptions;
     },
 
+    async addNewPrescription() {
+      this.allPrescriptionInfo = [];
+      this.prescriptionInfo = {};
+      this.addPrescription = !this.addPrescription;
+    },
+
     async loadUnitOfMeasurment(medicine_id) {
       await this.getSingleMedicineUofM(medicine_id);
     },
 
-    async save() {
-      if (this.$refs.save.validate()) {
-        await this.registerPrescription(this.prescriptionNew);
+    async Add() {
+      if (this.$refs.Add.validate()) {
+        let medicine = this.prescriptionInfo.medicine;
+
+        if (medicine.name === undefined) {
+          this.prescriptionInfo.medicine_id = -1;
+        } else {
+          this.prescriptionInfo.medicine = medicine.name;
+          this.prescriptionInfo.medicine_id = medicine.id;
+        }
+
+        this.allPrescriptionInfo.push(this.prescriptionInfo);
+        this.prescriptionInfo = {};
+      }
+    },
+
+    async submitAll() {
+      if (this.allPrescriptionInfo.length > 0) {
+        await this.registerPrescription(this.allPrescriptionInfo);
 
         if (this.registeredPrescription === true) {
           this.getPrescriptions();

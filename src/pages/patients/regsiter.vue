@@ -156,12 +156,14 @@
   </div>
 </template>
 <script>
+import AccountService from "@/network/accountService";
 import { mapActions, mapState } from "vuex";
 
 export default {
   components: {},
   data() {
     return {
+      login_user: AccountService.getProfile(),
       patientInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
       genderoptions: ["Male", "Female"],
@@ -169,7 +171,6 @@ export default {
       patientTypeoptions: [
         { name: "Regular", value: 1 },
         { name: "Credit", value: 2 },
-        { name: "Organization", value: 3 },
         { name: "Temporary", value: 4 },
       ],
       nationalityList: [
@@ -190,6 +191,8 @@ export default {
 
     async save() {
       if (this.$refs.form.validate()) {
+        this.patientInfo.user_id = this.login_user.id;
+        this.patientInfo.insurance_id = -1;
         await this.registerPatient(this.patientInfo);
         if (this.registeredPatient === true) {
           this.patientInfo = {};

@@ -194,7 +194,7 @@
 </template>
 
 <script>
-import { API_ROOT } from "@/network/root";
+import { API_ROOT_DOWNLOAD } from "@/network/root";
 
 import { mapActions, mapState } from "vuex";
 import Close from "@/assets/icons/close.svg";
@@ -235,7 +235,7 @@ export default {
       selectedFile: null,
       fileSelected: false,
 
-      domain: API_ROOT,
+      domain: API_ROOT_DOWNLOAD,
 
       tab: null,
       tabData: [],
@@ -243,9 +243,6 @@ export default {
   },
 
   created() {
-    let temp = "";
-    for (let i = 0; i < this.domain.length - 4; i++) temp += this.domain[i];
-    this.domain = temp;
     this.loadData();
 
     this.tabData.push({ id: 1, tab: "Personal" });

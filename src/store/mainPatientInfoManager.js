@@ -13,6 +13,9 @@ export default {
 
     registeredClearPatient: {},
     clearedPatientInfo: [],
+
+    registeredAssignedOPD: {},
+    assignedOPD: [],
   },
 
   mutations: {
@@ -34,6 +37,14 @@ export default {
 
     setClearPatientInfo(state, payload) {
       state.clearedPatientInfo = payload;
+    },
+
+    setRegisterAssignedOPD(state, payload) {
+      state.registeredAssignedOPD = payload;
+    },
+
+    setAssignedOPD(state, payload) {
+      state.assignedOPD = payload;
     },
   },
 
@@ -66,6 +77,16 @@ export default {
     async getClearPatientInfo({ commit }, service_id) {
       let res = await api.get(path.clear_patient, service_id);
       commit("setClearPatientInfo", res.data);
+    },
+
+    async registerAssignedOPD({ commit }, data) {
+      let res = await api.create(path.assign_opd, data);
+      commit("setRegisterAssignedOPD", res.data);
+    },
+
+    async getAssignedOPD({ commit }, service_id) {
+      let res = await api.get(path.assign_opd, service_id);
+      commit("setAssignedOPD", res.data);
     },
   },
 };

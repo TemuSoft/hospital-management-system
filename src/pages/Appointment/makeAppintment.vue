@@ -12,9 +12,12 @@
         <v-form @submit.prevent="save" ref="save">
           <v-layout>
             <v-flex xs12 sm6>
-              <v-text-field
+              <v-autocomplete
+                :items="patients"
                 outlined
                 dense
+                item-text="card_nmber"
+                item-value="id"
                 label="Patient"
                 v-model="appointmentInfo.patient_id"
               />
@@ -120,6 +123,8 @@ export default {
   computed: {
     ...mapState("department", ["departments", "staffInDepartent"]),
     ...mapState("appointment", ["makedAppointment"]),
+
+    ...mapState("patient", ["patients"]),
   },
 
   methods: {
@@ -130,6 +135,8 @@ export default {
       "getSingleAppointment",
       "makeAppointment",
     ]),
+
+    ...mapActions("patient", ["getPatientList"]),
 
     async loadData() {
       await this.getPatientList();

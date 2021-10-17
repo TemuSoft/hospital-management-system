@@ -70,6 +70,12 @@
               :patientId="patientId"
             />
 
+            <OPD
+              v-else-if="selectedTab === 11"
+              :service_id="service_id"
+              :patientId="patientId"
+            />
+
             <ClearPatient
               v-else-if="selectedTab === 13"
               :service_id="service_id"
@@ -197,6 +203,8 @@ import VitalSign from "../nurseOPD/vitalSign.vue";
 import Prescription from "../nurseOPD/prescription.vue";
 import MaterialRequest from "../nurseOPD/materialRequest.vue";
 import MedicalHistory from "../nurseOPD/medicalHistory.vue";
+
+import OPD from "../nurseOPD/opd.vue";
 import ClearPatient from "../nurseOPD/clearPatient.vue";
 
 import AccountService from "@/network/accountService";
@@ -247,6 +255,7 @@ export default {
     Prescription,
     MaterialRequest,
     MedicalHistory,
+    OPD,
     ClearPatient,
   },
 

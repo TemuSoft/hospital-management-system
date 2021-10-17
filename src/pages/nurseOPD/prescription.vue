@@ -28,17 +28,6 @@
             />
             <v-spacer />
 
-            <v-combobox
-              v-model="prescriptionInfo.unit_of_measurement"
-              dense
-              outlined
-              chips
-              label="Unit Of Measurment"
-              :items="singleMedicineUofM"
-              :rules="inputRules"
-            />
-            <v-spacer />
-
             <v-text-field
               v-model="prescriptionInfo.quantity"
               dense
@@ -78,6 +67,8 @@
       >
         Submit All
       </v-btn>
+
+      {{ prescriptionsSingle }}
     </v-card>
   </div>
 </template>
@@ -85,10 +76,13 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
+import AccountService from "@/network/accountService";
 
 export default {
+  props: ["service_id", "patientId"],
   data() {
     return {
+      login_user: AccountService.getProfile(),
       addPrescription: false,
       addPrescriptionDialog: false,
       prescriptionInfo: {},
@@ -100,7 +94,6 @@ export default {
 
       prescriptionHeaders: [
         { text: "Medicine", value: "medicine" },
-        { text: "Unit Of Measurment", value: "unit_of_measurement" },
         { text: "Quantity", value: "quantity" },
         { text: "Action", value: "action" },
       ],
@@ -117,7 +110,7 @@ export default {
 
   computed: {
     ...mapState("mainPatientInfoManager", [
-      "prescriptions",
+      "prescriptionsSingle",
       "registeredPrescription",
     ]),
 
@@ -126,7 +119,7 @@ export default {
 
   methods: {
     ...mapActions("mainPatientInfoManager", [
-      "getPrescriptions",
+      "getPrescriptionsSingle",
       "registerPrescription",
     ]),
 
@@ -134,8 +127,8 @@ export default {
 
     async loadData() {
       await this.getMedicineList();
-      await this.getPrescriptions();
-      this.prescriptionNew = this.prescriptions;
+      await this.getPrescriptionsSingle(this.service_id);
+      this.prescriptionNew = this.prescriptionsSingle;
     },
 
     async addNewPrescription() {
@@ -166,15 +159,20 @@ export default {
 
     async submitAll() {
       if (this.allPrescriptionInfo.length > 0) {
+        this.allPrescriptionInfo = {
+          user_id: this.login_user.id,
+          service_id: this.service_id,
+          data: this.allPrescriptionInfo,
+        };
         await this.registerPrescription(this.allPrescriptionInfo);
 
-        if (this.registeredPrescription === true) {
-          this.getPrescriptions();
+        if (this.registeredPrescription.st === true) {
+          this.getPrescriptionsSingle(this.service_id);
           this.prescriptionInfo = {};
         } else
           this.$fire({
             title: "Prescription Registeration",
-            text: "Something wrong please try again!!!",
+            text: this.registeredPrescription.msg,
             type: "error",
             timer: 7000,
           });

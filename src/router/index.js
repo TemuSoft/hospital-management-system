@@ -347,9 +347,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const authenticated = AuthService.isAuthenticated();
-  // const userRole = AuthService.getRole();
 
-  // if (to.matched.some((record) => record.meta[userRole])) {
   if (!authenticated && to.name !== "login") {
     next({ name: "login" });
   } else if (authenticated && to.name === "login") {
@@ -357,7 +355,17 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
-  // } else next({ name: "dashboard" });
+
+  // // const userRole = AuthService.getRole();
+  // // if (to.matched.some((record) => record.meta[userRole])) {
+  // if (!authenticated && to.name !== "login") {
+  //   next({ name: "login" });
+  // } else if (authenticated && to.name === "login") {
+  //   next({ name: "dashboard" });
+  // } else {
+  //   next();
+  // }
+  // // } else next({ name: "dashboard" });
 });
 
 export default router;

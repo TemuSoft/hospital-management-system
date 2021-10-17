@@ -276,6 +276,7 @@ export default {
         let name = new Date().toISOString().substr(0, 16) + "-ID-" + id;
         formData.append("attachment", this.selectedFile, name + ".pdf");
         formData.append("data", JSON.stringify(this.insuranceInfo));
+        /* eslint-disable no-console */
 
         await this.registereInsurance(formData);
 

@@ -98,7 +98,7 @@ export default {
     ),
 
     async loadData() {
-      await this.getAssignedOPD(service_id);
+      await this.getAssignedOPD(this.service_id);
       if (this.getAssignedOPD.length > 0) this.assignedOPDVisable = false;
     },
 

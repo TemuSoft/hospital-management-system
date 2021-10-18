@@ -8,7 +8,7 @@ export default {
     patientTestCase: [],
     patientLabTestCasesData: [],
 
-    prescriptions: [],
+    prescriptionsSingle: [],
     registeredPrescription: {},
 
     registeredClearPatient: {},
@@ -23,8 +23,8 @@ export default {
       state.patientLabTestCasesData = payload;
     },
 
-    setPrescriptions(state, payload) {
-      state.prescriptions = payload;
+    setPrescriptionsSingle(state, payload) {
+      state.prescriptionsSingle = payload;
     },
 
     setRegisterPrescription(state, payload) {
@@ -59,9 +59,9 @@ export default {
       commit("setPatientTestCase", res.data);
     },
 
-    async getPrescriptions({ commit }) {
-      let res = await api.getAll(path.prescription);
-      commit("setPrescriptions", res.data);
+    async getPrescriptionsSingle({ commit }, service_id) {
+      let res = await api.get(path.prescription_persenal, service_id);
+      commit("setPrescriptionsSingle", res.data);
     },
 
     async registerPrescription({ commit }, data) {

@@ -78,6 +78,12 @@ const path = {
   annual_plan_make_read: "/common/mark_annual_plan_as_seen",
   annual_plan_persenal: "/common/read_user_annual_plan_history",
 
+  prescription: "/pharmacy/prescription",
+  prescription_unseen: "/pharmacy/read_waiting_prescription",
+  prescription_persenal: "/pharmacy/prescription_info_with_service",
+
+  insurance: "/insurance/insurance",
+
   logout: "/user/logout",
   login: "/user/login",
 
@@ -85,7 +91,6 @@ const path = {
   work_permission_unseen: "/common/read_waiting_work_permmisions",
   work_permission_single: "/common/read_my_permmision_history",
   imaging_test_case: "/imaging_test",
-  insurance: "/insurance",
 };
 
 export default path;

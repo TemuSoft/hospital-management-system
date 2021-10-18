@@ -5,7 +5,14 @@
 
       <v-layout>
         <v-spacer />
-        <v-btn small outlined text color="green" @click="addNewPrescription()">
+        <v-btn
+          :disabled="notAddnewPrescription"
+          small
+          outlined
+          text
+          color="green"
+          @click="addNewPrescription()"
+        >
           Add New
         </v-btn>
       </v-layout>
@@ -24,17 +31,6 @@
               item-value="id"
               chips
               @change="loadUnitOfMeasurment"
-              :rules="inputRules"
-            />
-            <v-spacer />
-
-            <v-combobox
-              v-model="prescriptionInfo.unit_of_measurement"
-              dense
-              outlined
-              chips
-              label="Unit Of Measurment"
-              :items="singleMedicineUofM"
               :rules="inputRules"
             />
             <v-spacer />
@@ -61,23 +57,34 @@
 
           <v-btn small text outlined color="green" @click="Add()"> Add </v-btn>
         </v-form>
+
+        <v-data-table
+          :items="allPrescriptionInfo"
+          :headers="prescriptionHeaders"
+        >
+          <template v-slot:item.action="{ item }">
+            <Edit @click="editPrescription(item)" class="icon" />
+          </template>
+        </v-data-table>
+        <v-btn small text outlined color="green" @click="submitAll()">
+          Submit All
+        </v-btn>
       </v-card>
 
-      <v-data-table :items="allPrescriptionInfo" :headers="prescriptionHeaders">
-        <template v-slot:item.action="{ item }">
-          <Edit @click="editPrescription(item)" class="icon" />
+      <v-data-table
+        :items="prescriptionsSingle.data"
+        :headers="prescriptionPenddingHeaders"
+      >
+        <template v-slot:item.pay_status="{ item }">
+          <v-chip v-if="item.pay_status === 0" color="yellow">Not Payed</v-chip>
+          <v-chip v-else color="yellow">Something</v-chip>
+        </template>
+
+        <template v-slot:item.status="{ item }">
+          <v-chip v-if="item.status === 0" color="yellow">Pendding</v-chip>
+          <v-chip v-else color="yellow">Something</v-chip>
         </template>
       </v-data-table>
-      <v-btn
-        small
-        text
-        outlined
-        color="green"
-        v-if="allPrescriptionInfo.length > 0"
-        @click="submitAll()"
-      >
-        Submit All
-      </v-btn>
     </v-card>
   </div>
 </template>
@@ -85,24 +92,34 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
+import AccountService from "@/network/accountService";
 
 export default {
+  props: ["service_id", "patientId"],
   data() {
     return {
+      login_user: AccountService.getProfile(),
       addPrescription: false,
       addPrescriptionDialog: false,
       prescriptionInfo: {},
       allPrescriptionInfo: [],
-      prescriptionNew: [],
+      notAddnewPrescription: false,
 
       inputRules: [(v) => !!v || "This field is required"],
       numberRules0andabove: [(v) => v > 0 || "Can't be lessthan one"],
 
       prescriptionHeaders: [
         { text: "Medicine", value: "medicine" },
-        { text: "Unit Of Measurment", value: "unit_of_measurement" },
         { text: "Quantity", value: "quantity" },
         { text: "Action", value: "action" },
+      ],
+
+      prescriptionPenddingHeaders: [
+        { text: "Medicine", value: "medicine" },
+        { text: "Quantity", value: "quantity" },
+        { text: "Pay Status", value: "pay_status" },
+        { text: "Status", value: "status" },
+        { text: "Price", value: "price" },
       ],
     };
   },
@@ -117,7 +134,7 @@ export default {
 
   computed: {
     ...mapState("mainPatientInfoManager", [
-      "prescriptions",
+      "prescriptionsSingle",
       "registeredPrescription",
     ]),
 
@@ -126,7 +143,7 @@ export default {
 
   methods: {
     ...mapActions("mainPatientInfoManager", [
-      "getPrescriptions",
+      "getPrescriptionsSingle",
       "registerPrescription",
     ]),
 
@@ -134,8 +151,10 @@ export default {
 
     async loadData() {
       await this.getMedicineList();
-      await this.getPrescriptions();
-      this.prescriptionNew = this.prescriptions;
+      await this.getPrescriptionsSingle(this.service_id);
+
+      if (this.prescriptionsSingle.data.length > 0)
+        this.notAddnewPrescription = true;
     },
 
     async addNewPrescription() {
@@ -166,15 +185,20 @@ export default {
 
     async submitAll() {
       if (this.allPrescriptionInfo.length > 0) {
+        this.allPrescriptionInfo = {
+          user_id: this.login_user.id,
+          service_id: this.service_id,
+          data: this.allPrescriptionInfo,
+        };
         await this.registerPrescription(this.allPrescriptionInfo);
 
-        if (this.registeredPrescription === true) {
-          this.getPrescriptions();
+        if (this.registeredPrescription.st === true) {
+          this.getPrescriptionsSingle(this.service_id);
           this.prescriptionInfo = {};
         } else
           this.$fire({
             title: "Prescription Registeration",
-            text: "Something wrong please try again!!!",
+            text: this.registeredPrescription.msg,
             type: "error",
             timer: 7000,
           });

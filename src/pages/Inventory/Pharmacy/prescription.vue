@@ -1,8 +1,5 @@
 <template>
   <div class="main">
-    <v-btn small outlined @click="printPrescription()"
-      >Print prescription</v-btn
-    >
     <v-btn small outlined @click="printReferral()">Print referral</v-btn>
     <v-card>
       <v-data-table
@@ -11,8 +8,17 @@
         :search="search"
         :items-per-page="10"
       >
-        <template v-slot:item.action>
-          <Detail class="icon" @click="detailPrescription(item.id)" />
+        <template v-slot:item.dateT="{ item }">
+          {{ getDateTimeFormat(item.dateT) }}
+        </template>
+
+        <template v-slot:item.status="{ item }">
+          <v-chip v-if="item.status === 0" color="yellow">Pendding</v-chip>
+          <v-chip v-else color="yellow">Something</v-chip>
+        </template>
+
+        <template v-slot:item.action="{ item }">
+          <Detail class="icon" @click="detailPrescription(item.service_id)" />
         </template>
       </v-data-table>
     </v-card>
@@ -22,28 +28,18 @@
 <script>
 import Detail from "@/assets/icons/eye.svg";
 import { mapActions, mapState } from "vuex";
-import PrintPdf from "@/print";
 
 export default {
   data() {
     return {
       search: "",
       headers: [
-        { text: "Full Name", value: "fullName" },
+        { text: "Date", value: "dateT" },
+        { text: "Full Name", value: "patient_name" },
         { text: "Card Number", value: "card_number" },
         { text: "From", value: "ordered_by" },
         { text: "Status", value: "status" },
         { text: "Action", value: "action" },
-      ],
-      medicineList: [
-        {
-          medicine: "Parastmonl",
-          dosage: "2",
-          totalQTY: "30",
-          duration: "4hrs",
-          route: "Mouth",
-          frequency: "3 in a day",
-        },
       ],
     };
   },
@@ -67,21 +63,11 @@ export default {
       await this.getPrescriptionList();
     },
 
-    async detailPrescription(id) {
+    async detailPrescription(service_id) {
       this.$router.push({
         name: "prescriptionDetail",
-        params: { prescriptionId: id },
+        params: { service_id: service_id },
       });
-    },
-
-    async printPrescription() {
-      let profile = {
-        name: "Temesgen Kefie",
-        gender: "Male",
-        mobile_number: "0987654321",
-        birthdate: "04-06-1998",
-      };
-      PrintPdf.prescriptionPdfMaker(this.medicineList, profile);
     },
 
     async printReferral() {
@@ -103,6 +89,12 @@ export default {
       ];
 
       PrintPdf.referalPdfMaker(data, profile);
+    },
+
+    getDateTimeFormat(input) {
+      let date = new Date(input).toDateString();
+      let time = new Date(input).toTimeString().substr(0, 5);
+      return date + " " + time;
     },
   },
 };

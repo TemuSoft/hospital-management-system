@@ -13,7 +13,7 @@ export default {
   },
 
   mutations: {
-    setRegistereInsuranc(state, payload) {
+    setRegistereInsurance(state, payload) {
       state.registeredInsurance = payload;
     },
 
@@ -37,31 +37,27 @@ export default {
   actions: {
     async registereInsurance({ commit }, data) {
       let res = await api.createWithFile(path.insurance, data);
-
-      commit("setRegistereInsuranc", res.data);
+      console.log(res);
+      commit("setRegistereInsurance", res.data);
     },
 
     async getInsuranceList({ commit }) {
       let res = await api.getAll(path.insurance);
-
       commit("setInsuranceList", res.data);
     },
 
-    async updateInsurance({ commo }, data) {
+    async updateInsurance({ commit }, data) {
       let res = await api.update(path.insurance, data.id, data);
-
       commit("setUpdateInsurance", res.data);
     },
 
     async getSingleInsurance({ commit }, id) {
       let res = await api.get(path.insurance, id);
-
       commit("setSingleInsurance", res.data);
     },
 
-    async getInsuranceStaffList({ commit }, data) {
-      let res = await api.get(path.insurance, id);
-
+    async getInsuranceStaffList({ commit }, insurance_id) {
+      let res = await api.get(path.insurance, insurance_id);
       commit("setInsuranceStaffList", res.data);
     },
   },

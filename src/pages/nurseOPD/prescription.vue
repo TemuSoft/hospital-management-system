@@ -35,6 +35,29 @@
             />
             <v-spacer />
 
+            <v-autocomplete
+              v-if="prescriptionInfo.medicine.name != undefined"
+              :items="singleMedicineUofM"
+              dense
+              outlined
+              label="Unit Of Measurment"
+              item-text="name"
+              item-value="id"
+              chips
+              :rules="inputRules"
+              v-model="prescriptionInfo.unit_of_measurment"
+            />
+
+            <v-autocomplete
+              v-else
+              dense
+              outlined
+              label="Unit Of Measurment"
+              chips
+              :rules="inputRules"
+              v-model="prescriptionInfo.unit_of_measurment"
+            />
+
             <v-text-field
               v-model="prescriptionInfo.quantity"
               dense
@@ -80,6 +103,10 @@
           <v-chip v-else color="yellow">Something</v-chip>
         </template>
 
+        <template v-slot:item.unit_of_measurment="{ item }">
+          {{ getUnitOfMeasurment(item.unit_of_measurment) }}
+        </template>
+
         <template v-slot:item.status="{ item }">
           <v-chip v-if="item.status === 0" color="yellow">Pendding</v-chip>
           <v-chip v-else color="yellow">Something</v-chip>
@@ -116,6 +143,7 @@ export default {
 
       prescriptionPenddingHeaders: [
         { text: "Medicine", value: "medicine" },
+        { text: "Unit Of Measurment", value: "unit_of_measurment" },
         { text: "Quantity", value: "quantity" },
         { text: "Pay Status", value: "pay_status" },
         { text: "Status", value: "status" },
@@ -203,6 +231,16 @@ export default {
             timer: 7000,
           });
       }
+    },
+
+    getUnitOfMeasurment(uofmId) {
+      let res = "Unit meas..." + uofmId;
+      // for (let i = 0; i < this.measurements.length; i++)
+      //   if (uofmId === this.measurements[i].id) {
+      //     res = this.measurements[i].unit;
+      //     break;
+      //   }
+      return res;
     },
 
     editPrescription(item) {

@@ -5,7 +5,14 @@
 
       <v-layout>
         <v-spacer />
-        <v-btn small outlined text color="green" @click="addNewPrescription()">
+        <v-btn
+          :disabled="notAddnewPrescription"
+          small
+          outlined
+          text
+          color="green"
+          @click="addNewPrescription()"
+        >
           Add New
         </v-btn>
       </v-layout>
@@ -50,25 +57,34 @@
 
           <v-btn small text outlined color="green" @click="Add()"> Add </v-btn>
         </v-form>
+
+        <v-data-table
+          :items="allPrescriptionInfo"
+          :headers="prescriptionHeaders"
+        >
+          <template v-slot:item.action="{ item }">
+            <Edit @click="editPrescription(item)" class="icon" />
+          </template>
+        </v-data-table>
+        <v-btn small text outlined color="green" @click="submitAll()">
+          Submit All
+        </v-btn>
       </v-card>
 
-      <v-data-table :items="allPrescriptionInfo" :headers="prescriptionHeaders">
-        <template v-slot:item.action="{ item }">
-          <Edit @click="editPrescription(item)" class="icon" />
+      <v-data-table
+        :items="prescriptionsSingle.data"
+        :headers="prescriptionPenddingHeaders"
+      >
+        <template v-slot:item.pay_status="{ item }">
+          <v-chip v-if="item.pay_status === 0" color="yellow">Not Payed</v-chip>
+          <v-chip v-else color="yellow">Something</v-chip>
+        </template>
+
+        <template v-slot:item.status="{ item }">
+          <v-chip v-if="item.status === 0" color="yellow">Pendding</v-chip>
+          <v-chip v-else color="yellow">Something</v-chip>
         </template>
       </v-data-table>
-      <v-btn
-        small
-        text
-        outlined
-        color="green"
-        v-if="allPrescriptionInfo.length > 0"
-        @click="submitAll()"
-      >
-        Submit All
-      </v-btn>
-
-      {{ prescriptionsSingle }}
     </v-card>
   </div>
 </template>
@@ -87,7 +103,7 @@ export default {
       addPrescriptionDialog: false,
       prescriptionInfo: {},
       allPrescriptionInfo: [],
-      prescriptionNew: [],
+      notAddnewPrescription: false,
 
       inputRules: [(v) => !!v || "This field is required"],
       numberRules0andabove: [(v) => v > 0 || "Can't be lessthan one"],
@@ -96,6 +112,14 @@ export default {
         { text: "Medicine", value: "medicine" },
         { text: "Quantity", value: "quantity" },
         { text: "Action", value: "action" },
+      ],
+
+      prescriptionPenddingHeaders: [
+        { text: "Medicine", value: "medicine" },
+        { text: "Quantity", value: "quantity" },
+        { text: "Pay Status", value: "pay_status" },
+        { text: "Status", value: "status" },
+        { text: "Price", value: "price" },
       ],
     };
   },
@@ -128,7 +152,9 @@ export default {
     async loadData() {
       await this.getMedicineList();
       await this.getPrescriptionsSingle(this.service_id);
-      this.prescriptionNew = this.prescriptionsSingle;
+
+      if (this.prescriptionsSingle.data.length > 0)
+        this.notAddnewPrescription = true;
     },
 
     async addNewPrescription() {

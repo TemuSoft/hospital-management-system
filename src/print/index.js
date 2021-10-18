@@ -84,8 +84,8 @@ const Print = {
       data.push([
         i + 1,
         medicineList[i].medicine,
+        medicineList[i].quantity,
         medicineList[i].dosage,
-        medicineList[i].totalQTY,
         medicineList[i].duration,
         medicineList[i].route,
         medicineList[i].frequency,

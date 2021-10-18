@@ -58,36 +58,54 @@
         :items="prescriptionsSingle.data"
         :headers="prescriptionPenddingHeaders"
       >
-        <template v-slot:item.pay_status="{ item }">
-          <v-chip v-if="item.pay_status === 0" color="yellow">Not Payed</v-chip>
-          <v-chip v-else color="yellow">Something</v-chip>
-        </template>
+        <template v-slot:item="props">
+          <tr :style="getBackgroundColor(props.item)">
+            <td>
+              {{ props.item.medicine }}
+            </td>
+            <td>
+              {{ props.item.quantity }}
+            </td>
+            <td>
+              <v-chip v-if="props.item.status === 0" color="yellow">
+                Pendding
+              </v-chip>
+              <v-chip v-else color="yellow">Something</v-chip>
+            </td>
+            <td>
+              <v-chip v-if="props.item.pay_status === 0" color="yellow">
+                Not Payed
+              </v-chip>
+              <v-chip v-else color="yellow">Something</v-chip>
+            </td>
 
-        <template v-slot:item.status="{ item }">
-          <v-chip v-if="item.status === 0" color="yellow">Pendding</v-chip>
-          <v-chip v-else color="yellow">Something</v-chip>
-        </template>
+            <td>
+              <v-edit-dialog
+                v-if="props.item.medicine_id != -1"
+                :return-value.sync="props.item.price"
+                @save="save"
+                @cancel="cancel"
+                @open="open"
+                @close="close"
+                large
+              >
+                {{ props.item.price }}
+                <template v-slot:input>
+                  <v-text-field
+                    @change="validateInputPrice(props.item)"
+                    v-model="props.item.price"
+                    type="number"
+                    label="Edit"
+                    single-line
+                  />
+                </template>
+              </v-edit-dialog>
 
-        <template v-slot:item.price="{ item }">
-          <v-edit-dialog
-            :return-value.sync="item.price"
-            @save="save"
-            @cancel="cancel"
-            @open="open"
-            @close="close"
-            large
-          >
-            {{ item.price }}
-            <template v-slot:input>
-              <v-text-field
-                @change="validateInputPrice(item)"
-                v-model="item.price"
-                type="number"
-                label="Edit"
-                single-line
-              />
-            </template>
-          </v-edit-dialog>
+              <label v-else class="text-capitalize red--text">
+                Not Exist!!!
+              </label>
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </v-card>
@@ -156,6 +174,10 @@ export default {
       let temp = this.prescriptionsSingle.data;
       for (let i = 0; i < temp.length; i++)
         this.totalAmount += parseFloat(temp[i].price);
+    },
+
+    getBackgroundColor(item) {
+      if (item.medicine_id === -1) return { backgroundColor: "lightblue" };
     },
 
     async printPrescription() {

@@ -1,71 +1,50 @@
 <template>
   <v-app class="cover">
-    <div class="mainDiv">
-      <div class="innerMainDiv">
-        <div class="leftDiv">
-          <img src="@/assets/logo.png" width="60%" alt="alt" />
-        </div>
-
+    <div style="margin-top: 5%">
+      <center><h1>Hospital Management System</h1></center>
+    </div>
+    <v-card width="650" class="mx-auto mt-5">
+      <v-card-title>Login</v-card-title>
+      <v-content style="padding: 10%">
         <div class="rightDiv">
-          <v-flex xs12 pa-1>
-            <v-row>
-              <v-spacer />
-              <img src="@/assets/logo.png" width="20%" alt="alt" />
-              <v-spacer />
-            </v-row>
-          </v-flex>
-
-          <v-flex xs12 pa-1>
-            <v-row>
-              <v-spacer />
-              <h3 class="primary--text text-left py-2">Login</h3>
-              <v-spacer />
-            </v-row>
-          </v-flex>
-
-          <v-form @submit.prevent="login" class="pa-3" ref="login">
+          <v-form @submit.prevent="login" ref="login">
             <v-alert v-if="authError" :value="true" type="error">{{
               authError
             }}</v-alert>
-            <v-layout row wrap justify-center>
-              <v-flex xs12 pa-1>
-                <v-text-field
-                  label="User Name"
-                  outlined
-                  dense
-                  v-model="user.email"
-                  type="text"
-                />
-              </v-flex>
-              <v-flex xs12 pa-1>
-                <v-text-field
-                  label="Password"
-                  outlined
-                  dense
-                  v-model="user.password"
-                  type="password"
-                />
-              </v-flex>
-              <v-flex xs12 pa-1>
-                <v-btn
-                  :loading="loading"
-                  block
-                  outlined
-                  rounded
-                  color="green"
-                  type="submit"
-                  @click="login"
-                  >Sign In</v-btn
-                >
-              </v-flex>
-            </v-layout>
+            <v-text-field
+              label="User Name"
+              outlined
+              dense
+              required
+              placeholder="username"
+              prepend-inner-icon="mdi-account-circle"
+              v-model="user.email"
+              type="text"
+            />
+
+            <v-text-field
+              label="Password"
+              outlined
+              prepend-inner-icon="mdi-lock"
+              dense
+              v-model="user.password"
+              type="password"
+            />
+
+            <v-btn
+              :loading="loading"
+              block
+              outlined
+              rounded
+              color="grey"
+              type="submit"
+              @click="login"
+              >Sign In</v-btn
+            >
           </v-form>
         </div>
-      </div>
-      <v-btn text color="green" id="textLogin" class="text-lowercase">
-        Powered by: Temesgen Kefie and Robel Milashu.
-      </v-btn>
-    </div>
+      </v-content>
+    </v-card>
   </v-app>
 </template>
 

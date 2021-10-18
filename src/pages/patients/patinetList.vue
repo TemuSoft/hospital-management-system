@@ -46,7 +46,11 @@
               class="icon"
             />
             <label v-else-if="item.status === -5" style="color: green">
-              Pendding
+              Card Pendding
+            </label>
+
+            <label v-else-if="item.status === 2" style="color: blue">
+              Room Assigned
             </label>
           </template>
 
@@ -414,10 +418,12 @@ import Close from "@/assets/icons/close.svg";
 import Transfer from "@/assets/icons/send.svg";
 import Payment from "@/assets/icons/payment.svg";
 
+import AccountService from "@/network/accountService";
+
 export default {
   data() {
     return {
-      login_user: { id: 2, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
       assignRoom: {},
       selectedPatinet: {},
       tab: null,
@@ -518,7 +524,7 @@ export default {
         this.assignRoom.reception_user_id = this.login_user.id;
         await this.assignPatientRoomRequest(this.assignRoom);
 
-        if (this.assignedPatientRoomRequest.status === 1) {
+        if (this.assignedPatientRoomRequest.st === true) {
           this.assignPatientDialog = false;
           this.loadData();
         } else if (this.assignedPatientRoomRequest.type === -101)

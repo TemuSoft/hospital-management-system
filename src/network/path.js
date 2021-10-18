@@ -15,6 +15,8 @@ const path = {
   item: "/store/inventory_item",
   update_item: "/store/inventory_item_detail",
   issue: "/store/issue",
+  issue_confirm: "/store/issue_detail",
+  issue_personal: "/store/user_issue_info",
   update_issue: "/store/issue_upadte",
   register_imaging: "/imaging/imaging_test_case",
   register_lab_group: "/lab/lab_test_group",
@@ -26,13 +28,26 @@ const path = {
   lab_test_case_by_gruop: "/lab/lab_test_case_in_group",
   update_lab_test_case: "/lab/update_lab_test_case",
   patient_test_case: "/lab/lab_test_request",
+  verification_test_case: "/lab/varify_outsource_lab_test",
   get_patient_test_case: "/lab/lab_test_history_data",
   all_lab_test_case_request: "/lab/lab_test_request",
   single_lab_test_case_request: "/lab/lab_test_history_data",
   updatae_lab_test_case_request: "/lab/enter_lab_test_history_detail",
   register_outsourced_test_case: "/lab/outsource_lab_test",
   measurement: "/common/measurement",
+  measurement_pharmacy: "/pharmacy/medicine_unit_of_measurement",
+
+  medicine: "/pharmacy/medicine",
+  medicine_detail: "/pharmacy/medicine_detail",
+  medicine_category: "/pharmacy/medicine_category",
+  dispensary_request: "/pharmacy/dispensary_request",
+  dispensary_request_confirm: "/pharmacy/dispensary_request",
+
   assing_patient_room: "/",
+
+  medical_history_list: "/patient/medical_history",
+  medical_history_patient_id: "/patient/read_medical_history_history",
+  send_material_request: "/nurse/material_request",
 
   room: "/admin/room",
   update_room: "/admin/room_detail",
@@ -53,13 +68,29 @@ const path = {
 
   reception_card_renewal: "/reception/write_card_renewal",
   cashier_payment_request: "/cashier/payment_request",
+  card_renewal_payment: "/cashier/payment_approval",
+  single_prepayment_load: "/cashier/patient_prepayment_read",
+
+  register_prepayment: "/cashier/patient_prepayment_write",
+
+  annual_plan: "/common/annual_plan",
+  annual_plan_unseen: "/common/read_unseen_annual_plan",
+  annual_plan_make_read: "/common/mark_annual_plan_as_seen",
+  annual_plan_persenal: "/common/read_user_annual_plan_history",
+
+  prescription: "/pharmacy/prescription",
+  prescription_unseen: "/pharmacy/read_waiting_prescription",
+  prescription_persenal: "/pharmacy/prescription_info_with_service",
+
+  insurance: "/insurance/insurance",
 
   logout: "/user/logout",
   login: "/user/login",
 
-  register_work_permission: "/register_work_permission",
+  work_permission: "/common/work_permmision",
+  work_permission_unseen: "/common/read_waiting_work_permmisions",
+  work_permission_single: "/common/read_my_permmision_history",
   imaging_test_case: "/imaging_test",
-  insurance: "/insurance",
 };
 
 export default path;

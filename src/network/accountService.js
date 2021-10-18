@@ -15,11 +15,10 @@ const AccountService = {
           localStorage.setItem(ACCESS_TOKEN_KEY, res.token);
           localStorage.setItem(PROFILE_KEY, JSON.stringify(res));
           return Promise.resolve(true);
-        }
-        return Promise.reject(new Error("Unauthorized"));
+        } else return Promise.resolve(false);
       })
-      .catch((err) => {
-        throw err;
+      .catch(() => {
+        return Promise.resolve(false);
       });
   },
 

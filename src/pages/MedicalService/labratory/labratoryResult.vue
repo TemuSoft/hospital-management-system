@@ -41,6 +41,7 @@
           <Close @click="enterLabResultDialog = false" class="icon" />
         </v-toolbar>
         <br />
+
         <v-card-text>
           <v-form @submit.prevent="saveResult" ref="saveResult">
             <v-layout>
@@ -68,45 +69,111 @@
             <v-layout>
               <table>
                 <tr>
-                  <th>Need Outsourced</th>
+                  <th>Confiramtion</th>
                   <th>Test Case</th>
                   <th>Result</th>
                 </tr>
 
                 <tr v-for="(ltr, i) in labtestResult" :key="i">
-                  <td>
-                    <checked
-                      class="icon"
-                      v-if="checkboxWhole[labtestResult[i].id] === true"
-                      @click="checkboxWholeProcess(labtestResult[i].id, i)"
-                    />
-                    <unchecked
-                      class="icon"
-                      v-else
-                      @click="checkboxWholeProcess(labtestResult[i].id, i)"
-                    />
-                  </td>
-                  <td>{{ labtestResult[i].test_case_name }}</td>
-                  <td>
-                    <v-text-field
-                      class="tdCell"
-                      v-if="!checkboxWhole[labtestResult[i].id]"
-                      v-model="labtestResult[i].result"
-                      :rules="inputRules"
-                      dense
-                      outlined
-                    />
-                    <label v-else style="color: red">Outsourced</label>
-                  </td>
+                  <template
+                    v-if="
+                      labtestResult[i].status === 2 ||
+                      labtestResult[i].verified === true
+                    "
+                  >
+                    <td></td>
+                    <td>{{ labtestResult[i].test_case_name }}</td>
+                    <td>
+                      <v-text-field
+                        v-if="labtestResult[i].payment_status == 1"
+                        class="tdCell"
+                        v-model="labtestResult[i].result"
+                        :rules="inputRules"
+                        dense
+                        outlined
+                      />
+
+                      <label
+                        v-if="
+                          labtestResult[i].payment_status == 0 &&
+                          labtestResult[i].verified === true
+                        "
+                        style="color: red"
+                      >
+                        Payment No done yet
+                      </label>
+
+                      <label
+                        v-if="labtestResult[i].status === 2"
+                        style="color: red"
+                      >
+                        Outsourced
+                      </label>
+                    </td>
+                  </template>
+
+                  <template v-else-if="labtestResult[i].status === 1">
+                    <td></td>
+                    <td>{{ labtestResult[i].test_case_name }}</td>
+                    <td>
+                      <label>{{ labtestResult[i].result }}</label>
+                    </td>
+                  </template>
+
+                  <template
+                    v-else-if="
+                      labtestResult[i].verified === false &&
+                      labtestResult[i].status === 0
+                    "
+                  >
+                    <td>
+                      <checked
+                        class="icon"
+                        v-if="checkboxWhole[labtestResult[i].id] === true"
+                        @click="checkboxWholeProcess(labtestResult[i].id, i)"
+                      />
+                      <unchecked
+                        class="icon"
+                        v-else
+                        @click="checkboxWholeProcess(labtestResult[i].id, i)"
+                      />
+                    </td>
+                    <td>{{ labtestResult[i].test_case_name }}</td>
+                    <td>
+                      <label v-if="!checkboxWhole[labtestResult[i].id]">
+                      </label>
+                      <label v-else style="color: Green">Verified</label>
+                    </td>
+                  </template>
                 </tr>
               </table>
             </v-layout>
 
             <br />
             <v-layout>
-              <v-btn small outlined text color="green" @click="saveResult()">
+              <v-btn
+                :disabled="save_result_btn"
+                small
+                outlined
+                color="green"
+                @click="saveResult()"
+                class="text-capitalize"
+              >
                 Save Results
               </v-btn>
+              <v-spacer />
+
+              <v-btn
+                :disabled="verified_btn"
+                small
+                outlined
+                color="blue"
+                @click="saveVerified()"
+                class="text-capitalize"
+              >
+                Verified
+              </v-btn>
+              <v-spacer />
             </v-layout>
           </v-form>
         </v-card-text>
@@ -121,16 +188,20 @@ import Close from "@/assets/icons/close.svg";
 import Checked from "@/assets/icons/checked.svg";
 import Unchecked from "@/assets/icons/unchecked.svg";
 import { mapActions, mapState } from "vuex";
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
     return {
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
 
       inputRules: [(v) => !!v || "This field is required"],
       labtestResult: [],
       selectedResult: {},
       selectedId: "",
+
+      save_result_btn: true,
+      verified_btn: false,
 
       checkboxWhole: {},
       search: "",
@@ -160,6 +231,7 @@ export default {
       "labratoryRequests",
       "singleLabratoryRequests",
       "insertedLabRequestResult",
+      "verifiedTestCase",
     ]),
   },
 
@@ -169,6 +241,7 @@ export default {
       "getSingleLabrtoryRequest",
       "insertLabRequestResult",
       "insertLabRequestResultOutsource",
+      "verificationTestCase",
     ]),
 
     async loadData() {
@@ -209,6 +282,33 @@ export default {
       }
     },
 
+    async saveVerified() {
+      let data = { user_id: this.login_user.id };
+      let datamini = [];
+
+      for (let i = 0; i < this.labtestResult.length; i++) {
+        let id = this.labtestResult[i].id;
+
+        if (this.checkboxWhole[id] === true)
+          datamini.push({ id: id, verified: true, type: 1 });
+        else datamini.push({ id: id, status: 2, type: 2 });
+      }
+
+      data.data = datamini;
+
+      await this.verificationTestCase(data);
+
+      if (this.verifiedTestCase == true) {
+        this.enterLabResultDialog = false;
+      } else
+        this.$fire({
+          title: "Verfication Lab Test Case",
+          text: "Something wrong please try again!!!",
+          type: "error",
+          timer: 7000,
+        });
+    },
+
     async checkboxWholeProcess(id, i) {
       this.checkboxWhole[id] = !this.checkboxWhole[id];
       if (this.checkboxWhole[id] === false) delete this.checkboxWhole[id];
@@ -225,6 +325,19 @@ export default {
       this.enterLabResultDialog = true;
       await this.getSingleLabrtoryRequest(service_id);
       this.labtestResult = this.singleLabratoryRequests.data;
+
+      for (let i = 0; i < this.labtestResult.length; i++) {
+        if (this.labtestResult[i].payment_status === 1) {
+          this.save_result_btn = true;
+          this.verified_btn = true;
+          break;
+        } else if (
+          this.labtestResult[i].status === 2 ||
+          this.labtestResult[i].verified === true
+        ) {
+          this.verified_btn = true;
+        }
+      }
     },
   },
 };
@@ -248,6 +361,7 @@ table {
 }
 td {
   justify-content: center;
+  text-align: center;
 }
 
 tr:nth-child(even) {

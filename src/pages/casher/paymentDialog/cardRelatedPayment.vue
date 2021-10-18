@@ -112,7 +112,7 @@
                 dense
                 outlined
                 @change="validatePayment()"
-                v-model="paymentInfo.payment_option"
+                v-model="paymentInfo.payed_from"
               />
               <v-autocomplete
                 v-else
@@ -124,7 +124,7 @@
                 dense
                 outlined
                 @change="validatePayment()"
-                v-model="paymentInfo.payment_option"
+                v-model="paymentInfo.payed_from"
               />
             </v-layout>
 
@@ -132,7 +132,6 @@
               <v-checkbox
                 v-model="confirmPaymentCheckbox"
                 label="Select me to confirm payment"
-                @change="validatePayment()"
               />
               <br />
             </v-layout>
@@ -160,12 +159,14 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Close from "@/assets/icons/close.svg";
+import AccountService from "@/network/accountService";
 
 export default {
   props: ["selectedPatinet", "paymentDialogCard"],
 
   data() {
     return {
+      login_user: AccountService.getProfile(),
       inputRules: [(v) => !!v || "This field is required"],
 
       paymentInfo: {},
@@ -191,7 +192,11 @@ export default {
   },
 
   computed: {
-    ...mapState("cashier", ["paymnetRequest", "prepaymentAmount"]),
+    ...mapState("cashier", [
+      "paymnetRequest",
+      "prepaymentAmount",
+      "registeredCardrenewalPayment",
+    ]),
   },
 
   mounted() {
@@ -199,23 +204,46 @@ export default {
   },
 
   methods: {
-    ...mapActions("cashier", ["getPaymentRequest", "getPrepaymentAmount"]),
+    ...mapActions("cashier", [
+      "getPaymentRequest",
+      "getPrepaymentAmount",
+      "registerCardrenewalPayment",
+    ]),
 
     async loadData() {
       await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
     },
 
     async validatePayment() {
+      this.confirmPaymentCheckbox = true;
       if (this.paymentInfo.payment_option === 1) {
         this.confirmPaymentCheckbox = false;
-        if (this.prepaymentAmountHave >= this.selectedPatinet.amount) {
+        if (this.prepaymentAmount >= this.selectedPatinet.amount)
           this.confirmPaymentCheckbox = true;
-        }
       }
     },
 
     async closeDialog() {
       this.$emit("cardPaymentControl", false);
+    },
+
+    async paymentDoneCard() {
+      this.paymentInfo.cashier_id = this.login_user.id;
+      this.paymentInfo.note = "";
+
+      await this.registerCardrenewalPayment([
+        this.paymentInfo,
+        this.selectedPatinet.id,
+      ]);
+
+      if (this.registeredCardrenewalPayment.st === true) this.closeDialog();
+      else
+        this.$fire({
+          title: "Card Renewl Payment",
+          text: this.registeredCardrenewalPayment.msg,
+          type: "error",
+          timer: 7000,
+        });
     },
   },
 };

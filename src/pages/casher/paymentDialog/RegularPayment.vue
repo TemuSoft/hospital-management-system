@@ -182,15 +182,7 @@ export default {
       totalPayment: 0,
       confirmPaymentCheckbox: false,
 
-      testListPayment: [
-        { name: "Test Case 1", price: 50, id: 1 },
-        { name: "Test Case 2", price: 150, id: 2 },
-        { name: "Test Case 3", price: 40, id: 3 },
-        { name: "Test Case 4", price: 79, id: 4 },
-        { name: "Test Case 5", price: 79, id: 5 },
-        { name: "Test Case 6", price: 4, id: 6 },
-        { name: "Test Case 7", price: 43, id: 7 },
-      ],
+      testListPayment: [],
       checkboxWhole: {},
     };
   },
@@ -209,25 +201,23 @@ export default {
     ...mapState("cashier", [
       "paymnetRequest",
       "prepaymentAmount",
-      "testCaseList",
+      "testCasePaymentDone",
     ]),
-  },
-
-  mounted() {
-    this.loadData();
   },
 
   methods: {
     ...mapActions("cashier", [
       "getPaymentRequest",
       "getPrepaymentAmount",
-      "getTestCaseList",
+      "testCasePaymentRegister",
     ]),
 
     async loadData() {
-      // await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
+      await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
       // await this.getTestCaseList(this.selectedPatinet.service_id);
+      // alert(true);
 
+      this.testListPayment = this.selectedPatinet.test_cases;
       this.totalPriceInService = 0;
       for (let i = 0; i < this.testListPayment.length; i++)
         this.totalPriceInService += this.testListPayment[i].price;
@@ -237,7 +227,27 @@ export default {
 
     async paymentDoneCard() {
       if (this.$refs.paymentDoneCard.validate()) {
-        alert("All Input is valid");
+        let data = {};
+        data.reason_id = this.selectedPatinet.reason_id;
+        data.amount = this.selectedPatinet.amount;
+        data.cash = this.totalPayment - this.prepaymentAmount;
+        data.prepayment = this.prepaymentAmount;
+        data.credit = 0;
+        data.insurance = 0;
+        data.test_cases_id = [];
+        for (let i = 0; i < this.testListPayment.length; i++)
+          data.test_cases_id.push(this.testListPayment[i].id);
+
+        await this.testCasePaymentRegister(data);
+        if (this.testCasePaymentDone === true)
+          this.paymentDialogRegular = false;
+        else
+          this.$fire({
+            title: "Test Case Payment",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
       }
     },
 

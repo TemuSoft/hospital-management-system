@@ -17,9 +17,15 @@
           ></v-text-field>
           <v-spacer></v-spacer>
 
-          <v-btn small @click="registerInventoryDialog = true"
-            >Add Inventory</v-btn
+          <v-btn
+            small
+            color="green"
+            class="text-capitalize"
+            outlined
+            @click="registerInventoryDialog = true"
           >
+            Add Inventory
+          </v-btn>
         </v-layout>
         <br />
       </template>
@@ -35,7 +41,12 @@
 
     <v-dialog v-model="registerInventoryDialog" persistent width="700px">
       <v-card>
-        <v-toolbar color="green" dark>Add New Inventory </v-toolbar>
+        <v-toolbar color="green" dense>
+          Add New Inventory
+          <v-spacer />
+
+          <Close @click="registerInventoryDialog = false" class="icon" />
+        </v-toolbar>
         <br />
         <v-card-text>
           <v-form @submit.prevent="save()" ref="save">
@@ -66,12 +77,16 @@
             </v-layout>
 
             <v-layout>
-              <v-spacer></v-spacer>
-              <v-btn small @click="registerInventoryDialog = false"
-                >Cancel</v-btn
+              <v-spacer />
+              <v-btn
+                small
+                @click="save()"
+                class="text-capitalize"
+                outlined
+                color="green"
               >
-              <v-spacer></v-spacer>
-              <v-btn small @click="save()">Save</v-btn>
+                Save
+              </v-btn>
             </v-layout>
           </v-form>
         </v-card-text>
@@ -128,6 +143,7 @@ import { mapState, mapActions } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
 import Detail from "@/assets/icons/eye.svg";
 import Delete from "@/assets/icons/delete.svg";
+import Close from "@/assets/icons/close.svg";
 
 export default {
   name: "Staff",
@@ -144,7 +160,7 @@ export default {
         { text: "Name", value: "name" },
         { text: "Date Created", value: "created_date" },
         { text: "Description", value: "description" },
-        { text: "Action", value: "action" },
+        { text: "Action", value: "action", width: "15%" },
       ],
     };
   },
@@ -153,6 +169,7 @@ export default {
     Edit,
     Detail,
     Delete,
+    Close,
   },
 
   created() {
@@ -199,6 +216,7 @@ export default {
         await this.registerInventory(this.inventoryInfo);
 
         if (this.registeredInventory === true) {
+          this.inventoryInfo = {};
           this.registerInventoryDialog = false;
           await this.loadData();
         } else

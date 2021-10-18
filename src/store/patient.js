@@ -31,19 +31,16 @@ export default {
   actions: {
     async registerPatient({ commit }, data) {
       let res = await api.create(path.register_patient, data);
-
       commit("setRegisterPatient", res.data);
     },
 
     async getPatientList({ commit }) {
       let res = await api.getAll(path.patient);
-
       commit("setPatientList", res.data);
     },
 
     async getPatientFilter({ commit }, filter) {
       let res = await api.create(path.patient, filter);
-
       commit("setPatientList", res.data);
     },
 
@@ -58,7 +55,6 @@ export default {
 
     async updatePatientInfo({ commit }, data) {
       let res = await api.update(path.update_patient, data.id, data);
-
       commit("setUpdatePatientInfo", res.data);
     },
   },

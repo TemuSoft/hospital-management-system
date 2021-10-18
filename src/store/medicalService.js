@@ -20,6 +20,13 @@ export default {
     imagingRequests: [],
     singleImagingRequests: [],
     insertedImagingRequestResult: [],
+
+    verifiedTestCase: false,
+    registeredMedicalHistory: {},
+    medicalHistorys: [],
+
+    doneMaterialRequest: false,
+    singleMaterialRequets: [],
   },
   mutations: {
     setRegisterLab(state, payload) {
@@ -72,6 +79,26 @@ export default {
 
     setInsertImagingRequestResult(state, payload) {
       state.insertImagingRequestResult = payload;
+    },
+
+    setVerificationTestCase(state, payload) {
+      state.verifiedTestCase = payload;
+    },
+
+    setRegisterMedicalHistory(state, payload) {
+      state.registeredMedicalHistory = payload;
+    },
+
+    setMedicalHistory(state, payload) {
+      state.medicalHistorys = payload;
+    },
+
+    setMaterialRequest(state, payload) {
+      state.doneMaterialRequest = payload;
+    },
+
+    setSingleMaterialRequest(state, payload) {
+      state.singleMaterialRequets = payload;
     },
   },
 
@@ -160,6 +187,33 @@ export default {
     async insertImagingRequestResultOutsource({ commit }, data) {
       await api.create(path.register_outsourced_imaging_case, data);
       commit;
+    },
+
+    async verificationTestCase({ commit }, data) {
+      console.log(data);
+      let res = await api.create(path.verification_test_case, data);
+      commit("setVerificationTestCase", res.data);
+    },
+
+    async registerMedicalHistory({ commit }, data) {
+      console.log(data);
+      let res = await api.create(path.medical_history_list, data);
+      commit("setRegisterMedicalHistory", res.data);
+    },
+
+    async getMedicalHistory({ commit }, patinet_id) {
+      let res = await api.get(path.medical_history_patient_id, patinet_id);
+      commit("setMedicalHistory", res.data);
+    },
+
+    async sendMaterialRequest({ commit }, data) {
+      let res = await api.create(path.send_material_request, data);
+      commit("setMaterialRequest", res.data);
+    },
+
+    async getSingleMaterialRequest({ commit }, service_id) {
+      let res = await api.get(path.get_material_request_serviceId, service_id);
+      commit("setSingleMaterialRequest", res.data);
     },
   },
 };

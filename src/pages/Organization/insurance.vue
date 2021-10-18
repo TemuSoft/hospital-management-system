@@ -10,6 +10,17 @@
         <Detail @click="detailInsurance(item)" class="icon" />
       </template>
 
+      <template v-slot:item.attachment="{ item }">
+        <v-btn
+          color="green"
+          text
+          class="text-capitalize"
+          @click="openAttachment(item)"
+        >
+          Download
+        </v-btn>
+      </template>
+
       <template v-slot:top>
         <br />
         <v-layout>
@@ -19,15 +30,15 @@
             dense
             single-line
             hide-details
-          ></v-text-field>
-          <v-spacer></v-spacer>
+          />
+          <v-spacer />
 
           <v-btn
             @click="registerInsuranceDialog = true"
+            class="text-capitalize green"
             small
-            prepend-icon="mdi-plus"
           >
-            <v-icon left>mdi-plus</v-icon>Add New
+            Add New
           </v-btn>
         </v-layout>
         <br />
@@ -36,7 +47,12 @@
 
     <v-dialog v-model="registerInsuranceDialog" persistent width="700px">
       <v-card>
-        <v-toolbar color="green" dark>Add New Insurane </v-toolbar>
+        <v-toolbar dense color="green" dark>
+          Add New Insurane
+          <v-spacer />
+
+          <Close class="icon" @click="cancelDialog()" />
+        </v-toolbar>
         <br />
         <v-card-text>
           <v-form @submit.prevent="save" ref="save">
@@ -82,10 +98,23 @@
             </v-layout>
 
             <v-layout>
-              <v-spacer></v-spacer>
-              <v-btn small @click="cancelDialog()">Cancel</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn small @click="save()">Save</v-btn>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Attachment</v-flex>
+              <v-flex xs12 sm8>
+                <input
+                  type="file"
+                  @change="onFileUpload"
+                  :rules="inputRules"
+                  accept="application/pdf"
+                />
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-spacer />
+              <v-btn small class="text-capitalize green" @click="save()">
+                Save
+              </v-btn>
             </v-layout>
           </v-form>
         </v-card-text>
@@ -94,7 +123,12 @@
 
     <v-dialog v-model="updateInsuranceDialog" persistent width="700px">
       <v-card>
-        <v-toolbar color="green" dark>Update Insurane </v-toolbar>
+        <v-toolbar dense color="green" dark>
+          Update Insurane
+          <v-spacer />
+
+          <Close class="icon" @click="cancelDialog()" />
+        </v-toolbar>
         <br />
         <v-card-text>
           <v-form @submit.prevent="update" ref="update">
@@ -140,10 +174,23 @@
             </v-layout>
 
             <v-layout>
-              <v-spacer></v-spacer>
-              <v-btn small @click="cancelDialog()">Cancel</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn small @click="update()">Update</v-btn>
+              <v-flex xs12 sm1> </v-flex>
+              <v-flex xs12 sm3> Attachment</v-flex>
+              <v-flex xs12 sm8>
+                <input
+                  type="file"
+                  @change="onFileUpload"
+                  :rules="inputRules"
+                  accept="application/pdf"
+                />
+              </v-flex>
+            </v-layout>
+
+            <v-layout>
+              <v-spacer />
+              <v-btn small outlined color="green" @click="update()">
+                Update
+              </v-btn>
             </v-layout>
           </v-form>
         </v-card-text>
@@ -153,13 +200,20 @@
 </template>
 
 <script>
+import { API_ROOT_DOWNLOAD } from "@/network/root";
+
 import { mapActions, mapState } from "vuex";
 import Edit from "@/assets/icons/edit.svg";
+import Close from "@/assets/icons/close.svg";
 import Detail from "@/assets/icons/eye.svg";
+
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
     return {
+      login_user: AccountService.getProfile(),
+
       registerInsuranceDialog: false,
       updateInsuranceDialog: false,
       insuranceInfo: {},
@@ -173,13 +227,20 @@ export default {
         { text: "Description", value: "description" },
         { text: "Status", value: "status" },
         { text: "Start Date", value: "startDate" },
+        { text: "Attachment", value: " attachment" },
         { text: "Action", value: "action" },
       ],
+
+      domain: API_ROOT_DOWNLOAD,
+
+      selectedFile: null,
+      fileSelected: false,
     };
   },
 
   components: {
     Edit,
+    Close,
     Detail,
   },
 
@@ -207,9 +268,17 @@ export default {
     },
 
     async save() {
-      if (this.$refs.save.validate()) {
-        this.insuranceInfo.created_by = "Temesegen";
-        await this.registereInsurance(this.insuranceInfo);
+      if (this.$refs.save.validate() && this.fileSelected) {
+        let id = this.login_user.id;
+        this.insuranceInfo.user_id = id;
+
+        const formData = new FormData();
+        let name = new Date().toISOString().substr(0, 16) + "-ID-" + id;
+        formData.append("attachment", this.selectedFile, name + ".pdf");
+        formData.append("data", JSON.stringify(this.insuranceInfo));
+        /* eslint-disable no-console */
+
+        await this.registereInsurance(formData);
 
         if (this.registeredInsurance === true) {
           this.registerInsuranceDialog = false;
@@ -222,6 +291,15 @@ export default {
             timer: 7000,
           });
       }
+    },
+
+    onFileUpload(event) {
+      this.selectedFile = event.target.files[0];
+      this.fileSelected = true;
+    },
+
+    openAttachment(item) {
+      window.open(this.domain + item.attachment, "_blank").focus();
     },
 
     async updte() {
@@ -257,7 +335,7 @@ export default {
     async detailInsurance(item) {
       this.$router.push({
         name: "insuranceDetail",
-        params: { insuranceId: item.id },
+        params: { insurance_id: item.id },
       });
     },
   },

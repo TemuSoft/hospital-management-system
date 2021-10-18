@@ -12,110 +12,25 @@
         </v-btn>
         <v-spacer />
 
-        <h3>Patinet Detail</h3>
+        <h3>
+          Patinet : {{ singlePatient[0].first_name }}
+          {{ singlePatient[0].fathers_name }} ({{ singlePatient[0].gender }}) ,
+          Card Number : {{ singlePatient.card_number }} , Guardian :
+          {{ singlePatient[0].guardian_name }}
+        </h3>
         <v-spacer />
 
         <v-btn
-          class="text-capitalize"
-          text
-          outlined
+          small
+          class="text-capitalize green"
           @click="registerVitalSignDialog = true"
         >
           Register Vital Sign
         </v-btn>
       </v-toolbar>
       <v-divider />
-      <br />
 
-      <!-- <v-layout>
-        <v-flex xs12 sm1></v-flex>
-        <v-flex xs12 sm5>
-          <label class="titleHead">Full Name : </label>
-          <label class="titleCont"
-            >{{ singlePatient[0].first_name }}
-            {{ singlePatient[0].fathers_name }} ({{
-              singlePatient[0].gender
-            }})</label
-          >
-          <br />
-
-          <label class="titleHead">Card Number : </label>
-          <label class="titleCont">{{ singlePatient.card_number }} </label>
-          <br />
-
-          <label class="titleHead">BirthDate : </label>
-          <label class="titleCont">{{ singlePatient[0].birthdate }} </label>
-          <br />
-
-          <label class="titleHead">Card Last Updated Date :</label>
-          <label class="titleCont">{{
-            singlePatient[0].card_updated_date
-          }}</label>
-          <br />
-
-          <label class="titleHead">Phone Number : </label>
-          <label class="titleCont">{{ singlePatient[0].phone_number }} </label>
-          <br />
-
-          <label class="titleHead">Patient Type : </label>
-          <label v-if="singlePatient[0].patient_type === 1" class="titleCont"
-            >Regular</label
-          >
-          <label
-            v-else-if="singlePatient[0].patient_type === 2"
-            class="titleCont"
-            >Credit</label
-          >
-          <label
-            v-else-if="singlePatient[0].patient_type === 3"
-            class="titleCont"
-            >Organization</label
-          >
-          <label
-            v-else-if="singlePatient[0].patient_type === 4"
-            class="titleCont"
-            >Temporary</label
-          >
-        </v-flex>
-
-        <v-flex xs12 sm6>
-          <label class="titleHead">Guardian Name : </label>
-          <label class="titleCont">{{ singlePatient[0].guardian_name }}</label>
-          <br />
-
-          <label class="titleHead">Guardian Contact : </label>
-          <label class="titleCont">{{
-            singlePatient[0].guardian_contact
-          }}</label>
-          <br />
-
-          <label class="titleHead">Registration Date :</label>
-          <label class="titleCont">{{
-            singlePatient[0].registration_date
-          }}</label>
-          <br />
-
-          <label class="titleHead">Nationality :</label>
-          <label class="titleCont">{{ singlePatient[0].nationality }}</label>
-          <br />
-
-          <label class="titleHead">Address main :</label>
-          <label class="titleCont"
-            >{{ singlePatient[0].zone }}, {{ singlePatient[0].woreda }}</label
-          >
-          <br />
-
-          <label class="titleHead">Address Detail</label>
-          <label class="titleCont"
-            >{{ singlePatient[0].kebele }},
-            {{ singlePatient[0].house_number }}</label
-          >
-        </v-flex>
-      </v-layout> -->
-
-      <v-divider />
-
-      <v-card>
+      <v-card height="85vh">
         <v-tabs vertical>
           <v-tabs-slider color="yellow"></v-tabs-slider>
           <div v-for="(info, i) in mainInfoTab" :key="i">
@@ -141,6 +56,30 @@
             <Prescription
               v-else-if="selectedTab === 5"
               :service_id="service_id"
+            />
+
+            <MaterialRequest
+              v-else-if="selectedTab === 6"
+              :service_id="service_id"
+              :patientId="patientId"
+            />
+
+            <MedicalHistory
+              v-else-if="selectedTab === 7"
+              :service_id="service_id"
+              :patientId="patientId"
+            />
+
+            <OPD
+              v-else-if="selectedTab === 11"
+              :service_id="service_id"
+              :patientId="patientId"
+            />
+
+            <ClearPatient
+              v-else-if="selectedTab === 13"
+              :service_id="service_id"
+              :patientId="patientId"
             />
           </v-tabs-items>
         </v-tabs>
@@ -262,6 +201,13 @@ import ImagingOrder from "../nurseOPD/imagingOrder.vue";
 import Appointment from "../nurseOPD/appointement.vue";
 import VitalSign from "../nurseOPD/vitalSign.vue";
 import Prescription from "../nurseOPD/prescription.vue";
+import MaterialRequest from "../nurseOPD/materialRequest.vue";
+import MedicalHistory from "../nurseOPD/medicalHistory.vue";
+
+import OPD from "../nurseOPD/opd.vue";
+import ClearPatient from "../nurseOPD/clearPatient.vue";
+
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
@@ -279,20 +225,23 @@ export default {
         { text: "Action", value: "action" },
       ],
       inputRules: [(v) => !!v || "This field is required"],
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
 
       selectedTab: 1,
       mainInfoTab: [
         { text: "Labratory Order", value: 1 },
         { text: "Imaging Order", value: 2 },
         { text: "Vital Sign", value: 3 },
-        { text: "Apponintment", value: 4 },
+        // { text: "Apponintment", value: 4 },
         { text: "Prescription", value: 5 },
-        { text: "Mediacal History", value: 6 },
-        { text: "Referal", value: 7 },
-        { text: "Medical Certeficate", value: 8 },
-        { text: "Material Request", value: 9 },
+        { text: "Material Request", value: 6 },
+        { text: "Mediacal History", value: 7 },
+        { text: "Referal", value: 8 },
+        { text: "Medical Certeficate", value: 9 },
         { text: "Vital Certeficate", value: 10 },
+        { text: "OPD", value: 11 },
+        { text: "Surgical Order", value: 12 },
+        { text: "Clear Patient", value: 13 },
       ],
     };
   },
@@ -304,12 +253,17 @@ export default {
     VitalSign,
     Appointment,
     Prescription,
+    MaterialRequest,
+    MedicalHistory,
+    OPD,
+    ClearPatient,
   },
 
   created() {
     const { patientId, service_id } = this.$route.params;
     this.service_id = service_id;
     this.patientId = patientId;
+
     this.loadData();
   },
 
@@ -367,8 +321,8 @@ export default {
 
 <style scoped>
 .main {
-  margin: 2%;
-  margin-top: 0%;
+  margin-left: 5%;
+  margin-top: 1%;
 }
 
 .titleHead {

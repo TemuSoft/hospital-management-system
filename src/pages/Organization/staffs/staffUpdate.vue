@@ -181,6 +181,7 @@ export default {
         { name: "Nurse", value: "nurse" },
         { name: "Cashier", value: "cashier" },
         { name: "Pharmacy", value: "pharmacy" },
+        { name: "Pharmacy Store", value: "pharmacy_store" },
         { name: "Labratory", value: "labratory" },
         { name: "Imaging", value: "imaging" },
         { name: "Labratory Head", value: "labratory_head" },

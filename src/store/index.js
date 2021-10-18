@@ -9,6 +9,7 @@ import department from "./department";
 import workPermission from "./workPermission";
 import medicalService from "./medicalService";
 import inventory from "./inventory";
+import insurance from "./insurance";
 import item from "./item";
 import issue from "./issue";
 import measurement from "./measurement";
@@ -51,6 +52,7 @@ export default new Vuex.Store({
     workPermission,
     medicalService,
     inventory,
+    insurance,
     item,
     issue,
     measurement,

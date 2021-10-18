@@ -12,6 +12,7 @@ const companyProfile = [
     postal_code: "09876",
     email: "hospital@gmail.com",
     mobile_number: "0987654321",
+    card_renwal: 100,
   },
 ];
 

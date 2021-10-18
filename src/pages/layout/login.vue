@@ -9,7 +9,7 @@
         <div class="rightDiv">
           <v-form @submit.prevent="login" ref="login">
             <v-alert v-if="authError" :value="true" type="error">{{
-              authError
+              "Failed to login!!!"
             }}</v-alert>
             <v-text-field
               label="User Name"
@@ -63,9 +63,13 @@ export default {
   methods: {
     login() {
       if (this.$refs.login.validate()) {
-        AccountService.login(this.user.email, this.user.password).then(() => {
-          this.$router.go();
-        });
+        AccountService.login(this.user.email, this.user.password).then(
+          (res) => {
+            if (res) this.$router.go();
+            else this.authError = !res;
+            // this.$router.push({ name: "dashboard" });
+          }
+        );
       }
     },
   },

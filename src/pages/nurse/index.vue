@@ -86,6 +86,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import Detail from "@/assets/icons/eye.svg";
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
@@ -93,7 +94,7 @@ export default {
       search: "",
       tab: null,
       tabPatient: null,
-      login_user: { id: 4, name: "Temesgen Kefie", role: "Nurse" },
+      login_user: AccountService.getProfile(),
       nursePatientList: [],
       headers: [
         { text: "Card No", value: "card_number" },

@@ -45,7 +45,7 @@
     <v-dialog v-model="addMedicineCategoryDialog" persistent width="700px">
       <v-card>
         <v-toolbar dense color="green">
-          Add New Medicine Category
+          Add New
           <v-spacer />
           <Close class="icon" @click="closeDialog()" />
         </v-toolbar>
@@ -59,17 +59,6 @@
                 dense
                 outlined
                 v-model="medicineCategoryInfo.name"
-                :rules="inputRules"
-              />
-            </v-layout>
-
-            <v-layout>
-              <v-autocomplete
-                label="Unit Of Measurement"
-                dense
-                outlined
-                :items="measurements"
-                v-model="medicineCategoryInfo.uofm"
                 :rules="inputRules"
               />
             </v-layout>
@@ -114,7 +103,6 @@ export default {
       headers: [
         { text: "Name", value: "name" },
         { text: "Description", value: "description" },
-        { text: "Unit Of Measurment", value: "uofm" },
         { text: "Action", value: "action" },
       ],
     };
@@ -131,7 +119,6 @@ export default {
       "registeredMedicineCategory",
       "medicineCategoryList",
     ]),
-    ...mapState("measurement", ["measurements"]),
   },
 
   methods: {
@@ -139,11 +126,9 @@ export default {
       "registerMedicineCategory",
       "getMedicineCategory",
     ]),
-    ...mapActions("measurement", ["getMeasurementList"]),
 
     async loadData() {
       await this.getMedicineCategory();
-      await this.getMeasurementList();
     },
 
     async closeDialog() {
@@ -152,10 +137,10 @@ export default {
 
     async save() {
       if (this.$refs.save.validate()) {
-        await this.registerMedicine(this.medicineCategoryInfo);
+        await this.registerMedicineCategory(this.medicineCategoryInfo);
 
         if (this.registeredMedicineCategory === true) {
-          this.addMedicineDialogCategory = false;
+          this.addMedicineCategoryDialog = false;
           this.loadData();
         } else
           this.$fire({

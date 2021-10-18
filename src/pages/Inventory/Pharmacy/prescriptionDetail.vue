@@ -64,6 +64,11 @@
               {{ props.item.medicine }}
             </td>
             <td>
+              <template v-slot:item.unit_of_measurment="{ item }">
+                {{ getUnitOfMeasurment(item.unit_of_measurment) }}
+              </template>
+            </td>
+            <td>
               {{ props.item.quantity }}
             </td>
             <td>
@@ -126,6 +131,7 @@ export default {
 
       prescriptionPenddingHeaders: [
         { text: "Medicine", value: "medicine" },
+        { text: "Unit Of Measurment", value: "unit_of_measurment" },
         { text: "Quantity", value: "quantity" },
         { text: "Pay Status", value: "pay_status" },
         { text: "Status", value: "status" },
@@ -178,6 +184,16 @@ export default {
 
     getBackgroundColor(item) {
       if (item.medicine_id === -1) return { backgroundColor: "lightblue" };
+    },
+
+    getUnitOfMeasurment(uofmId) {
+      let res = "Unit meas..." + uofmId;
+      // for (let i = 0; i < this.measurements.length; i++)
+      //   if (uofmId === this.measurements[i].id) {
+      //     res = this.measurements[i].unit;
+      //     break;
+      //   }
+      return res;
     },
 
     async printPrescription() {

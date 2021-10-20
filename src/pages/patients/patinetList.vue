@@ -564,10 +564,12 @@ export default {
     },
 
     async filterPatient() {
-      await this.getPatientFilter({
-        key: this.tabSelected,
-        value: this.filterationText,
-      });
+      if (this.filterationText != "")
+        await this.getPatientFilter({
+          key: this.tabSelected,
+          value: this.filterationText,
+        });
+      else this.loadData();
     },
 
     async cardRenewal() {

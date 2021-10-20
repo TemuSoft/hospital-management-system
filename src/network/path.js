@@ -84,6 +84,9 @@ const path = {
 
   insurance: "/insurance/insurance",
 
+  reception_dashboard_card: "/reception/patient_data_with_all_state",
+  reception_dashboard_linechart: "/reception/new_patients_in_this_year",
+
   logout: "/user/logout",
   login: "/user/login",
 

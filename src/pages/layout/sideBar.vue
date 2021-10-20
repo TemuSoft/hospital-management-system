@@ -17,9 +17,11 @@
         <v-list-item link>
           <v-list-item-content>
             <v-list-item-title class="text-h6">
-              Temesgen Kefie
+              {{ singleStaff[0].first_name }} {{ singleStaff[0].father_name }}
             </v-list-item-title>
-            <v-list-item-subtitle>temusoft2012@gmail.com</v-list-item-subtitle>
+            <v-list-item-subtitle>
+              {{ singleStaff[0].email }}
+            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -84,7 +86,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import { menusData } from "@/menuData";
 
 import AccountService from "@/network/accountService";
@@ -103,11 +105,16 @@ export default {
   },
 
   computed: {
+    ...mapState("staff", ["singleStaff"]),
     ...mapState("core", ["navDrawerShow"]),
   },
 
   methods: {
-    async loadData() {},
+    ...mapActions("staff", ["getSingleStaff"]),
+
+    async loadData() {
+      await this.getSingleStaff(AccountService.getProfile().id);
+    },
 
     validateRole(rols) {
       let validated = false;

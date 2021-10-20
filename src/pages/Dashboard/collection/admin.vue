@@ -30,6 +30,99 @@
     </v-layout>
     <br />
 
+    <v-layout row class="pa-5">
+      <v-card elevation="5" class="mr-5" width="49%">
+        <h3 class="blue">OPD Detail</h3>
+        <v-toolbar color="green" dense class="pa-3">
+          <v-autocomplete
+            :items="OPDStaffList"
+            dense
+            rounded
+            item-text="name"
+            item-value="id"
+          />
+          <v-spacer />
+
+          <v-dialog
+            ref="dialog"
+            v-model="modal"
+            :return-value.sync="date"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="date"
+                rounded
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="date" scrollable range>
+              <v-spacer></v-spacer>
+              <v-btn text color="red" @click="modal = false"> Cancel </v-btn>
+              <v-btn text color="green" @click="$refs.dialog.save(date)">
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+        </v-toolbar>
+
+        <v-card-text>
+          <div v-for="opd in opdDoneInfo" :key="opd">
+            <v-layout>
+              <h3>{{ opd.title }}</h3>
+              <v-spacer />
+              <h3>{{ opd.value }}</h3>
+            </v-layout>
+            <v-divider />
+          </div>
+        </v-card-text>
+      </v-card>
+
+      <v-card elevation="5" class="mr-5" width="48%">
+        <h3 class="blue">Hospital Patient Information</h3>
+        <v-toolbar color="green" dense class="pa-3">
+          <v-dialog
+            ref="dialog"
+            v-model="modalOne"
+            :return-value.sync="dateOne"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="dateOne"
+                rounded
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="dateOne" scrollable range>
+              <v-spacer></v-spacer>
+              <v-btn text color="red" @click="modalOne = false"> Cancel </v-btn>
+              <v-btn text color="green" @click="$refs.dialog.save(dateOne)">
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+        </v-toolbar>
+
+        <v-card-text>
+          <div v-for="patient in hospitalPatientInfo" :key="patient">
+            <v-layout>
+              <h3>{{ patient.title }}</h3>
+              <v-spacer />
+              <h3>{{ patient.value }}</h3>
+            </v-layout>
+            <v-divider />
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-layout>
+
     <v-layout>
       <v-card outlined class="chartDis">
         <p style="color: green">Yearly patient statistical view</p>
@@ -75,6 +168,18 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 export default {
   data() {
     return {
+      modal: false,
+      date: [
+        new Date().toISOString().substr(0, 10),
+        new Date().toISOString().substr(0, 10),
+      ],
+
+      modalOne: false,
+      dateOne: [
+        new Date().toISOString().substr(0, 10),
+        new Date().toISOString().substr(0, 10),
+      ],
+
       topHeaders: [
         {
           name: "Total Staff",
@@ -106,6 +211,29 @@ export default {
           amount: 0,
           iconName: "others",
         },
+      ],
+
+      OPDStaffList: [
+        { name: "OPD one", id: 1 },
+        { name: "OPD two", id: 2 },
+        { name: "OPD three", id: 3 },
+        { name: "OPD four", id: 14 },
+      ],
+
+      opdDoneInfo: [
+        { title: "Total Lab Orders", value: 25 },
+        { title: "Money From Lab", value: 2300 },
+        { title: "Total Imaging Orders", value: 10 },
+        { title: "Money From Imaging", value: 1200 },
+        { title: "Patient Served", value: 200 },
+      ],
+
+      hospitalPatientInfo: [
+        { title: "No Of New Cards", value: 34 },
+        { title: "No Of Visitors", value: 8 },
+        { title: "No Of Lab Test", value: 56 },
+        { title: "No Of Imaging Tests", value: 78 },
+        { title: "Total Income Patient", value: 45 },
       ],
 
       appointmentToday: [

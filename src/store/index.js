@@ -20,6 +20,7 @@ import appointment from "./appointment";
 import prescription from "./prescription";
 import pharmacy from "./pharmacy";
 import cashier from "./cashier";
+import dashboard from "./dashboard"
 
 Vue.use(Vuex);
 
@@ -63,5 +64,6 @@ export default new Vuex.Store({
     prescription,
     pharmacy,
     cashier,
+    dashboard,
   },
 });

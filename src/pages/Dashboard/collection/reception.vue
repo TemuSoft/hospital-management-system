@@ -1,9 +1,28 @@
 <template>
   <div>
     <v-layout justify-center row>
-      <v-card class="topHeaderCard" v-for="top in topHeaders" :key="top">
+      <v-card
+        class="topHeaderCard"
+        v-for="top in receptionDashboardCard"
+        :key="top"
+      >
         <div class="title">
-          <label class="suTitle">{{ top.name }}</label>
+          <label v-if="top.by === 'date'" class="suTitle">Today patient</label>
+          <label v-if="top.by === 'week'" class="suTitle">
+            This week patient
+          </label>
+
+          <label v-else-if="top.by === 'month'" class="suTitle">
+            This month patient
+          </label>
+
+          <label v-else-if="top.by === 'year'" class="suTitle">
+            This year patient
+          </label>
+
+          <label v-else-if="top.by === 'temporary'" class="suTitle">
+            Temporary patient
+          </label>
         </div>
 
         <div class="content">
@@ -12,7 +31,7 @@
 
             <v-spacer />
 
-            <h1>{{ top.amount }}</h1>
+            <h1>{{ top.count }}</h1>
           </v-layout>
         </div>
       </v-card>
@@ -77,38 +96,12 @@ import Icon from "@/assets/icons/patient.svg";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { mapActions, mapState } from "vuex";
 
 export default {
   data() {
     return {
       dailyMonthly: false,
-      topHeaders: [
-        {
-          name: "Today patient",
-          amount: 100,
-          iconName: "staff",
-        },
-        {
-          name: "This week patient ",
-          amount: 5,
-          iconName: "doctors",
-        },
-        {
-          name: "This month patient",
-          amount: 20,
-          iconName: "appointment",
-        },
-        {
-          name: "This year patient",
-          amount: 3783,
-          iconName: "patient",
-        },
-        {
-          name: "Temporary patient",
-          amount: 55,
-          iconName: "patient",
-        },
-      ],
 
       paitentToday: [
         { card_number: "C-001", fullName: "Patient 1", status: "On progreess" },
@@ -135,26 +128,33 @@ export default {
     Icon,
   },
 
+  computed: {
+    ...mapState("dashboard", [
+      "receptionDashboardCard",
+      "receptionDashboardLiceChart",
+    ]),
+  },
+
   methods: {
+    ...mapActions("dashboard", [
+      "getReceptionDashboardCard",
+      "getReceptionDashboardLiceChart",
+    ]),
+
     async loadData() {
-      await this.draChartPatient();
+      await this.getReceptionDashboardCard();
+      await this.getReceptionDashboardLiceChart();
+      await this.drawChartPatient();
     },
 
-    async draChartPatient() {
+    async drawChartPatient() {
       am4core.useTheme(am4themes_animated);
       // Create chart instance
       let chart = am4core.create("chartPatient", am4charts.XYChart);
       // Add data
 
       //MM-DD-YYYY format
-      chart.data = [
-        { totalPatient: 15, date: "04-25-2021" },
-        { totalPatient: 22, date: "05-20-2021" },
-        { totalPatient: 45, date: "06-15-2021" },
-        { totalPatient: 35, date: "07-10-2021" },
-        { totalPatient: 25, date: "08-05-2021" },
-        { totalPatient: 50, date: "09-29-2021" },
-      ];
+      chart.data = this.receptionDashboardLiceChart;
       // Create axes
       let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
       dateAxis.renderer.minGridDistance = 50;
@@ -172,7 +172,7 @@ export default {
       series.tooltip.background.fillOpacity = 0.5;
       series.tooltip.label.padding(12, 12, 12, 12);
       // Add scrollbar
-      // chart.scrollbarX = new am4charts.XYChartScrollbar();
+      chart.scrollbarX = new am4charts.XYChartScrollbar();
       chart.scrollbarX.series.push(series);
       // Add cursor
       chart.cursor = new am4charts.XYCursor();

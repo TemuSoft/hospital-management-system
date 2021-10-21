@@ -30,8 +30,8 @@
     </v-layout>
     <br />
 
-    <v-layout row class="pa-5">
-      <v-card elevation="5" class="mr-5" width="49%">
+    <v-layout row class="pa-5" justify-center>
+      <v-card elevation="5" class="ma-3" width="48%">
         <h3 class="blue">OPD Detail</h3>
         <v-toolbar color="green" dense class="pa-3">
           <v-autocomplete
@@ -40,29 +40,30 @@
             rounded
             item-text="name"
             item-value="id"
+            v-model="OPDStaffSelected"
           />
           <v-spacer />
 
           <v-dialog
-            ref="dialog"
-            v-model="modal"
-            :return-value.sync="date"
+            ref="dialogOPD"
+            v-model="modalOPD"
+            :return-value.sync="dateOPD"
             persistent
             width="290px"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="date"
+                v-model="dateOPD"
                 rounded
                 readonly
                 v-bind="attrs"
                 v-on="on"
               ></v-text-field>
             </template>
-            <v-date-picker v-model="date" scrollable range>
+            <v-date-picker v-model="dateOPD" scrollable range>
               <v-spacer></v-spacer>
-              <v-btn text color="red" @click="modal = false"> Cancel </v-btn>
-              <v-btn text color="green" @click="$refs.dialog.save(date)">
+              <v-btn text color="red" @click="modalOPD = false"> Cancel </v-btn>
+              <v-btn text color="green" @click="$refs.dialogOPD.save(dateOPD)">
                 OK
               </v-btn>
             </v-date-picker>
@@ -81,7 +82,64 @@
         </v-card-text>
       </v-card>
 
-      <v-card elevation="5" class="mr-5" width="48%">
+      <v-card elevation="5" class="ma-3" width="48%">
+        <h3 class="blue">Nurse Detail</h3>
+        <v-toolbar color="green" dense class="pa-3">
+          <v-autocomplete
+            :items="nurseStaffList"
+            dense
+            rounded
+            item-text="name"
+            item-value="id"
+            v-model="nurseStaffSelected"
+          />
+          <v-spacer />
+
+          <v-dialog
+            ref="dialogNurse"
+            v-model="modalNurse"
+            :return-value.sync="dateNurse"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="dateNurse"
+                rounded
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="dateNurse" scrollable range>
+              <v-spacer></v-spacer>
+              <v-btn text color="red" @click="modalNurse = false">
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="green"
+                @click="$refs.dialogNurse.save(dateNurse)"
+              >
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+        </v-toolbar>
+
+        <v-card-text>
+          <div v-for="nurse in nurseDoneInfo" :key="nurse">
+            <v-layout>
+              <h3>{{ nurse.title }}</h3>
+              <v-spacer />
+              <h3>{{ nurse.value }}</h3>
+            </v-layout>
+            <v-divider />
+          </div>
+        </v-card-text>
+      </v-card>
+
+      <v-card elevation="5" class="ma-3" width="48%">
         <h3 class="blue">Hospital Patient Information</h3>
         <v-toolbar color="green" dense class="pa-3">
           <v-dialog
@@ -119,6 +177,81 @@
             </v-layout>
             <v-divider />
           </div>
+        </v-card-text>
+      </v-card>
+
+      <v-card elevation="5" class="ma-3" width="48%">
+        <v-layout class="blue">
+          <h3>Cashier Detail</h3>
+          <v-spacer />
+          <v-spacer />
+          <h5 class="mt-2">Cash : 2345 ETB</h5>
+          <v-spacer />
+
+          <v-btn
+            small
+            class="text-capitalize white"
+            @click="cashierDetailView = !cashierDetailView"
+          >
+            Detail
+          </v-btn>
+        </v-layout>
+
+        <v-toolbar color="green" dense class="pa-3">
+          <v-autocomplete
+            :items="cashierStaffList"
+            dense
+            rounded
+            item-text="name"
+            item-value="id"
+            v-model="cashierStaffSelected"
+          />
+          <v-spacer />
+
+          <v-dialog
+            ref="dialogCashier"
+            v-model="modalCashier"
+            :return-value.sync="dateCashier"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="dateCashier"
+                rounded
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="dateCashier" scrollable range>
+              <v-spacer></v-spacer>
+              <v-btn text color="red" @click="modalCashier = false">
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="green"
+                @click="$refs.dialogCashier.save(dateCashier)"
+              >
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+        </v-toolbar>
+
+        <v-card-text>
+          <v-data-table
+            v-if="cashierDetailView"
+            :items="cashierDoneInfo"
+            :headers="cashierHeaders"
+            dense
+            :items-per-page="3"
+          >
+            <template v-slot:item.number="{ item }">
+              {{ cashierDoneInfo.indexOf(item) + 1 }}
+            </template>
+          </v-data-table>
         </v-card-text>
       </v-card>
     </v-layout>
@@ -168,12 +301,6 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 export default {
   data() {
     return {
-      modal: false,
-      date: [
-        new Date().toISOString().substr(0, 10),
-        new Date().toISOString().substr(0, 10),
-      ],
-
       modalOne: false,
       dateOne: [
         new Date().toISOString().substr(0, 10),
@@ -213,19 +340,73 @@ export default {
         },
       ],
 
+      modalOPD: false,
+      dateOPD: [
+        new Date().toISOString().substr(0, 10),
+        new Date().toISOString().substr(0, 10),
+      ],
+      OPDStaffSelected: "",
       OPDStaffList: [
         { name: "OPD one", id: 1 },
         { name: "OPD two", id: 2 },
         { name: "OPD three", id: 3 },
         { name: "OPD four", id: 14 },
       ],
-
       opdDoneInfo: [
         { title: "Total Lab Orders", value: 25 },
         { title: "Money From Lab", value: 2300 },
         { title: "Total Imaging Orders", value: 10 },
         { title: "Money From Imaging", value: 1200 },
         { title: "Patient Served", value: 200 },
+      ],
+
+      modalNurse: false,
+      dateNurse: [
+        new Date().toISOString().substr(0, 10),
+        new Date().toISOString().substr(0, 10),
+      ],
+      nurseStaffSelected: "",
+      nurseStaffList: [
+        { name: "nurse one", id: 1 },
+        { name: "nurse two", id: 2 },
+        { name: "nurse three", id: 3 },
+        { name: "nurse four", id: 14 },
+      ],
+      nurseDoneInfo: [
+        { title: "Total Lab Orders", value: 25 },
+        { title: "Money From Lab", value: 2300 },
+        { title: "Total Imaging Orders", value: 10 },
+        { title: "Money From Imaging", value: 1200 },
+        { title: "Patient Served", value: 200 },
+      ],
+
+      modalCashier: false,
+      dateCashier: [
+        new Date().toISOString().substr(0, 10),
+        new Date().toISOString().substr(0, 10),
+      ],
+      cashierStaffSelected: "",
+      cashierStaffList: [
+        { name: "nurse one", id: 1 },
+        { name: "nurse two", id: 2 },
+        { name: "nurse three", id: 3 },
+        { name: "nurse four", id: 14 },
+      ],
+      cashierDoneInfo: [
+        { name: "Temesgen 1", amount: 78, reason: "reason 1" },
+        { name: "Temesgen 2", amount: 79, reason: "reason 2" },
+        { name: "Temesgen 3", amount: 71, reason: "reason 3" },
+        { name: "Temesgen 4", amount: 72, reason: "reason 4" },
+        { name: "Temesgen 5", amount: 73, reason: "reason 5" },
+        { name: "Temesgen 6", amount: 74, reason: "reason 6" },
+        { name: "Temesgen 7", amount: 75, reason: "reason 7" },
+      ],
+      cashierDetailView: false,
+      cashierHeaders: [
+        { text: "No", value: "number" },
+        { text: "Patient / Company", value: "name" },
+        { text: "Amount", value: "amount" },
+        { text: "Reason", value: "reason" },
       ],
 
       hospitalPatientInfo: [
@@ -281,6 +462,9 @@ export default {
 
   methods: {
     async loadData() {
+      this.OPDStaffSelected = this.OPDStaffList[0].id;
+      this.nurseStaffSelected = this.nurseStaffList[0].id;
+      this.cashierStaffSelected = this.cashierStaffList[0].id;
       await this.draChartPatient();
     },
 

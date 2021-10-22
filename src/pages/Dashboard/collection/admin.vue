@@ -298,6 +298,57 @@
         <v-divider />
         <div id="chartMoney"></div>
       </v-card>
+
+      <v-card elevation="5" class="mt-3" width="98%">
+        <v-toolbar color="green" dense class="pa-3">
+          <h3 class="piechartHeading">Laboratory Vs Vistors</h3>
+          <v-spacer />
+          <v-dialog
+            ref="dialogPie"
+            v-model="modalPie"
+            :return-value.sync="datePie"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="datePie"
+                rounded
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="datePie" scrollable range>
+              <v-spacer></v-spacer>
+              <v-btn text color="red" @click="modalPie = false"> Cancel </v-btn>
+              <v-btn text color="green" @click="$refs.dialogPie.save(datePie)">
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+          <v-spacer />
+          <h3 class="piechartHeading">Imaging Vs Vistors</h3>
+        </v-toolbar>
+
+        <v-divider />
+        <v-card-text>
+          <v-layout height="400px">
+            <div id="piehartLaboratory"></div>
+            <v-spacer />
+            <div id="piehartImaging"></div>
+          </v-layout>
+        </v-card-text>
+        <v-divider />
+
+        <v-layout>
+          <v-spacer />
+          <h4 class="green--text">Total No Of Vistors : 56</h4>
+          <v-spacer />
+          <h4 class="green--text">Money Generated : 35667</h4>
+          <v-spacer />
+        </v-layout>
+      </v-card>
     </v-layout>
   </div>
 </template>
@@ -316,6 +367,12 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
+      modalPie: false,
+      datePie: [
+        new Date().toISOString().substr(0, 10),
+        new Date().toISOString().substr(0, 10),
+      ],
+
       dailyMonthlyPatient: false,
       dailyMonthlyMoney: false,
 
@@ -462,6 +519,8 @@ export default {
       await this.getReceptionDashboardLiceChart();
       await this.drawChartPatient();
       await this.drawChartMoney();
+      await this.drawPicechartLaboratory();
+      await this.drawPicechartImaging();
     },
 
     async drawChartPatient() {
@@ -529,6 +588,114 @@ export default {
       chart.cursor.xAxis = dateAxis;
       chart.cursor.snapToSeries = series;
     },
+
+    async drawPicechartLaboratory() {
+      am4core.useTheme(am4themes_animated);
+      // Themes end
+
+      // Create chart instance
+      let chart = am4core.create("piehartLaboratory", am4charts.PieChart);
+
+      // Add data
+      chart.data = [
+        {
+          laboratory: "Laboratory 1",
+          patient: 501.9,
+        },
+        {
+          laboratory: "Laboratory 2",
+          patient: 301.9,
+        },
+        {
+          laboratory: "Laboratory 3",
+          patient: 201.1,
+        },
+        {
+          laboratory: "Laboratory 3",
+          patient: 165.8,
+        },
+        {
+          laboratory: "Laboratory 4",
+          patient: 139.9,
+        },
+        {
+          laboratory: "Laboratory 5",
+          patient: 128.3,
+        },
+        {
+          laboratory: "Laboratory 6",
+          patient: 99,
+        },
+      ];
+
+      // Add and configure Series
+      let pieSeries = chart.series.push(new am4charts.PieSeries());
+      pieSeries.dataFields.value = "patient";
+      pieSeries.dataFields.category = "laboratory";
+      pieSeries.slices.template.stroke = am4core.color("#fff");
+      pieSeries.slices.template.strokeOpacity = 1;
+
+      // This creates initial animation
+      pieSeries.hiddenState.properties.opacity = 1;
+      pieSeries.hiddenState.properties.endAngle = -90;
+      pieSeries.hiddenState.properties.startAngle = -90;
+
+      chart.hiddenState.properties.radius = am4core.percent(0);
+    },
+
+    async drawPicechartImaging() {
+      am4core.useTheme(am4themes_animated);
+      // Themes end
+
+      // Create chart instance
+      let chart = am4core.create("piehartImaging", am4charts.PieChart);
+
+      // Add data
+      chart.data = [
+        {
+          imaging: "Imaging 1",
+          patient: 501.9,
+        },
+        {
+          imaging: "Imaging 2",
+          patient: 301.9,
+        },
+        {
+          imaging: "Imaging 3",
+          patient: 201.1,
+        },
+        {
+          imaging: "Imaging 3",
+          patient: 165.8,
+        },
+        {
+          imaging: "Imaging 4",
+          patient: 139.9,
+        },
+        {
+          imaging: "Imaging 5",
+          patient: 128.3,
+        },
+        {
+          imaging: "Imaging 6",
+          patient: 99,
+        },
+      ];
+
+      // Add and configure Series
+      let pieSeries = chart.series.push(new am4charts.PieSeries());
+      pieSeries.dataFields.value = "patient";
+      pieSeries.dataFields.category = "imaging";
+      pieSeries.slices.template.stroke = am4core.color("#fff");
+      pieSeries.slices.template.strokeOpacity = 1;
+
+      // This creates initial animation
+      pieSeries.hiddenState.properties.opacity = 1;
+      pieSeries.hiddenState.properties.endAngle = -90;
+      pieSeries.hiddenState.properties.startAngle = -90;
+
+      chart.hiddenState.properties.radius = am4core.percent(0);
+    },
   },
 };
 </script>
@@ -573,5 +740,16 @@ export default {
   height: 350px;
   margin-left: 0;
   /* height: 100%; */
+}
+
+.piechartHeading {
+  margin-top: -2%;
+}
+
+#piehartLaboratory,
+#piehartImaging {
+  width: 48%;
+  height: 350px;
+  margin-left: 0.5%;
 }
 </style>

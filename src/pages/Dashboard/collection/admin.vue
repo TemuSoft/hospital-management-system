@@ -333,7 +333,7 @@
 
         <v-divider />
         <v-card-text>
-          <v-layout height="400px">
+          <v-layout height="300px">
             <div id="piehartLaboratory"></div>
             <v-spacer />
             <div id="piehartImaging"></div>
@@ -731,13 +731,13 @@ export default {
 
 .chartDis,
 .chartDisRight {
-  height: 400px;
+  height: 350px;
 }
 
 #chartPatient,
 #chartMoney {
   width: 100%;
-  height: 350px;
+  height: 300px;
   margin-left: 0;
   /* height: 100%; */
 }
@@ -749,7 +749,7 @@ export default {
 #piehartLaboratory,
 #piehartImaging {
   width: 48%;
-  height: 350px;
+  height: 250px;
   margin-left: 0.5%;
 }
 </style>

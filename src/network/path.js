@@ -7,6 +7,7 @@ const path = {
   register_taff: "/user/register",
   staff: "/user/search_user",
   staff_update: "/user/update_user",
+  staff_by_role: "/user/user_of_role",
   register_department: "/admin/register_department",
   department: "/admin/department_data",
   update_department: "/admin/update_department_data",

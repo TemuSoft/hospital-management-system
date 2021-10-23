@@ -38,7 +38,7 @@
             :items="OPDStaffList"
             dense
             rounded
-            item-text="name"
+            item-text="full_name"
             item-value="id"
             v-model="OPDStaffSelected"
           />
@@ -89,7 +89,7 @@
             :items="nurseStaffList"
             dense
             rounded
-            item-text="name"
+            item-text="full_name"
             item-value="id"
             v-model="nurseStaffSelected"
           />
@@ -421,12 +421,7 @@ export default {
         new Date().toISOString().substr(0, 10),
       ],
       OPDStaffSelected: "",
-      OPDStaffList: [
-        { name: "OPD one", id: 1 },
-        { name: "OPD two", id: 2 },
-        { name: "OPD three", id: 3 },
-        { name: "OPD four", id: 14 },
-      ],
+
       opdDoneInfo: [
         { title: "Total Lab Orders", value: 25 },
         { title: "Money From Lab", value: 2300 },
@@ -441,12 +436,7 @@ export default {
         new Date().toISOString().substr(0, 10),
       ],
       nurseStaffSelected: "",
-      nurseStaffList: [
-        { name: "nurse one", id: 1 },
-        { name: "nurse two", id: 2 },
-        { name: "nurse three", id: 3 },
-        { name: "nurse four", id: 14 },
-      ],
+
       nurseDoneInfo: [
         { title: "Total Lab Orders", value: 25 },
         { title: "Money From Lab", value: 2300 },
@@ -506,13 +496,23 @@ export default {
   },
 
   computed: {
-    ...mapState("dashboard", ["receptionDashboardLiceChart"]),
+    ...mapState("dashboard", [
+      "receptionDashboardLiceChart",
+      "nurseStaffList",
+      "OPDStaffList",
+    ]),
   },
 
   methods: {
-    ...mapActions("dashboard", ["getReceptionDashboardLiceChart"]),
+    ...mapActions("dashboard", [
+      "getReceptionDashboardLiceChart",
+      "getStaffListByRole",
+    ]),
 
     async loadData() {
+      await this.getStaffListByRole("nurse");
+      await this.getStaffListByRole("opd");
+
       this.OPDStaffSelected = this.OPDStaffList[0].id;
       this.nurseStaffSelected = this.nurseStaffList[0].id;
       this.cashierStaffSelected = this.cashierStaffList[0].id;

@@ -11,19 +11,24 @@
             label="Chief Complain"
             outlined
             :rules="inputRules"
+            @input="validateMediaclHistoryInfo()"
             rows="2"
           />
 
           <v-textarea
+            :disabled="assesment"
             v-model="mediaclHistoryInfo.assesment"
             label="Assesment"
             outlined
             :rules="inputRules"
+            @input="validateMediaclHistoryInfo()"
             rows="2"
           />
 
           <v-textarea
+            :disabled="treatment"
             v-model="mediaclHistoryInfo.treatment"
+            @input="validateMediaclHistoryInfo()"
             label="Treatemnt"
             outlined
             :rules="inputRules"
@@ -78,6 +83,8 @@ export default {
 
   data() {
     return {
+      assesment: true,
+      treatment: true,
       login_user: AccountService.getProfile(),
 
       selectedMedicalHistory: {},
@@ -139,6 +146,19 @@ export default {
 
     async loadMedicalHistory(data) {
       this.selectedMedicalHistory = data;
+    },
+
+    validateMediaclHistoryInfo() {
+      let mh = this.mediaclHistoryInfo;
+      if (mh.chief_complain === undefined || mh.chief_complain === "") {
+        this.mediaclHistoryInfo.assesment = "";
+        this.assesment = true;
+      } else this.assesment = false;
+
+      if (mh.assesment === undefined || mh.assesment === "") {
+        this.mediaclHistoryInfo.treatment = "";
+        this.treatment = true;
+      } else this.treatment = false;
     },
   },
 };

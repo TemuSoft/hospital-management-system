@@ -63,8 +63,8 @@ const path = {
   patient_vital_sign: "/nurse/patient_vital_sign",
   patient_vital_sign_read: "/nurse/patient_vital_sign_read",
 
-  make_appointemtn: "/common/appointment",
-  single_make_appointemtn: "/common/read_user_appointment",
+  make_appointemnt: "/common/appointment",
+  single_make_appointemnt: "/common/read_user_appointment",
 
   reception_card_renewal: "/reception/write_card_renewal",
   cashier_payment_request: "/cashier/payment_request",

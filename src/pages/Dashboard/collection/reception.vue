@@ -79,11 +79,36 @@
           <v-spacer />
         </v-layout>
         <v-divider />
+
         <v-data-table
-          :items="paitentToday"
+          :items="patientsNewFive"
           :headers="paitentHeaders"
           :items-per-page="5"
-        />
+        >
+          <template v-slot:item.status="{ item }">
+            <label v-if="item.status === 1" style="color: gray">
+              Room Waiting</label
+            >
+            <label v-if="item.status === 0" style="color: red">
+              Card Expired
+            </label>
+
+            <label v-else-if="item.status === -5" style="color: green">
+              Card Pendding
+            </label>
+
+            <label v-else-if="item.status === 2" style="color: blue">
+              Room Assigned
+            </label>
+          </template>
+
+          <template v-slot:item.first_name="{ item }">
+            <label>
+              {{ item.first_name }}
+              {{ item.fathers_name }}
+            </label>
+          </template>
+        </v-data-table>
       </v-card>
       <div></div>
     </v-layout>
@@ -103,18 +128,9 @@ export default {
     return {
       dailyMonthly: false,
 
-      paitentToday: [
-        { card_number: "C-001", fullName: "Patient 1", status: "On progreess" },
-        { card_number: "C-002", fullName: "Patient 2", status: "No start yet" },
-        { card_number: "C-003", fullName: "Patient 3", status: "Cleared out" },
-        { card_number: "C-004", fullName: "Patient 4", status: "Cleared out" },
-        { card_number: "C-005", fullName: "Patient 5", status: "On progreess" },
-        { card_number: "C-006", fullName: "Patient 6", status: "No start yet" },
-      ],
-
       paitentHeaders: [
         { text: "Card Number", value: "card_number" },
-        { text: "Full Name", value: "fullName" },
+        { text: "Full Name", value: "first_name" },
         { text: "Status", value: "status" },
       ],
     };
@@ -133,6 +149,8 @@ export default {
       "receptionDashboardCard",
       "receptionDashboardLiceChart",
     ]),
+
+    ...mapState("patient", ["patientsNewFive"]),
   },
 
   methods: {
@@ -140,11 +158,13 @@ export default {
       "getReceptionDashboardCard",
       "getReceptionDashboardLiceChart",
     ]),
+    ...mapActions("patient", ["getPatientListNewFive"]),
 
     async loadData() {
       await this.getReceptionDashboardCard();
       await this.getReceptionDashboardLiceChart();
       await this.drawChartPatient();
+      await this.getPatientListNewFive();
     },
 
     async drawChartPatient() {
@@ -223,5 +243,9 @@ export default {
   height: 350px;
   margin-left: 0;
   /* height: 100%; */
+}
+
+.icon {
+  cursor: pointer;
 }
 </style>

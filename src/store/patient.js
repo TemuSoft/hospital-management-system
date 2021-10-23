@@ -7,6 +7,7 @@ export default {
   state: {
     registeredPatient: false,
     patients: [],
+    patientsNewFive: [],
     updateResponse: false,
     singlePatient: [],
   },
@@ -17,6 +18,10 @@ export default {
 
     setPatientList(state, payload) {
       state.patients = payload;
+    },
+
+    setPatientListNewFive(state, payload) {
+      state.patientsNewFive = payload;
     },
 
     setUpdatePatientInfo(state, payload) {
@@ -37,6 +42,12 @@ export default {
     async getPatientList({ commit }) {
       let res = await api.getAll(path.patient);
       commit("setPatientList", res.data);
+    },
+
+    async getPatientListNewFive({ commit }) {
+      let res = await api.getAll(path.patient);
+      res.data.reverse();
+      commit("setPatientListNewFive", res.data);
     },
 
     async getPatientFilter({ commit }, filter) {

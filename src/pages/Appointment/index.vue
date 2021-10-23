@@ -32,7 +32,7 @@
 
       <v-data-table
         :search="search"
-        :items="singleAppointment"
+        :items="appointmentLists"
         :headers="headers"
       >
         <template v-slot:item.date="{ item }">
@@ -112,8 +112,8 @@ export default {
     ]),
 
     async loadData() {
-      // await this.getAppointmentList();
-      await this.getSingleAppointment(2);
+      await this.getAppointmentList();
+      // await this.getSingleAppointment();
     },
 
     async editAppointment(item) {
@@ -127,6 +127,7 @@ export default {
 
     dialogControl(registerAppoDialog) {
       this.registerAppoDialog = registerAppoDialog;
+      this.loadData();
     },
   },
 };

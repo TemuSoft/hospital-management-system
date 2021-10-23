@@ -16,7 +16,7 @@
                 :items="patients"
                 outlined
                 dense
-                item-text="card_nmber"
+                item-text="card_number"
                 item-value="id"
                 label="Patient"
                 v-model="appointmentInfo.patient_id"
@@ -149,8 +149,7 @@ export default {
         await this.makeAppointment(this.appointmentInfo);
 
         if (this.makedAppointment == true) {
-          this.registerAppoDialog = false;
-          this.loadData();
+          this.dialogControl();
         } else
           this.$fire({
             title: "Make Appointment!",

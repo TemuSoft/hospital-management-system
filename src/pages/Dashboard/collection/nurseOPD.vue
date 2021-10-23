@@ -41,7 +41,6 @@
 
     <v-layout>
       <v-card outlined class="chartDis">
-        Action : Detail view related with OPD and nurse communicatio
         <v-layout>
           <v-spacer />
           <p class="mt-2 green--text">Onprogress patient</p>
@@ -55,14 +54,19 @@
         </v-layout>
         <v-divider />
         <v-data-table
-          :items="paitentToday"
+          :items="patientAssignedServing"
           :headers="paitentHeaders"
           :items-per-page="5"
-        />
+        >
+          <template v-slot:item.is_emergency="{ item }">
+            <v-chip v-if="item.is_emergency === 0" color="green" small>
+              No
+            </v-chip>
+            <v-chip v-else color="red" small>Yes</v-chip>
+          </template>
+        </v-data-table>
       </v-card>
       <v-card outlined class="chartDisRight">
-        Action : Detail view related with approval dialod
-
         <v-layout>
           <v-spacer />
           <p class="mt-2 green--text">Need Approval</p>
@@ -75,11 +79,19 @@
           <v-spacer />
         </v-layout>
         <v-divider />
+
         <v-data-table
-          :items="paitentToday"
+          :items="patientAssignedPendding"
           :headers="paitentHeaders"
           :items-per-page="5"
-        />
+        >
+          <template v-slot:item.is_emergency="{ item }">
+            <v-chip v-if="item.is_emergency === 0" color="green" small>
+              No
+            </v-chip>
+            <v-chip v-else color="red" small>Yes</v-chip>
+          </template>
+        </v-data-table>
       </v-card>
     </v-layout>
   </div>
@@ -87,10 +99,13 @@
 
 <script>
 import Icon from "@/assets/icons/patient.svg";
+import { mapActions, mapState } from "vuex";
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
     return {
+      login_user: AccountService.getProfile(),
       dailyMonthly: false,
       topHeaders: [
         {
@@ -110,20 +125,12 @@ export default {
         },
       ],
 
-      paitentToday: [
-        { card_number: "C-001", fullName: "Patient 1", status: "Onprogress" },
-        { card_number: "C-002", fullName: "Patient 2", status: "No start yet" },
-        { card_number: "C-003", fullName: "Patient 3", status: "Cleared out" },
-        { card_number: "C-004", fullName: "Patient 4", status: "Cleared out" },
-        { card_number: "C-005", fullName: "Patient 5", status: "On progreess" },
-        { card_number: "C-006", fullName: "Patient 6", status: "No start yet" },
-      ],
-
       paitentHeaders: [
-        { text: "Card Number", value: "card_number" },
-        { text: "Full Name", value: "fullName" },
-        { text: "Status", value: "status" },
-        { text: "Action", value: "action" },
+        { text: "Card No", value: "card_number" },
+        { text: "Name", value: "full_name" },
+        { text: "Gender", value: "gender" },
+        { text: "Guardian Name", value: "guardian_name" },
+        { text: "Is Emergency?", value: "is_emergency" },
       ],
     };
   },
@@ -136,8 +143,20 @@ export default {
     Icon,
   },
 
+  computed: {
+    ...mapState("nurse", ["patientAssignedPendding", "patientAssignedServing"]),
+  },
+
   methods: {
-    async loadData() {},
+    ...mapActions("nurse", [
+      "getPenddingPatientNurse",
+      "getServingPatientNurse",
+    ]),
+
+    async loadData() {
+      await this.getPenddingPatientNurse(this.login_user.id);
+      await this.getServingPatientNurse(this.login_user.id);
+    },
   },
 };
 </script>

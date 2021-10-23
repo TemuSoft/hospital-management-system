@@ -28,7 +28,9 @@
 
       <v-dialog v-model="registerLabDialog" persistent width="700px">
         <v-card>
-          <v-toolbar color="green" dark>Add New Labratory Test </v-toolbar>
+          <v-toolbar dense color="green" dark
+            >Add New Labratory Test
+          </v-toolbar>
           <br />
           <v-card-text>
             <v-form @submit.prevent="save" ref="form">
@@ -241,8 +243,10 @@ export default {
         this.testInfo.registered_by = this.login_user.id;
         await this.registerLab(this.testInfo);
 
-        if (this.registeredLab === true) this.registerLabDialog = false;
-        else
+        if (this.registeredLab === true) {
+          this.registerLabDialog = false;
+          this.loadData();
+        } else
           this.$fire({
             title: "Lab Text Case Registeration",
             text: "Something wrong please try again!!!",
@@ -260,6 +264,7 @@ export default {
         if (this.registeredLabGroup === true) {
           await this.getLabratoryGroup();
           this.labgroupInfo = {};
+          this.loadData();
         } else
           this.$fire({
             title: "Lab group Registeration",

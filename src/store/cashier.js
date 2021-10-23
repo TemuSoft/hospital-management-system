@@ -87,11 +87,13 @@ export default {
     },
 
     async registerCardrenewalPayment({ commit }, data) {
+      console.log(data);
       let res = await api.createById(
         path.card_renewal_payment,
         data[1],
         data[0]
       );
+      console.log(res.data);
       commit("setRegisterCardrenewalPayment", res.data);
     },
   },

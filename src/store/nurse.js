@@ -65,7 +65,7 @@ export default {
         data.service_id,
         data
       );
-      commit(null, null);
+      commit;
     },
 
     async registerVitalSign({ commit }, data) {
@@ -84,7 +84,6 @@ export default {
     },
 
     async patientVitalSignsRegisteration({ commit }, data) {
-      console.log(data);
       await api.create(path.patient_vital_sign, data);
       commit;
     },

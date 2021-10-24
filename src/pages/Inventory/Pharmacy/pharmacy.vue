@@ -7,7 +7,7 @@
         small
         text
         outlined
-        color="green"
+        class="text-capitalize green"
         @click="(dispensaryRegisterDialog = true), (dispensaryInfo = {})"
       >
         Send Dispensary Request
@@ -24,7 +24,6 @@
         </v-toolbar>
         <br />
 
-        {{ selectedMedicines }}
         <v-card-text>
           <v-form @submit.prevent="register" ref="register">
             <div v-if="selectedMedicines.length > 0">
@@ -41,14 +40,17 @@
 
                 <v-autocomplete
                   label="Unit Of Measurment"
-                  item-text="unit"
+                  item-text="note"
                   item-value="id"
                   dense
                   outlined
                   rounded
                   class="ml-5"
+                  return-object
                   :items="selectedMedicines[i].uofmlist"
                   v-model="selectedMedicines[i].unit"
+                  :rules="inputRules"
+                  @change="validateAvalibality(i)"
                 />
 
                 <v-text-field
@@ -58,8 +60,9 @@
                   type="number"
                   rounded
                   class="ml-5"
-                  :rules="inputRules"
+                  :rules="numberRules0above"
                   v-model="selectedMedicines[i].quantity_requested"
+                  @input="validateAvalibality(i)"
                 />
 
                 <Delete
@@ -113,6 +116,7 @@ export default {
     return {
       login_user: AccountService.getProfile(),
       inputRules: [(v) => !!v || "This field is required"],
+      numberRules0above: [(v) => v > 0 || "Can't be lessthan one"],
 
       selectedMedicines: [],
       dispensaryInfo: {},
@@ -162,7 +166,7 @@ export default {
         for (let i = 0; i < this.selectedMedicines.length; i++)
           this.dispensaryInfo.details.push({
             medicine_id: this.selectedMedicines[i].id,
-            unit: this.selectedMedicines[i].unit,
+            unit: this.selectedMedicines[i].unit.id,
             quantity_requested: this.selectedMedicines[i].quantity_requested,
           });
 
@@ -184,6 +188,15 @@ export default {
 
     async deleteSelectedMedicines(i) {
       this.selectedMedicines.splice(i, 1);
+    },
+
+    async validateAvalibality(i) {
+      let d = this.selectedMedicines[i];
+      let ava = d.unit.balance;
+      let req = parseFloat(d.quantity_requested);
+
+      if (req < 0 || req > ava)
+        this.selectedMedicines[i].quantity_requested = 0;
     },
   },
 };

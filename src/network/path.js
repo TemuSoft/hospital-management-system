@@ -95,7 +95,7 @@ const path = {
   general_info_dashboard: "/admin/general_informaton_in_date_range",
   nurse_done_dashboard: "/admin/nurse_user_general_info",
   opd_done_dashboard: "/admin/opd_user_general_info",
-  cashier_done_dashboard: "/admin/cashier_general_info",
+  cashier_done_dashboard: "/admin/cashier_general_info_for_one_user",
 
   logout: "/user/logout",
   login: "/user/login",

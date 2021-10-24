@@ -137,7 +137,10 @@
             <br />
             Dosage : {{ selectedMedicine.dosage }}
             <br />
-            Unit Of Measurment : {{ selectedMedicine.unit_of_measurement }}
+            Unit Of Measurment :
+            {{
+              getMeasurementPharmacyName(selectedMedicine.unit_of_measurement)
+            }}
             <br />
             <br />
             <br />
@@ -437,6 +440,7 @@ export default {
         await this.getMedicineUofMRelationList(
           this.medicineUofMRelationInfo.medicine_id
         );
+        this.unitOfMeasurmentRelationDialog = false;
       }
     },
 
@@ -476,7 +480,7 @@ export default {
       else {
         let len = this.medicineUofMRelationList.length - 1;
         this.lastMedicineReUofM =
-          this.medicineUofMRelationList[len].main_unit_id;
+          this.medicineUofMRelationList[len].sub_unit_id;
       }
     },
 

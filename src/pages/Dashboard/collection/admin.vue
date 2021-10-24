@@ -318,7 +318,6 @@
         </v-toolbar>
 
         <v-card-text>
-          {{ cashierDoneInfo.detail }}
           <v-data-table
             v-if="cashierDetailView"
             :items="cashierDoneInfo.detail"
@@ -327,7 +326,11 @@
             :items-per-page="3"
           >
             <template v-slot:item.number="{ item }">
-              {{ cashierDoneInfo.indexOf(item) + 1 }}
+              {{ cashierDoneInfo.detail.indexOf(item) + 1 }}
+            </template>
+
+            <template v-slot:item.date="{ item }">
+              {{ new Date(item.date).toDateString() }}
             </template>
           </v-data-table>
         </v-card-text>
@@ -581,6 +584,7 @@ export default {
       cashierHeaders: [
         { text: "No", value: "number" },
         { text: "Patient / Company", value: "name" },
+        { text: "Date", value: "date" },
         { text: "Amount", value: "amount" },
         { text: "Reason", value: "reason" },
       ],
@@ -633,15 +637,16 @@ export default {
       this.OPDStaffSelected = this.OPDStaffList[0].id;
       this.nurseStaffSelected = this.nurseStaffList[0].id;
       this.cashierStaffSelected = this.cashierStaffList[0].id;
-      await this.getReceptionDashboardLiceChart();
-      await this.drawChartPatient();
-      await this.drawChartMoney();
 
+      this.loadCashierInfo();
       this.loadOPDInfo();
       this.loadNurseInfo();
       this.loadGeneralInfo();
-      this.loadCashierInfo();
       this.loadPicechartData();
+
+      await this.getReceptionDashboardLiceChart();
+      await this.drawChartPatient();
+      await this.drawChartMoney();
     },
 
     async loadOPDInfo() {

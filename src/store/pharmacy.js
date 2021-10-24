@@ -17,6 +17,7 @@ export default {
     confirmedDispensaryRequest: {},
 
     singleMedicineUofM: [],
+    medicineListWithUofM: [],
   },
 
   mutations: {
@@ -58,6 +59,10 @@ export default {
 
     setSingleMedicineUofM(state, payload) {
       state.singleMedicineUofM = payload;
+    },
+
+    setMedicineListWithUofM(state, payload) {
+      state.medicineListWithUofM = payload;
     },
   },
 
@@ -113,6 +118,16 @@ export default {
     async getSingleMedicineUofM({ commit }, medicine_id) {
       let res = await api.get(path.measurement_pharmacy, medicine_id);
       commit("getSingleMedicineUofM", res.data);
+    },
+
+    async getMedicineListWithUofM({ commit }) {
+      let res = await api.getAll(path.medicine);
+      res = res.data;
+      for (let i = 0; i < res.length; i++) {
+        let uofmList = await api.get(path.medicine_measurment_list, res[i].id);
+        res[i].uofmlist = uofmList.data;
+      }
+      commit("setMedicineListWithUofM", res);
     },
   },
 };

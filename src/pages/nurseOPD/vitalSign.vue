@@ -20,8 +20,8 @@
           <v-spacer />
 
           <v-text-field
-            label="Note"
-            v-model="patientVitalSignInfo[i].note"
+            label="Result"
+            v-model="patientVitalSignInfo[i].result"
             :rules="inputRules"
             dense
             rounded

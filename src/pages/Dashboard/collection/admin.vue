@@ -41,6 +41,7 @@
             item-text="full_name"
             item-value="id"
             v-model="OPDStaffSelected"
+            @change="loadOPDInfo()"
           />
           <v-spacer />
 
@@ -63,7 +64,11 @@
             <v-date-picker v-model="dateOPD" scrollable range>
               <v-spacer></v-spacer>
               <v-btn text color="red" @click="modalOPD = false"> Cancel </v-btn>
-              <v-btn text color="green" @click="$refs.dialogOPD.save(dateOPD)">
+              <v-btn
+                text
+                color="green"
+                @click="$refs.dialogOPD.save(dateOPD), loadOPDInfo()"
+              >
                 OK
               </v-btn>
             </v-date-picker>
@@ -71,14 +76,33 @@
         </v-toolbar>
 
         <v-card-text>
-          <div v-for="opd in opdDoneInfo" :key="opd">
-            <v-layout>
-              <h3>{{ opd.title }}</h3>
-              <v-spacer />
-              <h3>{{ opd.value }}</h3>
-            </v-layout>
-            <v-divider />
-          </div>
+          <v-layout>
+            <h3>Lab Orders</h3>
+            <v-spacer />
+            <h3>{{ nurseDoneInfo.lab_orders }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Money From Lab</h3>
+            <v-spacer />
+            <h3>{{ nurseDoneInfo.money_from_lab }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Imaging Orders</h3>
+            <v-spacer />
+            <h3>{{ nurseDoneInfo.imaging_orders }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Patient Served</h3>
+            <v-spacer />
+            <h3>{{ nurseDoneInfo.patients_served }}</h3>
+          </v-layout>
+          <v-divider />
         </v-card-text>
       </v-card>
 
@@ -92,6 +116,7 @@
             item-text="full_name"
             item-value="id"
             v-model="nurseStaffSelected"
+            @change="loadNurseInfo()"
           />
           <v-spacer />
 
@@ -119,7 +144,7 @@
               <v-btn
                 text
                 color="green"
-                @click="$refs.dialogNurse.save(dateNurse)"
+                @click="$refs.dialogNurse.save(dateNurse), loadNurseInfo()"
               >
                 OK
               </v-btn>
@@ -128,14 +153,33 @@
         </v-toolbar>
 
         <v-card-text>
-          <div v-for="nurse in nurseDoneInfo" :key="nurse">
-            <v-layout>
-              <h3>{{ nurse.title }}</h3>
-              <v-spacer />
-              <h3>{{ nurse.value }}</h3>
-            </v-layout>
-            <v-divider />
-          </div>
+          <v-layout>
+            <h3>Lab Orders</h3>
+            <v-spacer />
+            <h3>{{ nurseDoneInfo.lab_orders }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Money From Lab</h3>
+            <v-spacer />
+            <h3>{{ nurseDoneInfo.money_from_lab }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Imaging Orders</h3>
+            <v-spacer />
+            <h3>{{ nurseDoneInfo.imaging_orders }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Patient Served</h3>
+            <v-spacer />
+            <h3>{{ nurseDoneInfo.patients_served }}</h3>
+          </v-layout>
+          <v-divider />
         </v-card-text>
       </v-card>
 
@@ -161,7 +205,11 @@
             <v-date-picker v-model="dateOne" scrollable range>
               <v-spacer></v-spacer>
               <v-btn text color="red" @click="modalOne = false"> Cancel </v-btn>
-              <v-btn text color="green" @click="$refs.dialog.save(dateOne)">
+              <v-btn
+                text
+                color="green"
+                @click="$refs.dialog.save(dateOne), loadGeneralInfo()"
+              >
                 OK
               </v-btn>
             </v-date-picker>
@@ -169,14 +217,40 @@
         </v-toolbar>
 
         <v-card-text>
-          <div v-for="patient in hospitalPatientInfo" :key="patient">
-            <v-layout>
-              <h3>{{ patient.title }}</h3>
-              <v-spacer />
-              <h3>{{ patient.value }}</h3>
-            </v-layout>
-            <v-divider />
-          </div>
+          <v-layout>
+            <h3>New Patients</h3>
+            <v-spacer />
+            <h3>{{ hospitalPatientInfo.new_patinets }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Vistors</h3>
+            <v-spacer />
+            <h3>{{ hospitalPatientInfo.total_visitors }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Lab Orders</h3>
+            <v-spacer />
+            <h3>{{ hospitalPatientInfo.total_lab_orders }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Imaging Orders</h3>
+            <v-spacer />
+            <h3>{{ hospitalPatientInfo.total_imaging_orders }}</h3>
+          </v-layout>
+          <v-divider />
+
+          <v-layout>
+            <h3>Incomes</h3>
+            <v-spacer />
+            <h3>{{ hospitalPatientInfo.total_income }}</h3>
+          </v-layout>
+          <v-divider />
         </v-card-text>
       </v-card>
 
@@ -185,7 +259,7 @@
           <h3>Cashier Detail</h3>
           <v-spacer />
           <v-spacer />
-          <h5 class="mt-2">Cash : 2345 ETB</h5>
+          <h5 class="mt-2">Cash : {{ cashierDoneInfo.amount }} ETB</h5>
           <v-spacer />
 
           <v-btn
@@ -202,9 +276,10 @@
             :items="cashierStaffList"
             dense
             rounded
-            item-text="name"
+            item-text="full_name"
             item-value="id"
             v-model="cashierStaffSelected"
+            @change="loadCashierInfo()"
           />
           <v-spacer />
 
@@ -232,7 +307,9 @@
               <v-btn
                 text
                 color="green"
-                @click="$refs.dialogCashier.save(dateCashier)"
+                @click="
+                  $refs.dialogCashier.save(dateCashier), loadCashierInfo()
+                "
               >
                 OK
               </v-btn>
@@ -241,9 +318,10 @@
         </v-toolbar>
 
         <v-card-text>
+          {{ cashierDoneInfo.detail }}
           <v-data-table
             v-if="cashierDetailView"
-            :items="cashierDoneInfo"
+            :items="cashierDoneInfo.detail"
             :headers="cashierHeaders"
             dense
             :items-per-page="3"
@@ -301,6 +379,62 @@
 
       <v-card elevation="5" class="mt-3" width="98%">
         <v-toolbar color="green" dense class="pa-3">
+          <h3 class="piechartHeading">Laboratory Ratio</h3>
+          <v-spacer />
+          <v-dialog
+            ref="dialogPie"
+            v-model="modalPie"
+            :return-value.sync="datePie"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="datePie"
+                rounded
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="datePie" scrollable range>
+              <v-spacer></v-spacer>
+              <v-btn text color="red" @click="modalPie = false"> Cancel </v-btn>
+              <v-btn
+                text
+                color="green"
+                @click="$refs.dialogPie.save(datePie), loadPicechartData()"
+              >
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-dialog>
+          <v-spacer />
+          <h3 class="piechartHeading">Laboratory Vs Vistors</h3>
+        </v-toolbar>
+
+        <v-divider />
+        <v-card-text>
+          <v-layout height="300px">
+            <div id="piehartLaboratory"></div>
+            <v-spacer />
+            <div id="piehartLaboratoryVistors"></div>
+          </v-layout>
+        </v-card-text>
+        <v-divider />
+
+        <v-layout>
+          <v-spacer />
+          <h4 class="green--text">Total No Of Vistors : 56</h4>
+          <v-spacer />
+          <h4 class="green--text">Money Generated : 35667</h4>
+          <v-spacer />
+        </v-layout>
+      </v-card>
+
+      <!-- <v-card elevation="5" class="mt-3" width="98%">
+        {{ piechartLaboratoryVistors }}
+        <v-toolbar color="green" dense class="pa-3">
           <h3 class="piechartHeading">Laboratory Vs Vistors</h3>
           <v-spacer />
           <v-dialog
@@ -322,7 +456,11 @@
             <v-date-picker v-model="datePie" scrollable range>
               <v-spacer></v-spacer>
               <v-btn text color="red" @click="modalPie = false"> Cancel </v-btn>
-              <v-btn text color="green" @click="$refs.dialogPie.save(datePie)">
+              <v-btn
+                text
+                color="green"
+                @click="$refs.dialogPie.save(datePie), loadPicechartData()"
+              >
                 OK
               </v-btn>
             </v-date-picker>
@@ -348,7 +486,7 @@
           <h4 class="green--text">Money Generated : 35667</h4>
           <v-spacer />
         </v-layout>
-      </v-card>
+      </v-card> -->
     </v-layout>
   </div>
 </template>
@@ -359,6 +497,8 @@ import Appointment from "@/assets/icons/patient.svg";
 import Doctor from "@/assets/icons/patient.svg";
 import Staff from "@/assets/icons/patient.svg";
 
+import AccountService from "@/network/accountService";
+
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
@@ -367,6 +507,7 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
+      login_user: AccountService.getProfile(),
       modalPie: false,
       datePie: [
         new Date().toISOString().substr(0, 10),
@@ -422,28 +563,12 @@ export default {
       ],
       OPDStaffSelected: "",
 
-      opdDoneInfo: [
-        { title: "Total Lab Orders", value: 25 },
-        { title: "Money From Lab", value: 2300 },
-        { title: "Total Imaging Orders", value: 10 },
-        { title: "Money From Imaging", value: 1200 },
-        { title: "Patient Served", value: 200 },
-      ],
-
       modalNurse: false,
       dateNurse: [
         new Date().toISOString().substr(0, 10),
         new Date().toISOString().substr(0, 10),
       ],
-      nurseStaffSelected: "",
-
-      nurseDoneInfo: [
-        { title: "Total Lab Orders", value: 25 },
-        { title: "Money From Lab", value: 2300 },
-        { title: "Total Imaging Orders", value: 10 },
-        { title: "Money From Imaging", value: 1200 },
-        { title: "Patient Served", value: 200 },
-      ],
+      nurseStaffSelected: 0,
 
       modalCashier: false,
       dateCashier: [
@@ -451,35 +576,13 @@ export default {
         new Date().toISOString().substr(0, 10),
       ],
       cashierStaffSelected: "",
-      cashierStaffList: [
-        { name: "nurse one", id: 1 },
-        { name: "nurse two", id: 2 },
-        { name: "nurse three", id: 3 },
-        { name: "nurse four", id: 14 },
-      ],
-      cashierDoneInfo: [
-        { name: "Temesgen 1", amount: 78, reason: "reason 1" },
-        { name: "Temesgen 2", amount: 79, reason: "reason 2" },
-        { name: "Temesgen 3", amount: 71, reason: "reason 3" },
-        { name: "Temesgen 4", amount: 72, reason: "reason 4" },
-        { name: "Temesgen 5", amount: 73, reason: "reason 5" },
-        { name: "Temesgen 6", amount: 74, reason: "reason 6" },
-        { name: "Temesgen 7", amount: 75, reason: "reason 7" },
-      ],
+
       cashierDetailView: false,
       cashierHeaders: [
         { text: "No", value: "number" },
         { text: "Patient / Company", value: "name" },
         { text: "Amount", value: "amount" },
         { text: "Reason", value: "reason" },
-      ],
-
-      hospitalPatientInfo: [
-        { title: "No Of New Cards", value: 34 },
-        { title: "No Of Visitors", value: 8 },
-        { title: "No Of Lab Test", value: 56 },
-        { title: "No Of Imaging Tests", value: 78 },
-        { title: "Total Income Patient", value: 45 },
       ],
     };
   },
@@ -500,6 +603,13 @@ export default {
       "receptionDashboardLiceChart",
       "nurseStaffList",
       "OPDStaffList",
+      "cashierStaffList",
+      "piechartLaboratory",
+      "piechartLaboratoryVistors",
+      "hospitalPatientInfo",
+      "nurseDoneInfo",
+      "OPDDoneInfo",
+      "cashierDoneInfo",
     ]),
   },
 
@@ -507,11 +617,18 @@ export default {
     ...mapActions("dashboard", [
       "getReceptionDashboardLiceChart",
       "getStaffListByRole",
+      "getPiechartLaboratory",
+      "getPiechartLaboratoryVistors",
+      "getHospitalPatientInfo",
+      "getNurseDoneInfo",
+      "getOPDDoneInfo",
+      "getCashierDoneInfo",
     ]),
 
     async loadData() {
       await this.getStaffListByRole("nurse");
       await this.getStaffListByRole("opd");
+      await this.getStaffListByRole("cashier");
 
       this.OPDStaffSelected = this.OPDStaffList[0].id;
       this.nurseStaffSelected = this.nurseStaffList[0].id;
@@ -519,8 +636,52 @@ export default {
       await this.getReceptionDashboardLiceChart();
       await this.drawChartPatient();
       await this.drawChartMoney();
-      await this.drawPicechartLaboratory();
-      await this.drawPicechartImaging();
+
+      this.loadOPDInfo();
+      this.loadNurseInfo();
+      this.loadGeneralInfo();
+      this.loadCashierInfo();
+      this.loadPicechartData();
+    },
+
+    async loadOPDInfo() {
+      if (this.dateOPD.length === 1) this.dateOPD[1] = this.dateOPD[0];
+      await this.getOPDDoneInfo({
+        date: this.dateOPD,
+        opd_id: this.OPDStaffSelected,
+      });
+    },
+
+    async loadNurseInfo() {
+      if (this.dateNurse.length === 1) this.dateNurse[1] = this.dateNurse[0];
+      await this.getNurseDoneInfo({
+        date: this.dateNurse,
+        nurse_id: this.nurseStaffSelected,
+      });
+    },
+
+    async loadGeneralInfo() {
+      if (this.dateOne.length === 1) this.dateOne[1] = this.dateOne[0];
+      await this.getHospitalPatientInfo(this.dateOne);
+    },
+
+    async loadCashierInfo() {
+      if (this.dateCashier.length === 1)
+        this.dateCashier[1] = this.dateCashier[0];
+      await this.getCashierDoneInfo({
+        date: this.dateCashier,
+        cashier_id: this.cashierStaffSelected,
+      });
+    },
+
+    async loadPicechartData() {
+      if (this.datePie.length === 1) this.datePie[1] = this.datePie[0];
+      await this.getPiechartLaboratory(this.datePie);
+      await this.getPiechartLaboratoryVistors(this.datePie);
+      await this.drawPiechartLaboratory();
+      await this.drawPiechartLaboratoryVistors();
+
+      await this.drawPiechartImaging();
     },
 
     async drawChartPatient() {
@@ -589,7 +750,7 @@ export default {
       chart.cursor.snapToSeries = series;
     },
 
-    async drawPicechartLaboratory() {
+    async drawPiechartLaboratory() {
       am4core.useTheme(am4themes_animated);
       // Themes end
 
@@ -597,41 +758,12 @@ export default {
       let chart = am4core.create("piehartLaboratory", am4charts.PieChart);
 
       // Add data
-      chart.data = [
-        {
-          laboratory: "Laboratory 1",
-          patient: 501.9,
-        },
-        {
-          laboratory: "Laboratory 2",
-          patient: 301.9,
-        },
-        {
-          laboratory: "Laboratory 3",
-          patient: 201.1,
-        },
-        {
-          laboratory: "Laboratory 3",
-          patient: 165.8,
-        },
-        {
-          laboratory: "Laboratory 4",
-          patient: 139.9,
-        },
-        {
-          laboratory: "Laboratory 5",
-          patient: 128.3,
-        },
-        {
-          laboratory: "Laboratory 6",
-          patient: 99,
-        },
-      ];
+      chart.data = this.piechartLaboratory;
 
       // Add and configure Series
       let pieSeries = chart.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = "patient";
-      pieSeries.dataFields.category = "laboratory";
+      pieSeries.dataFields.value = "count";
+      pieSeries.dataFields.category = "case_name";
       pieSeries.slices.template.stroke = am4core.color("#fff");
       pieSeries.slices.template.strokeOpacity = 1;
 
@@ -643,7 +775,39 @@ export default {
       chart.hiddenState.properties.radius = am4core.percent(0);
     },
 
-    async drawPicechartImaging() {
+    async drawPiechartLaboratoryVistors() {
+      am4core.useTheme(am4themes_animated);
+      // Themes end
+
+      // Create chart instance
+      let chart = am4core.create(
+        "piehartLaboratoryVistors",
+        am4charts.PieChart
+      );
+
+      // Add data
+      let d = this.piechartLaboratoryVistors;
+      chart.data = [
+        { title: "Have Laboratory", count: d.done },
+        { title: "No Laboratory", count: d.totalVisitor - d.done },
+      ];
+
+      // Add and configure Series
+      let pieSeries = chart.series.push(new am4charts.PieSeries());
+      pieSeries.dataFields.value = "count";
+      pieSeries.dataFields.category = "title";
+      pieSeries.slices.template.stroke = am4core.color("#fff");
+      pieSeries.slices.template.strokeOpacity = 1;
+
+      // This creates initial animation
+      pieSeries.hiddenState.properties.opacity = 1;
+      pieSeries.hiddenState.properties.endAngle = -90;
+      pieSeries.hiddenState.properties.startAngle = -90;
+
+      chart.hiddenState.properties.radius = am4core.percent(0);
+    },
+
+    async drawPiechartImaging() {
       am4core.useTheme(am4themes_animated);
       // Themes end
 
@@ -747,6 +911,7 @@ export default {
 }
 
 #piehartLaboratory,
+#piehartLaboratoryVistors,
 #piehartImaging {
   width: 48%;
   height: 250px;

@@ -36,7 +36,7 @@
             <v-spacer />
 
             <v-autocomplete
-              v-if="prescriptionInfo.medicine.name != undefined"
+              v-if="prescriptionInfo.medicine != undefined"
               :items="singleMedicineUofM"
               dense
               outlined
@@ -57,6 +57,7 @@
               :rules="inputRules"
               v-model="prescriptionInfo.unit_of_measurment"
             />
+            <v-spacer />
 
             <v-text-field
               v-model="prescriptionInfo.quantity"
@@ -127,7 +128,7 @@ export default {
     return {
       login_user: AccountService.getProfile(),
       addPrescription: false,
-      addPrescriptionDialog: false,
+
       prescriptionInfo: {},
       allPrescriptionInfo: [],
       notAddnewPrescription: false,
@@ -181,8 +182,9 @@ export default {
       await this.getMedicineList();
       await this.getPrescriptionsSingle(this.service_id);
 
-      if (this.prescriptionsSingle.data.length > 0)
-        this.notAddnewPrescription = true;
+      if (this.prescriptionsSingle.data != undefined)
+        if (this.prescriptionsSingle.data.length > 0)
+          this.notAddnewPrescription = true;
     },
 
     async addNewPrescription() {

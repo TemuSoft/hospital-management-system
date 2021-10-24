@@ -14,7 +14,7 @@
       </v-btn>
     </v-layout>
 
-    <v-dialog v-model="dispensaryRegisterDialog" width="800px" persistent>
+    <v-dialog v-model="dispensaryRegisterDialog" width="1000px" persistent>
       <v-card>
         <v-toolbar dense color="green">
           Send dispensary request
@@ -23,36 +23,51 @@
           <Close @click="dispensaryRegisterDialog = false" class="icon" />
         </v-toolbar>
         <br />
+
         {{ selectedMedicines }}
         <v-card-text>
           <v-form @submit.prevent="register" ref="register">
-            <table v-if="selectedMedicines.length > 0">
-              <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Action</th>
-              </tr>
+            <div v-if="selectedMedicines.length > 0">
+              <v-layout v-for="(sm, i) in selectedMedicines" :key="i">
+                <v-text-field
+                  dense
+                  outlined
+                  label="Name"
+                  rounded
+                  readonly
+                  v-model="sm.name"
+                />
+                <v-spacer />
 
-              <tr v-for="(sm, i) in selectedMedicines" :key="i">
-                <td>{{ sm.name }}</td>
+                <v-autocomplete
+                  label="Unit Of Measurment"
+                  item-text="unit"
+                  item-value="id"
+                  dense
+                  outlined
+                  rounded
+                  class="ml-5"
+                  :items="selectedMedicines[i].uofmlist"
+                  v-model="selectedMedicines[i].unit"
+                />
 
-                <td>
-                  <v-text-field
-                    dense
-                    outlined
-                    type="number"
-                    rounded
-                    class="ml-15"
-                    :rules="inputRules"
-                    v-model="selectedMedicines[i].quantity_requested"
-                  />
-                </td>
+                <v-text-field
+                  dense
+                  outlined
+                  label="Quantity Requested"
+                  type="number"
+                  rounded
+                  class="ml-5"
+                  :rules="inputRules"
+                  v-model="selectedMedicines[i].quantity_requested"
+                />
 
-                <td style="width: 30%">
-                  <Delete class="icon" @click="deleteSelectedMedicines(i)" />
-                </td>
-              </tr>
-            </table>
+                <Delete
+                  class="icon mb-5 ml-10"
+                  @click="deleteSelectedMedicines(i)"
+                />
+              </v-layout>
+            </div>
 
             <v-layout>
               <v-autocomplete
@@ -61,7 +76,7 @@
                 item-value="id"
                 dense
                 outlined
-                :items="medicineList"
+                :items="medicineListWithUofM"
                 v-model="selectedMedicines"
                 multiple
                 chips
@@ -118,7 +133,7 @@ export default {
 
   computed: {
     ...mapState("pharmacy", [
-      "medicineList",
+      "medicineListWithUofM",
       "dispensaryList",
       "registeredDispensary",
     ]),
@@ -130,13 +145,13 @@ export default {
 
   methods: {
     ...mapActions("pharmacy", [
-      "getMedicineList",
+      "getMedicineListWithUofM",
       "getDispensaryList",
       "registerDispensary",
     ]),
 
     async loadData() {
-      await this.getMedicineList();
+      await this.getMedicineListWithUofM();
       await this.getDispensaryList();
     },
 
@@ -147,6 +162,7 @@ export default {
         for (let i = 0; i < this.selectedMedicines.length; i++)
           this.dispensaryInfo.details.push({
             medicine_id: this.selectedMedicines[i].id,
+            unit: this.selectedMedicines[i].unit,
             quantity_requested: this.selectedMedicines[i].quantity_requested,
           });
 
@@ -154,6 +170,7 @@ export default {
 
         if (this.registeredDispensary.st === true) {
           this.dispensaryInfo = {};
+          this.selectedMedicines = [];
           this.dispensaryRegisterDialog = false;
         } else
           this.$fire({
@@ -175,5 +192,8 @@ export default {
 .main {
   margin: 7%;
   margin-top: 1%;
+}
+.icon {
+  cursor: pointer;
 }
 </style>

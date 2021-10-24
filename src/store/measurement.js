@@ -14,6 +14,7 @@ export default {
     updatedMeasurementPharmacy: false,
 
     medicineUofMRelationList: [],
+    measurementsPharmacySelf: [],
   },
 
   mutations: {
@@ -44,6 +45,10 @@ export default {
 
     setMedicineUofMRelationList(state, payload) {
       state.medicineUofMRelationList = payload;
+    },
+
+    setMeasurementsPharmacySelf(state, payload) {
+      state.measurementsPharmacySelf = payload;
     },
   },
 
@@ -80,14 +85,18 @@ export default {
     },
 
     async registerMedicineUofMRelation({ commit }, data) {
-      console.log(data);
-      let res = await api.create(path.medicine_measurment_relation, data);
+      await api.create(path.medicine_measurment_relation, data);
       commit;
     },
 
     async getMedicineUofMRelationList({ commit }, medicine_id) {
       let res = await api.get(path.medicine_measurment_relation, medicine_id);
       commit("setMedicineUofMRelationList", res.data);
+    },
+
+    async getMeasurementsPharmacySelf({ commit }, medicine_id) {
+      let res = await api.get(path.medicine_measurment_list, medicine_id);
+      commit("setMeasurementsPharmacySelf", res.data);
     },
   },
 };

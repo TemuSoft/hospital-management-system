@@ -76,10 +76,16 @@
               :patientId="patientId"
             />
 
+            <SurgicalOrder
+              v-else-if="selectedTab === 12"
+              :service_id="service_id"
+              :patientId="patientId"
+            />
+
             <ClearPatient
               v-else-if="selectedTab === 13"
               :service_id="service_id"
-              :patientId="patientId"
+              :patient_id="patientId"
             />
           </v-tabs-items>
         </v-tabs>
@@ -205,6 +211,7 @@ import MaterialRequest from "../nurseOPD/materialRequest.vue";
 import MedicalHistory from "../nurseOPD/medicalHistory.vue";
 
 import OPD from "../nurseOPD/opd.vue";
+import SurgicalOrder from "../nurseOPD/surgicalOrder.vue";
 import ClearPatient from "../nurseOPD/clearPatient.vue";
 
 import AccountService from "@/network/accountService";
@@ -256,6 +263,7 @@ export default {
     MaterialRequest,
     MedicalHistory,
     OPD,
+    SurgicalOrder,
     ClearPatient,
   },
 

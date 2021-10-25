@@ -2,11 +2,7 @@
   <div class="main">
     <v-card>
       <v-toolbar dense>
-        <v-btn
-          text
-          class="text-capitalize"
-          @click="$router.push({ name: 'nurse' })"
-        >
+        <v-btn text class="text-capitalize" @click="back()">
           <v-icon class="mx-3">mdi-arrow-left</v-icon>
           Go Back
         </v-btn>
@@ -15,7 +11,7 @@
         <h3>
           Patinet : {{ singlePatient[0].first_name }}
           {{ singlePatient[0].fathers_name }} ({{ singlePatient[0].gender }}) ,
-          Card Number : {{ singlePatient.card_number }} , Guardian :
+          Card Number : {{ singlePatient[0].card_number }} , Guardian :
           {{ singlePatient[0].guardian_name }}
         </h3>
         <v-spacer />
@@ -79,7 +75,7 @@
             <SurgicalOrder
               v-else-if="selectedTab === 12"
               :service_id="service_id"
-              :patientId="patientId"
+              :patient_id="patientId"
             />
 
             <ClearPatient
@@ -272,6 +268,8 @@ export default {
     this.service_id = service_id;
     this.patientId = patientId;
 
+    if (service_id === undefined) this.back();
+
     this.loadData();
   },
 
@@ -322,6 +320,10 @@ export default {
             timer: 7000,
           });
       }
+    },
+
+    back() {
+      this.$router.push({ name: "nurse" });
     },
   },
 };

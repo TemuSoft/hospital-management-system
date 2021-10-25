@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <h3>Medicines</h3>
+    {{ medicineList }}
     <v-data-table :headers="headers" :items="medicineList" :search="search">
       <template v-slot:item.category_id="{ item }">
         <div v-for="cc in medicineCategoryList" :key="cc">
@@ -136,7 +137,10 @@
             <br />
             Dosage : {{ selectedMedicine.dosage }}
             <br />
-            Unit Of Measurment : {{ selectedMedicine.unit_of_measurement }}
+            Unit Of Measurment :
+            {{
+              getMeasurementPharmacyName(selectedMedicine.unit_of_measurement)
+            }}
             <br />
             <br />
             <br />
@@ -253,7 +257,7 @@
                 item-value="id"
                 :rules="numberRules0andabove"
                 @change="validateSimilarity($event)"
-                v-model="medicineUofMRelationInfo.unit_of_measurement_sub"
+                v-model="medicineUofMRelationInfo.sub_unit_id"
               />
               <v-spacer />
 
@@ -284,7 +288,15 @@
           <v-data-table
             :items="medicineUofMRelationList"
             :headers="medicineUofMRelationHeaders"
-          />
+          >
+            <template v-slot:item.main_unit_id="{ item }">
+              {{ getMeasurementPharmacyName(item.main_unit_id) }}
+            </template>
+
+            <template v-slot:item.sub_unit_id="{ item }">
+              {{ getMeasurementPharmacyName(item.sub_unit_id) }}
+            </template>
+          </v-data-table>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -322,8 +334,8 @@ export default {
       ],
 
       medicineUofMRelationHeaders: [
-        { text: "Main Unit", value: "unit_of_measurement_mian" },
-        { text: "Sub Unit", value: "unit_of_measurement_sub" },
+        { text: "Main Unit", value: "main_unit_id" },
+        { text: "Sub Unit", value: "sub_unit_id" },
         { text: "Quantity", value: "quantity" },
         { text: "Action", value: "action" },
       ],
@@ -423,9 +435,12 @@ export default {
     async registerUofM() {
       if (this.$refs.registerUofM.validate()) {
         this.medicineUofMRelationInfo.user_id = this.login_user.id;
-        this.medicineUofMRelationInfo.unit_of_measurement_main =
-          this.lastMedicineReUofM;
+        this.medicineUofMRelationInfo.main_unit_id = this.lastMedicineReUofM;
         await this.registerMedicineUofMRelation(this.medicineUofMRelationInfo);
+        await this.getMedicineUofMRelationList(
+          this.medicineUofMRelationInfo.medicine_id
+        );
+        this.unitOfMeasurmentRelationDialog = false;
       }
     },
 
@@ -442,14 +457,14 @@ export default {
 
     validateSimilarity(selected) {
       if (selected === this.lastMedicineReUofM)
-        this.medicineUofMRelationInfo.unit_of_measurement_sub = 0;
+        this.medicineUofMRelationInfo.sub_unit_id = 0;
 
       for (let i = 0; i < this.medicineUofMRelationList.length; i++) {
-        let main = this.medicineUofMRelationList[i].unit_of_measurement_main;
-        let sub = this.medicineUofMRelationList[i].unit_of_measurement_sub;
+        let main = this.medicineUofMRelationList[i].main_unit_id;
+        let sub = this.medicineUofMRelationList[i].sub_unit_id;
 
         if (selected === main || selected === sub) {
-          this.medicineUofMRelationInfo.unit_of_measurement_sub = 0;
+          this.medicineUofMRelationInfo.sub_unit_id = 0;
           break;
         }
       }
@@ -458,14 +473,14 @@ export default {
     async detialMedicine(item) {
       this.unitOfMeasurmentRelationDialog = true;
       this.medicineUofMRelationInfo.medicine_id = item.id;
-      // await this.getMedicineUofMRelationList(item.id);
+      await this.getMedicineUofMRelationList(item.id);
 
       if (this.medicineUofMRelationList.length === 0)
         this.lastMedicineReUofM = item.unit_of_measurement;
       else {
         let len = this.medicineUofMRelationList.length - 1;
         this.lastMedicineReUofM =
-          this.medicineUofMRelationList[len].unit_of_measurement_main;
+          this.medicineUofMRelationList[len].sub_unit_id;
       }
     },
 

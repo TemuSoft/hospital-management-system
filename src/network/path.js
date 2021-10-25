@@ -7,6 +7,7 @@ const path = {
   register_taff: "/user/register",
   staff: "/user/search_user",
   staff_update: "/user/update_user",
+  staff_by_role: "/user/user_of_role",
   register_department: "/admin/register_department",
   department: "/admin/department_data",
   update_department: "/admin/update_department_data",
@@ -36,6 +37,8 @@ const path = {
   register_outsourced_test_case: "/lab/outsource_lab_test",
   measurement: "/common/measurement",
   measurement_pharmacy: "/pharmacy/medicine_unit_of_measurement",
+  medicine_measurment_relation: "/pharmacy/unit_relation",
+  medicine_measurment_list: "/pharmacy/units_of_medicine",
 
   medicine: "/pharmacy/medicine",
   medicine_detail: "/pharmacy/medicine_detail",
@@ -63,8 +66,8 @@ const path = {
   patient_vital_sign: "/nurse/patient_vital_sign",
   patient_vital_sign_read: "/nurse/patient_vital_sign_read",
 
-  make_appointemtn: "/common/appointment",
-  single_make_appointemtn: "/common/read_user_appointment",
+  make_appointment: "/common/appointment",
+  single_make_appointment: "/common/read_user_appointment",
 
   reception_card_renewal: "/reception/write_card_renewal",
   cashier_payment_request: "/cashier/payment_request",
@@ -83,6 +86,16 @@ const path = {
   prescription_persenal: "/pharmacy/prescription_info_with_service",
 
   insurance: "/insurance/insurance",
+
+  reception_dashboard_card: "/reception/patient_data_with_all_state",
+  reception_dashboard_linechart: "/reception/new_patients_in_this_year",
+
+  piechart_lab_testcase_wise_dashboard: "/admin/lab_test_case_percentage",
+  piechart_lab_vistor_wise_dashboard: "/admin/lab_percentage_per_visitor",
+  general_info_dashboard: "/admin/general_informaton_in_date_range",
+  nurse_done_dashboard: "/admin/nurse_user_general_info",
+  opd_done_dashboard: "/admin/opd_user_general_info",
+  cashier_done_dashboard: "/admin/cashier_general_info_for_one_user",
 
   logout: "/user/logout",
   login: "/user/login",

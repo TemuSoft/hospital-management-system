@@ -48,8 +48,9 @@
             small
             @click="cancelAppointment(item)"
             class="text-capitalize"
-            >Cancel</v-btn
           >
+            Cancel
+          </v-btn>
         </template>
       </v-data-table>
     </v-card>
@@ -66,11 +67,13 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import MakeAppointment from "./makeAppintment.vue";
+import AccountService from "@/network/accountService";
 import Edit from "@/assets/icons/edit.svg";
 
 export default {
   data() {
     return {
+      login_user: AccountService.getProfile(),
       registerAppoDialog: false,
       search: "",
       appointmentInfo: {},
@@ -113,7 +116,7 @@ export default {
 
     async loadData() {
       // await this.getAppointmentList();
-      await this.getSingleAppointment(2);
+      await this.getSingleAppointment(this.login_user.id);
     },
 
     async editAppointment(item) {
@@ -127,6 +130,7 @@ export default {
 
     dialogControl(registerAppoDialog) {
       this.registerAppoDialog = registerAppoDialog;
+      this.loadData();
     },
   },
 };

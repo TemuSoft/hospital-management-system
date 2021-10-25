@@ -26,17 +26,18 @@ export default {
 
   actions: {
     async makeAppointment({ commit }, data) {
-      let res = await api.create(path.make_appointemtn, data);
+      console.log(data);
+      let res = await api.create(path.make_appointment, data);
       commit("setMakeAppointment", res.data);
     },
 
     async getAppointmentList({ commit }) {
-      let res = await api.getAll(path.get_make_appointemtn);
+      let res = await api.getAll(path.make_appointment);
       commit("setAppointmentList", res.data);
     },
 
     async getSingleAppointment({ commit }, id) {
-      let res = await api.get(path.single_make_appointemtn, id);
+      let res = await api.get(path.single_make_appointment, id);
       commit("setSingleAppointment", res.data);
     },
   },

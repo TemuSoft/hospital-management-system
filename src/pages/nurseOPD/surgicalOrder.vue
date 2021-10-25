@@ -18,37 +18,39 @@
       ref="register"
       v-if="addNewSurgicalOrder"
     >
-      <v-layout>
-        <v-textarea
-          v-model="surgicalOrdeInfo.description"
-          :rules="inputRules"
-          outlined
-          rows="3"
-          label="Description"
-        />
-      </v-layout>
+      <v-textarea
+        v-model="surgicalOrdeInfo.description"
+        :rules="inputRules"
+        outlined
+        rows="2"
+        label="Description"
+      />
 
       <v-layout>
+        <v-btn
+          :disabled="!confrimSurgicalOrder"
+          small
+          class="text-capitalizr green mr-10"
+          @click="register"
+        >
+          Save
+        </v-btn>
         <v-checkbox
           v-model="confrimSurgicalOrder"
           label="Checked me to confirm"
+          style="margin-top: -0%"
         />
       </v-layout>
-
-      <v-layout>
-        <v-btn small class="text-capitalizr green" @click="register">
-          Save
-        </v-btn>
-      </v-layout>
     </v-form>
-    <br />
+
     <v-card
       elevation="10"
+      :style="dynamicColorCode()"
       class="mb-3"
       v-for="(su, i) in surgicalOrderList"
       :key="su"
     >
-      <v-layout class="pa-5">
+      <v-layout class="pa-2">
         <v-layout>
           {{ su.description }}
           <v-spacer />
@@ -113,7 +115,6 @@ export default {
       if (this.$refs.register.validate()) {
         this.surgicalOrdeInfo.physician_id = this.login_user.id;
         this.surgicalOrdeInfo.service_id = this.service_id;
-        this.surgicalOrdeInfo.patient_id = this.patient_id;
 
         await this.registerSurgicalOrder(this.surgicalOrdeInfo);
         if (this.registeredSurgicalOrder.st === true) {
@@ -128,6 +129,17 @@ export default {
             timer: 7000,
           });
       }
+    },
+
+    dynamicColorCode() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return {
+        backgroundColor: color,
+      };
     },
   },
 };

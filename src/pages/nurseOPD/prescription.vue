@@ -19,48 +19,75 @@
       <br />
 
       <v-card flat v-if="addPrescription">
+        <v-checkbox
+          v-model="confrimPrescriptionNotExist"
+          label="Checked me fro new medicine"
+          @change="resetValue()"
+        />
         <v-form @submit.prevent="Add" ref="Add">
-          <v-layout>
-            <v-combobox
-              v-model="prescriptionInfo.medicine"
+          <v-layout v-if="!confrimPrescriptionNotExist">
+            <v-autocomplete
+              v-model="selectedMedicine"
               dense
               outlined
               label="Medicine"
-              :items="medicineList"
+              :items="medicineListWithUofM"
               item-text="name"
               item-value="id"
+              return-object
               chips
-              @change="loadUnitOfMeasurment"
               :rules="inputRules"
             />
             <v-spacer />
 
             <v-autocomplete
-              v-if="prescriptionInfo.medicine != undefined"
-              :items="singleMedicineUofM"
+              :items="selectedMedicine.uofmlist"
               dense
               outlined
               label="Unit Of Measurment"
-              item-text="name"
+              item-text="unit"
               item-value="id"
               chips
               :rules="inputRules"
-              v-model="prescriptionInfo.unit_of_measurment"
+              v-model="selectedMedicines_unit"
             />
 
-            <v-autocomplete
-              v-else
+            <v-spacer />
+
+            <v-text-field
+              v-model="selectedMedicine_quantity"
               dense
               outlined
-              label="Unit Of Measurment"
+              type="number"
+              label="Quantity"
+              :rules="numberRules0andabove"
+            />
+          </v-layout>
+
+          <v-layout v-else>
+            <v-text-field
+              v-model="selectedMedicine"
+              dense
+              outlined
+              label="Medicine"
               chips
               :rules="inputRules"
-              v-model="prescriptionInfo.unit_of_measurment"
             />
             <v-spacer />
 
             <v-text-field
-              v-model="prescriptionInfo.quantity"
+              dense
+              outlined
+              label="Unit Of Measurment"
+              chips
+              :rules="inputRules"
+              v-model="selectedMedicines_unit"
+            />
+
+            <v-spacer />
+
+            <v-text-field
+              v-model="selectedMedicine_quantity"
               dense
               outlined
               type="number"
@@ -87,7 +114,7 @@
           :headers="prescriptionHeaders"
         >
           <template v-slot:item.action="{ item }">
-            <Edit @click="editPrescription(item)" class="icon" />
+            <Delete @click="deletePrescription(item)" class="icon" />
           </template>
         </v-data-table>
         <v-btn small text outlined color="green" @click="submitAll()">
@@ -119,7 +146,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import Edit from "@/assets/icons/edit.svg";
+import Delete from "@/assets/icons/delete.svg";
 import AccountService from "@/network/accountService";
 
 export default {
@@ -128,6 +155,11 @@ export default {
     return {
       login_user: AccountService.getProfile(),
       addPrescription: false,
+
+      selectedMedicine: {},
+      selectedMedicines_unit: 0,
+      selectedMedicine_quantity: 0,
+      confrimPrescriptionNotExist: false,
 
       prescriptionInfo: {},
       allPrescriptionInfo: [],
@@ -139,6 +171,7 @@ export default {
       prescriptionHeaders: [
         { text: "Medicine", value: "medicine" },
         { text: "Quantity", value: "quantity" },
+        { text: "Note", value: "note" },
         { text: "Action", value: "action" },
       ],
 
@@ -158,7 +191,7 @@ export default {
   },
 
   components: {
-    Edit,
+    Delete,
   },
 
   computed: {
@@ -167,7 +200,7 @@ export default {
       "registeredPrescription",
     ]),
 
-    ...mapState("pharmacy", ["medicineList", "singleMedicineUofM"]),
+    ...mapState("pharmacy", ["medicineListWithUofM"]),
   },
 
   methods: {
@@ -176,10 +209,10 @@ export default {
       "registerPrescription",
     ]),
 
-    ...mapActions("pharmacy", ["getMedicineList", "getSingleMedicineUofM"]),
+    ...mapActions("pharmacy", ["getMedicineListWithUofM"]),
 
     async loadData() {
-      await this.getMedicineList();
+      await this.getMedicineListWithUofM();
       await this.getPrescriptionsSingle(this.service_id);
 
       if (this.prescriptionsSingle.data != undefined)
@@ -193,22 +226,26 @@ export default {
       this.addPrescription = !this.addPrescription;
     },
 
-    async loadUnitOfMeasurment(medicine_id) {
-      await this.getSingleMedicineUofM(medicine_id);
-    },
-
     async Add() {
       if (this.$refs.Add.validate()) {
-        let medicine = this.prescriptionInfo.medicine;
+        if (!this.confrimPrescriptionNotExist) {
+          this.prescriptionInfo.medicine_id = this.selectedMedicine.id;
+          this.prescriptionInfo.medicine = this.selectedMedicine.name;
 
-        if (medicine.name === undefined) {
-          this.prescriptionInfo.medicine_id = -1;
+          for (let i = 0; i < this.allPrescriptionInfo.length; i++) {
+            let id = this.allPrescriptionInfo[i].medicine_id;
+            if (id === this.selectedMedicine.id)
+              this.allPrescriptionInfo.splice(i, 1);
+          }
         } else {
-          this.prescriptionInfo.medicine = medicine.name;
-          this.prescriptionInfo.medicine_id = medicine.id;
+          this.prescriptionInfo.medicine_id = -1;
+          this.prescriptionInfo.medicine = this.selectedMedicine;
         }
+        this.prescriptionInfo.unit_of_measurment = this.selectedMedicines_unit;
+        this.prescriptionInfo.quantity = this.selectedMedicine_quantity;
 
         this.allPrescriptionInfo.push(this.prescriptionInfo);
+        this.resetValue();
         this.prescriptionInfo = {};
       }
     },
@@ -245,8 +282,15 @@ export default {
       return res;
     },
 
-    editPrescription(item) {
-      alert(item.id);
+    resetValue() {
+      this.selectedMedicine = "";
+      this.selectedMedicines_unit = "";
+      this.selectedMedicine_quantity = 0;
+    },
+
+    deletePrescription(item) {
+      let index = this.allPrescriptionInfo.indexOf(item);
+      this.allPrescriptionInfo.splice(index, 1);
     },
   },
 };

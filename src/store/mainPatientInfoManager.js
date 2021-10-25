@@ -101,7 +101,9 @@ export default {
     },
 
     async registerSurgicalOrder({ commit }, data) {
+      console.log(data);
       let res = await api.create(path.surgical_order, data);
+      console.log(res.data);
       commit("setRegisterSurgicalOrder", res.data);
     },
 

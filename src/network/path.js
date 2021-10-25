@@ -101,6 +101,8 @@ const path = {
   opd_done_dashboard: "/admin/opd_user_general_info",
   cashier_done_dashboard: "/admin/cashier_general_info_for_one_user",
 
+  assign_opd: "/nurse/send_to_opd",
+
   logout: "/user/logout",
   login: "/user/login",
 

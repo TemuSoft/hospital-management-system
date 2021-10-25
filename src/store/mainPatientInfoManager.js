@@ -91,6 +91,7 @@ export default {
     },
 
     async registerAssignedOPD({ commit }, data) {
+      console.log(data);
       let res = await api.create(path.assign_opd, data);
       commit("setRegisterAssignedOPD", res.data);
     },

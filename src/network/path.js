@@ -85,6 +85,10 @@ const path = {
   prescription_unseen: "/pharmacy/read_waiting_prescription",
   prescription_persenal: "/pharmacy/prescription_info_with_service",
 
+  surgical_order: "/nurse/surgical_order",
+  surgical_orders_service: "/nurse/surgical_orders_service",
+  surgical_order_data: "/nurse/surgical_order_data",
+
   insurance: "/insurance/insurance",
 
   reception_dashboard_card: "/reception/patient_data_with_all_state",

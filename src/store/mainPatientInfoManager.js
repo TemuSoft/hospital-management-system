@@ -16,6 +16,9 @@ export default {
 
     registeredAssignedOPD: {},
     assignedOPD: [],
+
+    registeredSurgicalOrder: [],
+    surgicalOrderList: [],
   },
 
   mutations: {
@@ -45,6 +48,14 @@ export default {
 
     setAssignedOPD(state, payload) {
       state.assignedOPD = payload;
+    },
+
+    setRegisterSurgicalOrder(state, payload) {
+      state.registeredSurgicalOrder = payload;
+    },
+
+    setSurgicalOrderList(state, payload) {
+      state.surgicalOrderList = payload;
     },
   },
 
@@ -87,6 +98,16 @@ export default {
     async getAssignedOPD({ commit }, service_id) {
       let res = await api.get(path.assign_opd, service_id);
       commit("setAssignedOPD", res.data);
+    },
+
+    async registerSurgicalOrder({ commit }, data) {
+      let res = await api.create(path.surgical_order, data);
+      commit("setRegisterSurgicalOrder", res.data);
+    },
+
+    async getSurgicalOrderList({ commit }, service_id) {
+      let res = await api.get(path.surgical_orders_service, service_id);
+      commit("setSurgicalOrderList", res.data);
     },
   },
 };

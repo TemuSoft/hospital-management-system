@@ -31,9 +31,9 @@
     <br />
 
     <v-layout row class="pa-5" justify-center>
-      <v-card elevation="5" class="ma-3" width="48%">
-        <h3 class="blue">OPD Detail</h3>
-        <v-toolbar color="green" dense class="pa-3">
+      <v-card elevation="5" class="ma-2" width="48%">
+        <v-toolbar color="" elevation="0" class="pa-2">
+          <h6 class="">OPD Detail</h6>
           <v-autocomplete
             :items="OPDStaffList"
             dense
@@ -43,8 +43,7 @@
             v-model="OPDStaffSelected"
             @change="loadOPDInfo()"
           />
-          <v-spacer />
-
+          <!-- <v-spacer /> -->
           <v-dialog
             ref="dialogOPD"
             v-model="modalOPD"
@@ -74,7 +73,7 @@
             </v-date-picker>
           </v-dialog>
         </v-toolbar>
-
+        <v-divider></v-divider>
         <v-card-text>
           <v-layout>
             <h3>Lab Orders</h3>
@@ -106,9 +105,9 @@
         </v-card-text>
       </v-card>
 
-      <v-card elevation="5" class="ma-3" width="48%">
-        <h3 class="blue">Nurse Detail</h3>
-        <v-toolbar color="green" dense class="pa-3">
+      <v-card elevation="5" class="ma-2" width="48%">
+        <v-toolbar color="" elevation="0" dense class="pa-2">
+        <h6 class="">Nurse Detail</h6>
           <v-autocomplete
             :items="nurseStaffList"
             dense
@@ -151,6 +150,7 @@
             </v-date-picker>
           </v-dialog>
         </v-toolbar>
+          <v-divider />
 
         <v-card-text>
           <v-layout>
@@ -183,9 +183,9 @@
         </v-card-text>
       </v-card>
 
-      <v-card elevation="5" class="ma-3" width="48%">
-        <h3 class="blue">Hospital Patient Information</h3>
-        <v-toolbar color="green" dense class="pa-3">
+      <v-card elevation="5" class="ma-2" width="48%">
+        <v-toolbar color="" dense class="pa-3">
+        <h6 class="">Hospital Patient Informations</h6>
           <v-dialog
             ref="dialog"
             v-model="modalOne"
@@ -254,8 +254,8 @@
         </v-card-text>
       </v-card>
 
-      <v-card elevation="5" class="ma-3" width="48%">
-        <v-layout class="blue">
+      <v-card elevation="5" class="ma-2" width="48%">
+        <v-layout class="">
           <h3>Cashier Detail</h3>
           <v-spacer />
           <v-spacer />
@@ -271,7 +271,7 @@
           </v-btn>
         </v-layout>
 
-        <v-toolbar color="green" dense class="pa-3">
+        <v-toolbar color="" dense class="pa-3">
           <v-autocomplete
             :items="cashierStaffList"
             dense
@@ -336,7 +336,7 @@
         </v-card-text>
       </v-card>
 
-      <v-card elevation="5" class="chartDis ma-3" width="48%">
+      <v-card elevation="5" class="chartDis ma-2" width="48%">
         <v-toolbar dense color="green">
           <v-spacer />
           <p class="mt-3" v-if="!dailyMonthlyPatient">

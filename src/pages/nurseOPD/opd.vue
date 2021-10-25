@@ -24,10 +24,13 @@
       ref="saveAssignOPD"
       v-show="assignedOPDVisable"
     >
+      {{ assignedOPD }}
       <v-layout>
         <v-autocomplete
-          :items="opdList"
+          :items="OPDStaffList"
           v-model="assignOPDInfo.opd_id"
+          item-text="full_name"
+          item-value="id"
           label="OPD"
           dense
           outlined
@@ -88,16 +91,20 @@ export default {
       "registeredAssignedOPD",
       "assignedOPD",
     ]),
+
+    ...mapState("dashboard", ["OPDStaffList"]),
   },
 
   methods: {
-    ...mapActions(
-      "mainPatientInfoManager",
+    ...mapActions("mainPatientInfoManager", [
       "registerAssignedOPD",
-      "getAssignedOPD"
-    ),
+      "getAssignedOPD",
+    ]),
+
+    ...mapActions("dashboard", ["getStaffListByRole"]),
 
     async loadData() {
+      await this.getStaffListByRole("opd");
       await this.getAssignedOPD(this.service_id);
       if (this.getAssignedOPD.length > 0) this.assignedOPDVisable = false;
     },
@@ -105,8 +112,20 @@ export default {
     async saveAssignOPD() {
       if (this.$refs.saveAssignOPD.validate()) {
         this.assignOPDInfo.user_id = this.login_user.id;
+        this.assignOPDInfo.service_id = this.service_id;
 
-        alert(true);
+        await this.registerAssignedOPD(this.assignOPDInfo);
+
+        if (this.registeredAssignedOPD.st === true) {
+          this.assignOPDInfo = {};
+          this.loadData();
+        } else
+          this.$fire({
+            title: "Assign OPD Registeration",
+            text: this.registeredAssignedOPD.msg,
+            type: "error",
+            timer: 7000,
+          });
       }
     },
 

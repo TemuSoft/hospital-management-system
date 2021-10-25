@@ -13,8 +13,6 @@
       </v-btn>
     </v-layout>
 
-    <v-layout v-for="su in surgicalOrderList" :key="su"> </v-layout>
-
     <v-form
       @submit.prevent="register"
       ref="register"
@@ -32,29 +30,43 @@
 
       <v-layout>
         <v-checkbox
-          label="Checked me to confirm"
           v-model="confrimSurgicalOrder"
-          dense
+          label="Checked me to confirm"
         />
       </v-layout>
 
       <v-layout>
-        <v-btn
-          v-if="confrimSurgicalOrder"
-          small
-          class="text-capitalizr green"
-          @click="register"
-        >
+        <v-btn small class="text-capitalizr green" @click="register">
           Save
         </v-btn>
       </v-layout>
     </v-form>
+    <br />
+    <v-card
+      elevation="10"
+      class="mb-3"
+      v-for="(su, i) in surgicalOrderList"
+      :key="su"
+    >
+      <v-layout class="pa-5">
+        <v-layout>
+          {{ su.description }}
+          <v-spacer />
+
+          <Edit class="icon ml-5" @click="editSurgicalOrder(i)" />
+          <Delete class="icon ml-5" @click="delteSurgicalOrder(i)" />
+        </v-layout>
+      </v-layout>
+    </v-card>
   </div>
 </template>
 
 <script>
 import AccountService from "@/network/accountService";
 import { mapActions, mapState } from "vuex";
+
+import Edit from "@/assets/icons/edit.svg";
+import Delete from "@/assets/icons/delete.svg";
 
 export default {
   props: ["service_id", "patient_id"],
@@ -63,11 +75,16 @@ export default {
       login_user: AccountService.getProfile(),
       inputRules: [(v) => !!v || "This field is required!!!"],
 
-      addNewSurgicalOrder: false,
+      addNewSurgicalOrder: true,
 
       surgicalOrdeInfo: {},
       confrimSurgicalOrder: false,
     };
+  },
+
+  components: {
+    Edit,
+    Delete,
   },
 
   created() {
@@ -75,7 +92,10 @@ export default {
   },
 
   computed: {
-    ...mapState("mainPatientInfoManager", ["surgicalOrderList"]),
+    ...mapState("mainPatientInfoManager", [
+      "registeredSurgicalOrder",
+      "surgicalOrderList",
+    ]),
   },
 
   methods: {
@@ -86,16 +106,27 @@ export default {
 
     async loadData() {
       await this.getSurgicalOrderList(this.service_id);
+      if (this.surgicalOrderList.length > 0) this.addNewSurgicalOrder = false;
     },
 
     async register() {
       if (this.$refs.register.validate()) {
-        this.surgicalOrdeInfo.user_id = this.login_user.id;
+        this.surgicalOrdeInfo.physician_id = this.login_user.id;
         this.surgicalOrdeInfo.service_id = this.service_id;
         this.surgicalOrdeInfo.patient_id = this.patient_id;
 
         await this.registerSurgicalOrder(this.surgicalOrdeInfo);
-        this.loadData();
+        if (this.registeredSurgicalOrder.st === true) {
+          this.surgicalOrdeInfo = {};
+          this.addNewSurgicalOrder = false;
+          this.loadData();
+        } else
+          this.$fire({
+            title: "Surgical Order Registeration",
+            text: this.registeredSurgicalOrder.msg,
+            type: "error",
+            timer: 7000,
+          });
       }
     },
   },

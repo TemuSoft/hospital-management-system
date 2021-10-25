@@ -4,7 +4,7 @@
       <center><h1>Hospital Management System</h1></center>
     </div>
     <v-card width="650" class="mx-auto mt-5">
-      <v-card-title>Login</v-card-title>
+      <!-- <v-card-title>         <center>Login</center></v-card-title> -->
       <v-content style="padding: 10%">
         <div class="rightDiv">
           <v-form @submit.prevent="login" ref="login">

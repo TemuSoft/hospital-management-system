@@ -91,20 +91,17 @@ export default {
     },
 
     async registerAssignedOPD({ commit }, data) {
-      console.log(data);
       let res = await api.create(path.assign_opd, data);
       commit("setRegisterAssignedOPD", res.data);
     },
 
     async getAssignedOPD({ commit }, service_id) {
-      let res = await api.get(path.assign_opd, service_id);
+      let res = await api.get(path.update_nurse_patient_assigned, service_id);
       commit("setAssignedOPD", res.data);
     },
 
     async registerSurgicalOrder({ commit }, data) {
-      console.log(data);
       let res = await api.create(path.surgical_order, data);
-      console.log(res.data);
       commit("setRegisterSurgicalOrder", res.data);
     },
 

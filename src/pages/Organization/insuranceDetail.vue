@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <v-card>
+    <v-card flat>
       <v-toolbar dense>
         <v-btn
           text
@@ -13,7 +13,13 @@
         <v-spacer />
         <h2>Insurance Details</h2>
         <v-spacer />
-        <v-spacer />
+        <v-btn
+          color="green"
+          class="text-capitalize"
+          @click="registerStaffDialog = true"
+        >
+          Add Member
+        </v-btn>
       </v-toolbar>
       <v-divider></v-divider>
       <br />

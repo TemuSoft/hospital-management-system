@@ -11,6 +11,7 @@ export default {
     nurseStaffList: [],
     OPDStaffList: [],
     cashierStaffList: [],
+    laboratoryTechStaffList: [],
 
     piechartLaboratory: [],
     piechartLaboratoryVistors: [],
@@ -18,6 +19,8 @@ export default {
     nurseDoneInfo: [],
     OPDDoneInfo: [],
     cashierDoneInfo: [],
+
+    generalViewLaboratoryHead: [],
   },
 
   mutations: {
@@ -39,6 +42,10 @@ export default {
 
     setCashierStaffList(state, payload) {
       state.cashierStaffList = payload;
+    },
+
+    setLaboratoryTechStaffList(state, payload) {
+      state.laboratoryTechStaffList = payload;
     },
 
     setPiechartLaboratory(state, payload) {
@@ -64,6 +71,10 @@ export default {
     setCashierDoneInfo(state, payload) {
       state.cashierDoneInfo = payload;
     },
+
+    setGeneralViewLaboratoryHead(state, payload) {
+      state.generalViewLaboratoryHead = payload;
+    },
   },
 
   actions: {
@@ -87,6 +98,12 @@ export default {
       if (role === "nurse") commit("setNurseStaffList", res);
       else if (role === "opd") commit("setOPDStaffList", res);
       else if (role === "cashier") commit("setCashierStaffList", res);
+      else if (role === "laboratory") {
+        res.reverse();
+        res.push({ full_name: "All", id: "all" });
+        res.reverse();
+        commit("setLaboratoryTechStaffList", res);
+      }
     },
 
     async getPiechartLaboratory({ commit }, date) {
@@ -150,6 +167,19 @@ export default {
       };
       let res = await api.create(path.cashier_done_dashboard, filter);
       commit("setCashierDoneInfo", res.data);
+    },
+
+    async getGeneralViewLaboratoryHead({ commit }, data) {
+      let filter = {
+        who: data.who,
+        d1: data.date[0],
+        d2: new Date(
+          new Date(data.date[1]).getTime() + 24 * 60 * 60 * 1000 - 1000
+        ),
+      };
+
+      let res = await api.create(path.general_info_laboratory_head, filter);
+      commit("setGeneralViewLaboratoryHead", res.data);
     },
   },
 };

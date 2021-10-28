@@ -73,6 +73,105 @@
       </v-card>
       <div></div>
     </v-layout>
+
+    <v-card elevation="5" class="ma-3">
+      <h3 class="blue">Laboratory Technician Detail</h3>
+      <v-toolbar color="green" dense class="pa-3">
+        <v-autocomplete
+          :items="laboratoryTechStaffList"
+          dense
+          rounded
+          item-text="full_name"
+          item-value="id"
+          v-model="laboratoryTechStaffSelected"
+          @change="loadlaboratoryTechInfo()"
+        />
+        <v-spacer />
+
+        <v-dialog
+          ref="dialoglaboratoryTech"
+          v-model="modallaboratoryTech"
+          :return-value.sync="datelaboratoryTech"
+          persistent
+          width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="datelaboratoryTech"
+              rounded
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="datelaboratoryTech" scrollable range>
+            <v-spacer></v-spacer>
+            <v-btn text color="red" @click="modallaboratoryTech = false">
+              Cancel
+            </v-btn>
+            <v-btn
+              text
+              color="green"
+              @click="
+                $refs.dialoglaboratoryTech.save(datelaboratoryTech),
+                  loadlaboratoryTechInfo()
+              "
+            >
+              OK
+            </v-btn>
+          </v-date-picker>
+        </v-dialog>
+      </v-toolbar>
+
+      <v-card-text>
+        <v-data-table
+          :items="generalViewLaboratoryHead"
+          :headers="labHeadHeader"
+          dense
+        >
+          <template v-slot:item.details="{ item }">
+            {{ item.details.length }}
+          </template>
+
+          <template v-slot:item.action="{ item }">
+            <Detail class="icon" @click="labHeDetail = item" />
+          </template>
+        </v-data-table>
+
+        <v-card
+          flat
+          v-if="labHeDetail.details != undefined"
+          class="green--text"
+        >
+          <h3>Date Selected : {{ labHeDetail.date }}</h3>
+          <v-simple-table dense>
+            <thead>
+              <tr>
+                <th class="blue lighten-5">Full Name</th>
+                <th class="blue lighten-5">Card Number</th>
+                <th class="blue lighten-5">Test Cases</th>
+                <th class="blue lighten-5">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template v-for="item in labHeDetail.details">
+                <tr v-for="(subitem, i) in item.cases" :key="i">
+                  <td v-if="i === 0" :rowspan="item.cases.length">
+                    {{ item.patient_name }}
+                  </td>
+                  <td v-if="i === 0" :rowspan="item.cases.length">
+                    {{ item.card_number }}
+                  </td>
+
+                  <td>{{ subitem.case_name }}</td>
+                  <td>{{ subitem.payed_price }}</td>
+                </tr>
+              </template>
+            </tbody>
+          </v-simple-table>
+        </v-card>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -82,10 +181,23 @@
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { mapActions, mapState } from "vuex";
+import AccountService from "@/network/accountService";
+
+import Detail from "@/assets/icons/eye.svg";
 
 export default {
   data() {
     return {
+      login_user: AccountService.getProfile(),
+
+      modallaboratoryTech: false,
+      datelaboratoryTech: [
+        new Date().toISOString().substr(0, 10),
+        new Date().toISOString().substr(0, 10),
+      ],
+      laboratoryTechStaffSelected: "",
+
       dailyMonthly: false,
       topHeaders: [
         {
@@ -161,23 +273,66 @@ export default {
         { text: "Test Case Type", value: "test_case_type" },
         { text: "Action", value: "action" },
       ],
+
+      labHeDetail: {},
+      labHeadHeader: [
+        { text: "Date", value: "date" },
+        { text: "No Patient", value: "details" },
+        { text: "No Test Case", value: "total_test_cases" },
+        { text: "Total Price", value: "total_price" },
+        { text: "Action", value: "action" },
+      ],
+
+      labHeDetailHeader: [
+        { text: "Full Name", value: "patient_name" },
+        { text: "Card Number", value: "card_number" },
+        { text: "Test Cases", value: "case_name" },
+        { text: "Price", value: "payed_price" },
+      ],
     };
   },
 
-  mounted() {
+  created() {
     this.loadData();
   },
 
   components: {
     // Icon,
+    Detail,
+  },
+
+  computed: {
+    ...mapState("dashboard", [
+      "generalViewLaboratoryHead",
+      "laboratoryTechStaffList",
+    ]),
   },
 
   methods: {
+    ...mapActions("dashboard", [
+      "getGeneralViewLaboratoryHead",
+      "getStaffListByRole",
+    ]),
+
     async loadData() {
-      await this.draChartPatient();
+      await this.getStaffListByRole("laboratory");
+      this.loadlaboratoryTechInfo();
+
+      await this.drawChartPatient();
     },
 
-    async draChartPatient() {
+    async loadlaboratoryTechInfo() {
+      if (this.datelaboratoryTech.length === 1)
+        this.datelaboratoryTech[1] = this.datelaboratoryTech[0];
+
+      this.laboratoryTechStaffSelected = this.laboratoryTechStaffList[0].id;
+      await this.getGeneralViewLaboratoryHead({
+        who: this.laboratoryTechStaffSelected,
+        date: this.datelaboratoryTech,
+      });
+    },
+
+    async drawChartPatient() {
       am4core.useTheme(am4themes_animated);
       // Create chart instance
       let chart = am4core.create("chartPatient", am4charts.XYChart);
@@ -260,5 +415,9 @@ export default {
   height: 350px;
   margin-left: 0;
   /* height: 100%; */
+}
+
+.icon {
+  cursor: pointer;
 }
 </style>

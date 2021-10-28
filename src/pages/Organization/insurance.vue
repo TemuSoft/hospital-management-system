@@ -3,7 +3,8 @@
     <h2>Insurance</h2>
     <br />
 
-    <v-data-table :headers="headers" :items="insuranes" :search="search">
+    {{ insurances }}
+    <v-data-table :headers="headers" :items="insurances" :search="search">
       <template v-slot:item.action="{ item }">
         <Edit @click="editInsurance(item)" class="icon" />
         &nbsp;&nbsp;&nbsp;
@@ -19,6 +20,11 @@
         >
           Download
         </v-btn>
+      </template>
+
+      <template v-slot:item.status="{ item }">
+        <v-chip color="green" v-if="item.status === 1">Active</v-chip>
+        <v-chip color="yellow" v-else>Not-Active</v-chip>
       </template>
 
       <template v-slot:top>
@@ -226,8 +232,8 @@ export default {
         { text: "Partner Name", value: "name" },
         { text: "Description", value: "description" },
         { text: "Status", value: "status" },
-        { text: "Start Date", value: "startDate" },
-        { text: "Attachment", value: " attachment" },
+        { text: "Start Date", value: "date" },
+        { text: "Attachment", value: "attachment" },
         { text: "Action", value: "action" },
       ],
 
@@ -244,11 +250,11 @@ export default {
     Detail,
   },
 
-  created() {
+  async created() {
     this.loadData();
   },
 
-  mounted: {
+  computed: {
     ...mapState("insurance", [
       "registeredInsurance",
       "updatedInsurance",
@@ -280,13 +286,13 @@ export default {
 
         await this.registereInsurance(formData);
 
-        if (this.registeredInsurance === true) {
+        if (this.registeredInsurance.st === true) {
           this.registerInsuranceDialog = false;
           this.loadData();
         } else
           this.$fire({
             title: "Insurance Registeration",
-            text: "Something wrong please try again!!!",
+            text: this.registeredInsurance.msg,
             type: "error",
             timer: 7000,
           });

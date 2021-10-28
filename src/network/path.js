@@ -61,6 +61,8 @@ const path = {
   nurse_patient_assigned: "/nurse/patient_service_request_nurse",
   update_nurse_patient_assigned: "/nurse/patient_service_update",
 
+  patient_service_detail: "/nurse/patient_service_detail",
+
   vital_sign: "/nurse/vital_sign",
   update_vital_sign: "/nurse/vital_sign_update",
   patient_vital_sign: "/nurse/patient_vital_sign",
@@ -101,7 +103,10 @@ const path = {
   opd_done_dashboard: "/admin/opd_user_general_info",
   cashier_done_dashboard: "/admin/cashier_general_info_for_one_user",
 
+  general_info_laboratory_head: "/lab/data_laboratory_for_head",
+
   assign_opd: "/nurse/send_to_opd",
+  assigned_opd_list: "/nurse/",
 
   logout: "/user/logout",
   login: "/user/login",

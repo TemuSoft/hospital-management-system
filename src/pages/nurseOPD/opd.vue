@@ -2,60 +2,67 @@
   <v-card flat>
     <h3>OPD</h3>
     <br />
+    <v-card flat v-if="canAssignOPD">
+      <v-layout>
+        <v-spacer />
+        <v-btn small class="text-capitalize green" @click="assignOPD()">
+          Assign
+        </v-btn>
 
-    <v-layout>
-      <v-spacer />
-      <v-btn small class="text-capitalize green" @click="assignOPD()">
-        Assign
-      </v-btn>
-
-      <!-- <v-spacer />
+        <!-- <v-spacer />
       <v-btn small class="text-capitalize green" @click="reAssignOPD()">
         Assign
       </v-btn> -->
-    </v-layout>
-
-    <v-data-table :items="assignedOPD" :headers="assignedOPDHeader">
-    </v-data-table>
-    <br />
-
-    <v-form
-      @submit.prevent="saveAssignOPD"
-      ref="saveAssignOPD"
-      v-show="assignedOPDVisable"
-    >
-      {{ assignedOPD }}
-      <v-layout>
-        <v-autocomplete
-          :items="OPDStaffList"
-          v-model="assignOPDInfo.opd_id"
-          item-text="full_name"
-          item-value="id"
-          label="OPD"
-          dense
-          outlined
-        />
-        <v-spacer />
-
-        <v-text-field
-          v-model="assignOPDInfo.note"
-          label="Note"
-          outlined
-          dense
-        />
       </v-layout>
-      <v-layout>
-        <v-btn small class="text-capitalize red" @click="cancelAssignOPD()">
-          Cancel
-        </v-btn>
-        <v-spacer />
 
-        <v-btn small class="text-capitalize green" @click="saveAssignOPD()">
-          Assign
-        </v-btn>
-        <v-spacer />
-      </v-layout>
-    </v-form>
+      <v-data-table :items="assignedOPD" :headers="assignedOPDHeader">
+      </v-data-table>
+      <br />
+
+      <v-form
+        @submit.prevent="saveAssignOPD"
+        ref="saveAssignOPD"
+        v-show="assignedOPDVisable"
+      >
+        {{ assignedOPD }}
+        <v-layout>
+          <v-autocomplete
+            :items="OPDStaffList"
+            v-model="assignOPDInfo.opd_user_id"
+            item-text="full_name"
+            item-value="id"
+            label="OPD"
+            dense
+            outlined
+          />
+          <v-spacer />
+
+          <v-text-field
+            v-model="assignOPDInfo.note"
+            label="Note"
+            outlined
+            dense
+          />
+        </v-layout>
+        <v-layout>
+          <v-btn small class="text-capitalize red" @click="cancelAssignOPD()">
+            Cancel
+          </v-btn>
+          <v-spacer />
+
+          <v-btn small class="text-capitalize green" @click="saveAssignOPD()">
+            Assign
+          </v-btn>
+          <v-spacer />
+        </v-layout>
+      </v-form>
+    </v-card>
+
+    <v-card flat v-else>
+      <h1 class="red--text">
+        It needs vital sign registeration before assign OPD
+      </h1>
+    </v-card>
   </v-card>
 </template>
 
@@ -79,6 +86,8 @@ export default {
         { text: "Status", vlaue: "status" },
         { text: "Action", vlaue: "action" },
       ],
+
+      canAssignOPD: false,
     };
   },
 
@@ -91,8 +100,8 @@ export default {
       "registeredAssignedOPD",
       "assignedOPD",
     ]),
-
     ...mapState("dashboard", ["OPDStaffList"]),
+    ...mapState("nurse", ["patientVitalSigns"]),
   },
 
   methods: {
@@ -100,10 +109,13 @@ export default {
       "registerAssignedOPD",
       "getAssignedOPD",
     ]),
-
     ...mapActions("dashboard", ["getStaffListByRole"]),
+    ...mapActions("nurse", ["getPatientVitalSigns"]),
 
     async loadData() {
+      await this.getPatientVitalSigns(this.service_id);
+      if (this.patientVitalSigns.length > 0) this.canAssignOPD = true;
+
       await this.getStaffListByRole("opd");
       await this.getAssignedOPD(this.service_id);
       if (this.getAssignedOPD.length > 0) this.assignedOPDVisable = false;

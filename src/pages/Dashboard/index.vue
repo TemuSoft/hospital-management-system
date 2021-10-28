@@ -5,8 +5,8 @@
     <LaboratoryImaging
       v-else-if="
         role === 'imaging' ||
-        role === 'labratory' ||
-        role === 'labratory_head' ||
+        role === 'laboratory' ||
+        role === 'laboratory_head' ||
         role === 'imaging_head'
       "
     />

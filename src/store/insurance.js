@@ -37,7 +37,6 @@ export default {
   actions: {
     async registereInsurance({ commit }, data) {
       let res = await api.createWithFile(path.insurance, data);
-      console.log(res);
       commit("setRegistereInsurance", res.data);
     },
 

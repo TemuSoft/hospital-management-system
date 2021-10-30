@@ -190,7 +190,11 @@ export default {
         d2: data.date[1],
         pharmacy_id: data.pharmacy_id,
       };
+      console.log(filter);
+      alert(true);
       let res = await api.create(path.pharmacy_done_dashboard, filter);
+      alert(false);
+      console.log(res.data);
       commit("setPharmacyDoneInfo", res.data);
     },
 

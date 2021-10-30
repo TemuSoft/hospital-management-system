@@ -261,6 +261,8 @@ export default {
 
         if (this.registeredPrescription.st === true) {
           this.prescriptionInfo = {};
+          this.allPrescriptionInfo = [];
+          this.addPrescription = false;
           this.loadData();
         } else
           this.$fire({

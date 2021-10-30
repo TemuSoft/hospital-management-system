@@ -21,6 +21,10 @@
       :headers="materialRequestHeader"
       :items-per-page="10"
     >
+      <template v-slot:item.status="{ item }">
+        <v-chip v-if="item.status === 0" color="yellow">Pendding</v-chip>
+        <v-chip v-else color="yellow">Something</v-chip>
+      </template>
     </v-data-table>
 
     <v-form @submit.prevent="save" ref="save" v-else>
@@ -162,13 +166,6 @@ export default {
 
         if (this.doneMaterialRequest === true) {
           this.materialRequestInfo = [];
-
-          this.$fire({
-            title: "Material Request Registeration",
-            text: "Successfuly done!!!",
-            type: "sccess",
-            timer: 7000,
-          });
 
           this.loadData();
         } else

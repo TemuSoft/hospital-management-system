@@ -7,7 +7,7 @@ export default {
   state: {
     sendCardRenewalRequested: false,
     paymnetRequest: [],
-    prepaymentAmount: 200,
+    prepaymentAmount: 0,
     testCaseList: [],
     testCasePaymentDone: false,
 
@@ -62,8 +62,10 @@ export default {
     },
 
     async getPrepaymentAmount({ commit }, patient_id) {
-      let res = await api.get(path.single_prepayment_load, patient_id);
-      commit("setPrepaymentAmount", res.data);
+      console.log(patient_id);
+      // let res = await api.get(path.single_prepayment_load, patient_id);
+      // commit("setPrepaymentAmount", res.data);
+      commit("setPrepaymentAmount", 200);
     },
 
     async getTestCaseList({ commit }, service_id) {
@@ -72,6 +74,7 @@ export default {
     },
 
     async testCasePaymentRegister({ commit }, data) {
+      console.log(data);
       let res = await api.create(path.test_case_payment_done, data);
       commit("setTestCasePaymentRegister", res.data);
     },

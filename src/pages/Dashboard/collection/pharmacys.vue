@@ -143,8 +143,9 @@
         <v-btn outlined small class="mt-2 text-capitalize"> Detail </v-btn>
       </v-toolbar>
       <v-divider />
+      {{ medicineWillExpired }}
       <v-data-table
-        :items="medicineExpired"
+        :items="medicineWillExpired"
         :headers="medicineExpiredHeaders"
         :items-per-page="3"
       >
@@ -220,37 +221,10 @@ export default {
         { text: "Status", value: "status" },
       ],
 
-      medicineExpired: [
-        {
-          name: "Medicine 1",
-          category: "Category 1",
-          expire_date: "2021-10-01",
-        },
-        {
-          name: "Medicine 2",
-          category: "Category 2",
-          expire_date: "2021-10-02",
-        },
-        {
-          name: "Medicine 3",
-          category: "Category 3",
-          expire_date: "2021-10-03",
-        },
-        {
-          name: "Medicine 4",
-          category: "Category 4",
-          expire_date: "2021-10-04",
-        },
-        {
-          name: "Medicine 5",
-          category: "Category 5",
-          expire_date: "2021-10-05",
-        },
-      ],
       medicineExpiredHeaders: [
-        { text: "Name", value: "name", align: "left" },
+        { text: "Name", value: "medicine_name", align: "left" },
         { text: "Category", value: "category" },
-        { text: "QTY Store", value: "quantity_store" },
+        { text: "QTY Store", value: "balance" },
         { text: "QTY Dispensary", value: "quantity_dispensary" },
         { text: "Unit", value: "unit_of_measurment" },
         { text: "Expire Date", value: "expire_date" },
@@ -281,14 +255,17 @@ export default {
   computed: {
     ...mapState("prescription", ["prescriptionList"]),
     ...mapState("dashboard", ["pharmacyDoneInfo"]),
+    ...mapState("pharmacy", ["medicineWillExpired"]),
   },
 
   methods: {
     ...mapActions("prescription", ["getPrescriptionList"]),
     ...mapActions("dashboard", ["getPharmacyDoneInfo"]),
+    ...mapActions("pharmacy", ["getMedicineWillExpired"]),
 
     async loadData() {
       await this.getPrescriptionList();
+      await this.getMedicineWillExpired();
       this.loadPharmacyInfo();
     },
 

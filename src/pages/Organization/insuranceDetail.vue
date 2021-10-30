@@ -22,8 +22,6 @@
       <br />
       <br />
 
-      {{ singleInsurance }}
-
       Insurance Name : {{ singleInsurance.name }}
       <br />
       Date : {{ singleInsurance.date }}
@@ -59,6 +57,13 @@
           {{ new Date(item.date_joined).toDateString(0, 10) }}
         </template>
 
+        <template v-slot:item.status="{ item }">
+          <v-chip v-if="item.status === 'active'" color="green">Active</v-chip>
+          <v-chip v-else-if="item.status === 'not-active'" color="red"
+            >Not-Active</v-chip
+          >
+        </template>
+
         <template v-slot:item.attachment="{ item }">
           <v-btn
             color="green"
@@ -79,6 +84,26 @@
 
         <template v-slot:item.action="{ item }">
           <Detial class="icon mt-3" @click="insuranceMemeberDetail(item.id)" />
+          <v-btn
+            v-if="item.status === 'active'"
+            class="icon ml-5 mb-2 text-capitalize blue--text"
+            @click="insuranceMemebeSuspend(item.id)"
+            small
+            text
+          >
+            Suspend
+          </v-btn>
+
+          <v-btn
+            v-else-if="item.status === 'not-active'"
+            class="icon ml-5 mb-2 text-capitalize green--text"
+            @click="insuranceMemebeActivate(item.id)"
+            small
+            text
+          >
+            Activate
+          </v-btn>
+
           <v-btn
             class="icon ml-5 mb-2 text-capitalize red--text"
             @click="insuranceMemeberRemove(item.id)"
@@ -179,7 +204,7 @@ export default {
         { text: "Registered By?", value: "registered_by_name" },
         { text: "Attachment", value: "attachment" },
         { text: "Status", value: "status" },
-        { text: "Action", value: "action", width: "15%", align: "center" },
+        { text: "Action", value: "action", align: "center" },
       ],
 
       domain: API_ROOT_DOWNLOAD,
@@ -211,6 +236,8 @@ export default {
     ...mapActions("insurance", [
       "getSingleInsurance",
       "registereInsuranceMember",
+      "suspendInsuranceMember",
+      "removeInsuranceMember",
     ]),
     ...mapActions("patient", ["getPatientListInsurance"]),
 
@@ -270,6 +297,21 @@ export default {
 
     back() {
       this.$router.push({ name: "insurance" });
+    },
+
+    async insuranceMemebeSuspend(id) {
+      await this.suspendInsuranceMember({ id: id, status: "not-active" });
+      this.loadData();
+    },
+
+    async insuranceMemebeActivate(id) {
+      await this.suspendInsuranceMember({ id: id, status: "active" });
+      this.loadData();
+    },
+
+    async insuranceMemeberRemove(id) {
+      await this.removeInsuranceMember(id);
+      this.loadData();
     },
   },
 };

@@ -95,7 +95,6 @@
             <h3 style="color: green">
               Imaging and Laboratory Test Payment Requests
             </h3>
-
             <v-layout>
               <table>
                 <tr>
@@ -213,7 +212,7 @@ export default {
     ]),
 
     async loadData() {
-      await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
+      await this.getPrepaymentAmount(this.selectedPatinet.patient_id);
       // await this.getTestCaseList(this.selectedPatinet.service_id);
 
       this.testListPayment = this.selectedPatinet.test_cases;
@@ -228,15 +227,25 @@ export default {
     async paymentDone() {
       if (this.$refs.paymentDone.validate()) {
         let data = {};
+        data.patient_id = this.selectedPatinet.patient_id;
         data.reason_id = this.selectedPatinet.reason_id;
         data.amount = this.selectedPatinet.amount;
         data.cash = this.totalPayment - this.prepaymentAmount;
-        data.prepayment = this.prepaymentAmount;
+        if (data.cash < 0) {
+          data.cash = 0;
+          data.prepayment = this.totalPayment;
+        }
         data.credit = 0;
         data.insurance = 0;
         data.test_cases_id = [];
-        for (let i = 0; i < this.testListPayment.length; i++)
-          data.test_cases_id.push(this.testListPayment[i].id);
+        for (let i = 0; i < this.testListPayment.length; i++) {
+          let cu = this.checkboxWhole[this.testListPayment[i].id];
+          if (cu === true)
+            data.test_cases_id.push({
+              id: this.testListPayment[i].id,
+              payed_price: this.testListPayment[i].payed_price,
+            });
+        }
 
         await this.testCasePaymentRegister(data);
         if (this.testCasePaymentDone === true)

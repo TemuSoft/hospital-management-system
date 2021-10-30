@@ -32,6 +32,7 @@
                 :rules="inputRules"
                 :items="departments"
                 label="Department"
+                v-model="appointmentInfo.department_id"
                 @change="staffInDepertment($event)"
               />
             </v-flex>

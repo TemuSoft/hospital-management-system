@@ -59,5 +59,15 @@ export default {
       let res = await api.createWithFile(path.insurance_member, data);
       commit("setRegistereInsuranceMember", res.data);
     },
+
+    async suspendInsuranceMember({ commit }, data) {
+      await api.update(path.insurance_member_options, data.id, data);
+      commit;
+    },
+
+    async removeInsuranceMember({ commit }, id) {
+      await api.delete(path.insurance_member_options, id);
+      commit;
+    },
   },
 };

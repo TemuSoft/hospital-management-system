@@ -47,7 +47,13 @@
           <v-spacer />
           <v-spacer />
 
-          <v-btn outlined small color="green" class="mt-2 text-capitalize">
+          <v-btn
+            outlined
+            small
+            color="green"
+            class="mt-2 text-capitalize"
+            @click="$router.push({ name: 'nurse' })"
+          >
             Detail
           </v-btn>
           <v-spacer />
@@ -73,7 +79,13 @@
           <v-spacer />
           <v-spacer />
 
-          <v-btn outlined small color="green" class="mt-2 text-capitalize">
+          <v-btn
+            outlined
+            small
+            color="green"
+            class="mt-2 text-capitalize"
+            @click="$router.push({ name: 'nurse' })"
+          >
             Detail
           </v-btn>
           <v-spacer />

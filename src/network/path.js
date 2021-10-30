@@ -45,6 +45,7 @@ const path = {
   medicine_category: "/pharmacy/medicine_category",
   dispensary_request: "/pharmacy/dispensary_request",
   dispensary_request_confirm: "/pharmacy/dispensary_request",
+  pharmacy_neer_expire_instore: "/pharmacy/neer_expire_meds_instore",
 
   assing_patient_room: "/",
 
@@ -95,6 +96,7 @@ const path = {
   insurance: "/insurance/insurance",
   insurance_single: "/insurance/insurance_data",
   insurance_member: "/insurance/insurance_members",
+  insurance_member_options: "/insurance/update_insurance_member",
 
   reception_dashboard_card: "/reception/patient_data_with_all_state",
   reception_dashboard_linechart: "/reception/new_patients_in_this_year",

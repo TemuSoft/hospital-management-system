@@ -18,6 +18,8 @@ export default {
 
     singleMedicineUofM: [],
     medicineListWithUofM: [],
+
+    medicineWillExpired: [],
   },
 
   mutations: {
@@ -63,6 +65,10 @@ export default {
 
     setMedicineListWithUofM(state, payload) {
       state.medicineListWithUofM = payload;
+    },
+
+    setMedicineWillExpired(state, payload) {
+      state.medicineWillExpired = payload;
     },
   },
 
@@ -162,6 +168,11 @@ export default {
         res[i].uofmlist = uofmList;
       }
       commit("setMedicineListWithUofM", res);
+    },
+
+    async getMedicineWillExpired({ commit }) {
+      let res = await api.getAll(path.pharmacy_neer_expire_instore);
+      commit("setMedicineWillExpired", res.data);
     },
   },
 };

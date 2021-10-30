@@ -91,7 +91,7 @@
                   v-model="prepaymentInfo.who_id"
                   dense
                   :items="whoNameList"
-                  item-text="name"
+                  item-text="first_name"
                   item-value="id"
                   outlined
                 />
@@ -183,7 +183,7 @@ export default {
     },
 
     async save() {
-      if (this.$$refs.save.validate()) {
+      if (this.$refs.save.validate()) {
         await this.registerPrepayment(this.prepaymentInfo);
 
         if (this.registeredPrepayment === true) {

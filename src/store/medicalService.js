@@ -212,7 +212,8 @@ export default {
     },
 
     async getSingleMaterialRequest({ commit }, service_id) {
-      let res = await api.get(path.get_material_request_serviceId, service_id);
+      commit("setSingleMaterialRequest", []);
+      let res = await api.get(path.material_request_service_id, service_id);
       commit("setSingleMaterialRequest", res.data);
     },
   },

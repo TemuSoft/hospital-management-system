@@ -3,21 +3,10 @@
     <h2>Material Request</h2>
     <br />
 
-    <v-layout>
+    <!-- <v-layout>
       <v-spacer />
 
       <v-btn
-        v-if="addMaterialRequest"
-        small
-        class="text-capitalize"
-        outlined
-        color="green"
-        @click="addMaterialRequest = !addMaterialRequest"
-        >View Lest</v-btn
-      >
-
-      <v-btn
-        v-else
         class="text-capitalize"
         small
         outlined
@@ -25,9 +14,9 @@
         @click="addMaterialRequest = !addMaterialRequest"
         >Add New</v-btn
       >
-    </v-layout>
+    </v-layout> -->
     <v-data-table
-      v-if="!addMaterialRequest"
+      v-if="singleMaterialRequets.length > 0"
       :items="singleMaterialRequets"
       :headers="materialRequestHeader"
       :items-per-page="10"
@@ -114,13 +103,12 @@ export default {
       inputRules: [(v) => !!v || "This field is required"],
       login_user: AccountService.getProfile(),
 
-      addMaterialRequest: false,
       materialRequestInfo: [],
       materialRequestHeader: [
         { text: "Name", value: "name" },
         { text: "Quantity", value: "quantity" },
         { text: "Note", value: "note" },
-        { text: "Action", value: "action" },
+        { text: "Status", value: "status" },
       ],
     };
   },

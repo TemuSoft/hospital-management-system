@@ -2,11 +2,7 @@
   <div class="main">
     <v-card flat>
       <v-toolbar dense>
-        <v-btn
-          text
-          class="text-capitalize"
-          @click="$router.push({ name: 'staff' })"
-        >
+        <v-btn text class="text-capitalize" @click="back()">
           <v-icon class="mx-3">mdi-arrow-left</v-icon>
           Go Back
         </v-btn>
@@ -14,9 +10,10 @@
         <h2>Insurance Details</h2>
         <v-spacer />
         <v-btn
+          small
           color="green"
           class="text-capitalize"
-          @click="registerStaffDialog = true"
+          @click="registerMemberDialog = true"
         >
           Add Member
         </v-btn>
@@ -25,159 +22,113 @@
       <br />
       <br />
 
+      {{ singleInsurance }}
+
       Insurance Name : {{ singleInsurance.name }}
       <br />
-      Status : {{ singleInsurance.status }}
+      Date : {{ singleInsurance.date }}
+      <br />
+      Status :
+      <v-chip color="green" v-if="singleInsurance.status === 1">Active</v-chip>
+      <v-chip color="yellow" v-else>Not-Active</v-chip>
       <br />
       Description : {{ singleInsurance.description }}
+      <br />
+      Attachment :
+      <v-btn
+        color="green"
+        text
+        class="text-capitalize"
+        @click="downloadAttachment(singleInsurance.attachment)"
+      >
+        Download
+      </v-btn>
+      <br />
 
-      <h2>List of staff in the insurance / organization</h2>
-      <v-data-taable
+      Registered BY : {{ singleInsurance.registered_by_name }}
+      <br />
+      <br />
+
+      <h3 class="green--text">List of staff in the insurance / organization</h3>
+      <v-data-table
         :headers="headers"
         :search="search"
-        :items="insuranceStaffList"
+        :items="singleInsurance.members"
       >
-      </v-data-taable>
+        <template v-slot:item.date_joined="{ item }">
+          {{ new Date(item.date_joined).toDateString(0, 10) }}
+        </template>
+
+        <template v-slot:item.attachment="{ item }">
+          <v-btn
+            color="green"
+            text
+            class="text-capitalize"
+            @click="downloadAttachment(item)"
+          >
+            Download
+          </v-btn>
+          <v-btn
+            text
+            class="green--text ml-5 text-capitalize"
+            @click="openAttachment(item)"
+          >
+            View
+          </v-btn>
+        </template>
+
+        <template v-slot:item.action="{ item }">
+          <Detial class="icon mt-3" @click="insuranceMemeberDetail(item.id)" />
+          <v-btn
+            class="icon ml-5 mb-2 text-capitalize red--text"
+            @click="insuranceMemeberRemove(item.id)"
+            small
+            text
+          >
+            Remove
+          </v-btn>
+        </template>
+      </v-data-table>
     </v-card>
 
-    <v-dialog persistent v-model="registerStaffDialog" width="100px">
+    <v-dialog persistent v-model="registerMemberDialog" width="600px">
       <v-card>
         <v-toolbar dense color="green">
-          Register Insurance List
+          Register Insurance Member
           <v-spacer />
 
-          <Close class="icon" @click="registerStaffDialog = false" />
+          <Close class="icon" @click="registerMemberDialog = false" />
         </v-toolbar>
+        <br />
 
         <v-card-text>
           <v-form @submit.prevent="registerMember" ref="registerMember">
-            <v-layout row>
-              <v-text-field
-                label="First Name"
-                v-model="patientInfo.first_name"
-                :rules="inputRules"
-                outlined
-                dense
-              />
+            <v-layout>
+              Patient List
               <v-spacer />
-
-              <v-text-field
-                label="Birth Date"
-                type="date"
-                v-model="patientInfo.birthdate"
-                :rules="inputRules"
-                outlined
-                dense
-              />
-              <v-spacer />
-
-              <v-text-field
-                label="Phone"
-                v-model="patientInfo.phone_number"
-                :rules="inputRules"
-                outlined
-                dense
-              />
-              <v-spacer />
-
-              <v-text-field
-                label="Guardian Name"
-                v-model="patientInfo.guardian_name"
-                :rules="inputRules"
-                outlined
-                dense
-              />
-            </v-layout>
-
-            <v-layout row>
-              <v-text-field
-                label="Father Name"
-                v-model="patientInfo.fathers_name"
-                :rules="inputRules"
-                outlined
-                dense
-              />
-              <v-spacer />
-
               <v-autocomplete
-                label="Nationality"
-                v-model="patientInfo.nationality"
-                :items="nationalityList"
-                item-text="name"
-                item-id="value"
                 outlined
+                item-text="full_name"
+                item-value="id"
+                v-model="selected_patient_id"
+                :rules="inputRules"
+                :items="patientsInsurance"
                 dense
               />
               <v-spacer />
-
-              <v-text-field
-                label="Region"
-                v-model="patientInfo.region"
-                outlined
-                dense
-              />
-              <v-spacer />
-
-              <v-text-field
-                type="number"
-                label="Guardian Contact"
-                v-model="patientInfo.guardian_contact"
-                outlined
-                dense
-              />
             </v-layout>
 
-            <v-layout row>
-              <v-text-field
-                label="Grand Father"
-                v-model="patientInfo.last_name"
+            <v-layout>
+              Attachment
+              <v-spacer />
+
+              <input
+                type="file"
+                @change="onFileUpload"
                 :rules="inputRules"
-                outlined
-                dense
+                accept="application/pdf"
               />
               <v-spacer />
-
-              <v-text-field
-                label="Zone"
-                v-model="patientInfo.zone"
-                outlined
-                dense
-              />
-              <v-spacer />
-
-              <v-text-field
-                label="Woreda"
-                v-model="patientInfo.woreda"
-                outlined
-                dense
-              />
-              <v-spacer />
-
-              <v-text-field
-                label="Kebele"
-                v-model="patientInfo.kebele"
-                outlined
-                dense
-              />
-            </v-layout>
-
-            <v-layout row>
-              <v-autocomplete
-                label="Gender"
-                v-model="patientInfo.gender"
-                :rules="inputRules"
-                :items="genderoptions"
-                outlined
-                dense
-              />
-              <v-spacer />
-
-              <v-text-field
-                label="House Number"
-                v-model="patientInfo.house_number"
-                outlined
-                dense
-              />
             </v-layout>
             <br />
 
@@ -186,11 +137,14 @@
                 Register
               </v-btn>
               <v-spacer />
-              <v-btn small outlined color="red" @click="cancel()">
+              <v-btn
+                small
+                outlined
+                color="red"
+                @click="registerMemberDialog = false"
+              >
                 Cancel
               </v-btn>
-              <v-spacer />
-              <v-spacer />
             </v-layout>
           </v-form>
         </v-card-text>
@@ -201,73 +155,121 @@
 
 <script>
 import AccountService from "@/network/accountService";
+import { API_ROOT_DOWNLOAD } from "@/network/root";
+
 import { mapActions, mapState } from "vuex";
 
 import Close from "@/assets/icons/close.svg";
+import Detial from "@/assets/icons/eye.svg";
 
 export default {
   data() {
     return {
       login_user: AccountService.getProfile(),
+      inputRules: [(v) => !!v || "This field is required"],
 
-      registerStaffDialog: false,
+      registerMemberDialog: false,
       patientInfo: {},
       insurance_id: "",
       search: "",
       headers: [
-        { text: "Full Name", value: "fullName" },
-        { text: "Total Access", value: "totalAcsess" },
-        { text: "Total Money", value: "totalMoney" },
-        { text: "Action", value: "action" },
+        { text: "Date Join", value: "date_joined" },
+        { text: "Full Name", value: "patient_name" },
+        { text: "Card Number", value: "card_number" },
+        { text: "Registered By?", value: "registered_by_name" },
+        { text: "Attachment", value: "attachment" },
+        { text: "Status", value: "status" },
+        { text: "Action", value: "action", width: "15%", align: "center" },
       ],
+
+      domain: API_ROOT_DOWNLOAD,
+      insurance_memmber: {},
+      selected_patient_id: 0,
+      selectedFile: null,
+      fileSelected: false,
     };
   },
 
   components: {
     Close,
+    Detial,
   },
 
   created() {
     const { insurance_id } = this.$route.params;
     this.insurance_id = insurance_id;
-
+    if (this.insurance_id == undefined) this.back();
     this.loadData();
   },
 
   computed: {
-    ...mapState("insurance", ["singleInsurance", "insuranceStaffList"]),
-    ...mapState("patient", ["registeredPatient"]),
+    ...mapState("insurance", ["singleInsurance", "registeredInsuranceMember"]),
+    ...mapState("patient", ["patientsInsurance"]),
   },
 
   methods: {
-    ...mapActions("insurance", ["getSingleInsurance", "getInsuranceStaffList"]),
-    ...mapActions("patient", ["registerPatient"]),
+    ...mapActions("insurance", [
+      "getSingleInsurance",
+      "registereInsuranceMember",
+    ]),
+    ...mapActions("patient", ["getPatientListInsurance"]),
 
     async loadData() {
       await this.getSingleInsurance(this.insurance_id);
-      await this.getInsuranceStaffList(this.insurance_id);
+      await this.getPatientListInsurance();
+    },
+
+    async openAttachment(item) {
+      window.open(this.domain + item.attachment, "_blank").focus();
     },
 
     async registerMember() {
-      if (this.$refs.registerMember.validate()) {
-        this.patientInfo.patient_type = 3;
-        this.patientInfo.user_id = this.login_user.id;
-        this.patientInfo.insurance_id = this.insurance_id;
+      if (this.$refs.registerMember.validate() && this.fileSelected) {
+        let pid = this.selected_patient_id;
+        this.insurance_memmber.user_id = this.login_user.id;
+        this.insurance_memmber.insurance_id = this.insurance_id;
+        this.insurance_memmber.patient_id = pid;
 
-        await this.registerPatient(this.patientInfo);
+        const formData = new FormData();
+        let name = new Date().toISOString().substr(0, 16) + "-ID-" + pid;
+        formData.append("attachment", this.selectedFile, name + ".pdf");
+        formData.append("data", JSON.stringify(this.insurance_memmber));
+        /* eslint-disable no-console */
 
-        if (this.registeredPatient === true) {
-          this.patientInfo = {};
-          this.registerStaffDialog = false;
+        await this.registereInsuranceMember(formData);
+
+        if (this.registeredInsuranceMember.st === true) {
+          this.registerMemberDialog = false;
           this.loadData();
         } else
           this.$fire({
-            title: "Patient Registeration",
-            text: "Something wrong please try again!!!",
+            title: "Insurance Member Registeration",
+            text: this.registeredInsuranceMember.msg,
             type: "error",
             timer: 7000,
           });
       }
+    },
+
+    downloadAttachment(item) {
+      // window.open(this.domain + item.attachment, "_blank").focus();
+      var link = document.createElement("a");
+      link.setAttribute("download", "Attachment.pdf");
+      link.href = this.domain + item.attachment;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      this.loadData();
+    },
+
+    onFileUpload(event) {
+      this.selectedFile = event.target.files[0];
+      this.fileSelected = true;
+    },
+
+    back() {
+      this.$router.push({ name: "insurance" });
     },
   },
 };
@@ -277,5 +279,9 @@ export default {
 .main {
   margin: 7%;
   margin-top: 3%;
+}
+
+.icon {
+  cursor: pointer;
 }
 </style>

@@ -10,7 +10,7 @@
       <v-list class="profile">
         <v-list-item class="px-2">
           <v-list-item-avatar>
-            <v-img src="@/assets/images/icon.png"></v-img>
+            <v-img src="@/assets/company/company_logo.png"></v-img>
           </v-list-item-avatar>
         </v-list-item>
 

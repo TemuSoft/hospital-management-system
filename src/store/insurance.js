@@ -8,8 +8,8 @@ export default {
     registeredInsurance: false,
     insurances: [],
     updatedInsurance: false,
-    singleInsurance: [],
-    insuranceStaffList: [],
+    singleInsurance: {},
+    registeredInsuranceMember: {},
   },
 
   mutations: {
@@ -26,11 +26,11 @@ export default {
     },
 
     setSingleInsurance(state, payload) {
-      state.singleInsurance, payload;
+      state.singleInsurance = payload;
     },
 
-    setInsuranceStaffList(state, payload) {
-      state.insuranceStaffList = payload;
+    setRegistereInsuranceMember(state, payload) {
+      state.registeredInsuranceMember = payload;
     },
   },
 
@@ -51,13 +51,13 @@ export default {
     },
 
     async getSingleInsurance({ commit }, id) {
-      let res = await api.get(path.insurance, id);
+      let res = await api.get(path.insurance_single, id);
       commit("setSingleInsurance", res.data);
     },
 
-    async getInsuranceStaffList({ commit }, insurance_id) {
-      let res = await api.get(path.insurance, insurance_id);
-      commit("setInsuranceStaffList", res.data);
+    async registereInsuranceMember({ commit }, data) {
+      let res = await api.createWithFile(path.insurance_member, data);
+      commit("setRegistereInsuranceMember", res.data);
     },
   },
 };

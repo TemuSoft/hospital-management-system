@@ -260,8 +260,8 @@ export default {
         await this.registerPrescription(this.allPrescriptionInfo);
 
         if (this.registeredPrescription.st === true) {
-          this.getPrescriptionsSingle(this.service_id);
           this.prescriptionInfo = {};
+          this.loadData();
         } else
           this.$fire({
             title: "Prescription Registeration",

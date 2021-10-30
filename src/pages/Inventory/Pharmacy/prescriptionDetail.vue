@@ -64,9 +64,7 @@
               {{ props.item.medicine }}
             </td>
             <td>
-              <template v-slot:item.unit_of_measurment="{ item }">
-                {{ getUnitOfMeasurment(item.unit_of_measurment) }}
-              </template>
+              {{ getUnitOfMeasurment(props.item.unit_of_measurment) }}
             </td>
             <td>
               {{ props.item.quantity }}

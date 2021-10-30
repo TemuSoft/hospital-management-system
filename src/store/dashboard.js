@@ -7,6 +7,7 @@ export default {
   state: {
     receptionDashboardCard: [],
     receptionDashboardLiceChart: [],
+    cashierDashboardLiceChart: [],
 
     nurseStaffList: [],
     OPDStaffList: [],
@@ -19,6 +20,7 @@ export default {
     nurseDoneInfo: [],
     OPDDoneInfo: [],
     cashierDoneInfo: [],
+    pharmacyDoneInfo: [],
 
     generalViewLaboratoryHead: [],
   },
@@ -30,6 +32,10 @@ export default {
 
     setReceptionDashboardLiceChart(state, payload) {
       state.receptionDashboardLiceChart = payload;
+    },
+
+    setCashierDashboardLiceChart(state, payload) {
+      state.cashierDashboardLiceChart = payload;
     },
 
     setNurseStaffList(state, payload) {
@@ -72,6 +78,10 @@ export default {
       state.cashierDoneInfo = payload;
     },
 
+    setPharmacyDoneInfo(state, payload) {
+      state.pharmacyDoneInfo = payload;
+    },
+
     setGeneralViewLaboratoryHead(state, payload) {
       state.generalViewLaboratoryHead = payload;
     },
@@ -86,6 +96,11 @@ export default {
     async getReceptionDashboardLiceChart({ commit }) {
       let res = await api.getAll(path.reception_dashboard_linechart);
       commit("setReceptionDashboardLiceChart", res.data);
+    },
+
+    async getCashierDashboardLiceChart({ commit }) {
+      let res = await api.getAll(path.cashier_dashboard_linechart);
+      commit("setCashierDashboardLiceChart", res.data);
     },
 
     async getStaffListByRole({ commit }, role) {
@@ -167,6 +182,16 @@ export default {
       };
       let res = await api.create(path.cashier_done_dashboard, filter);
       commit("setCashierDoneInfo", res.data);
+    },
+
+    async getPharmacyDoneInfo({ commit }, data) {
+      let filter = {
+        d1: data.date[0],
+        d2: data.date[1],
+        pharmacy_id: data.pharmacy_id,
+      };
+      let res = await api.create(path.pharmacy_done_dashboard, filter);
+      commit("setPharmacyDoneInfo", res.data);
     },
 
     async getGeneralViewLaboratoryHead({ commit }, data) {

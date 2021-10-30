@@ -7,6 +7,7 @@ export default {
   state: {
     receptionDashboardCard: [],
     receptionDashboardLiceChart: [],
+    cashierDashboardLiceChart: [],
 
     nurseStaffList: [],
     OPDStaffList: [],
@@ -30,6 +31,10 @@ export default {
 
     setReceptionDashboardLiceChart(state, payload) {
       state.receptionDashboardLiceChart = payload;
+    },
+
+    setCashierDashboardLiceChart(state, payload) {
+      state.cashierDashboardLiceChart = payload;
     },
 
     setNurseStaffList(state, payload) {
@@ -86,6 +91,11 @@ export default {
     async getReceptionDashboardLiceChart({ commit }) {
       let res = await api.getAll(path.reception_dashboard_linechart);
       commit("setReceptionDashboardLiceChart", res.data);
+    },
+
+    async getCashierDashboardLiceChart({ commit }) {
+      let res = await api.getAll(path.cashier_dashboard_linechart);
+      commit("setCashierDashboardLiceChart", res.data);
     },
 
     async getStaffListByRole({ commit }, role) {

@@ -3,7 +3,6 @@
     <h2>Insurance</h2>
     <br />
 
-    {{ insurances }}
     <v-data-table :headers="headers" :items="insurances" :search="search">
       <template v-slot:item.action="{ item }">
         <Edit @click="editInsurance(item)" class="icon" />
@@ -16,7 +15,7 @@
           color="green"
           text
           class="text-capitalize"
-          @click="openAttachment(item)"
+          @click="downloadAttachment(item)"
         >
           Download
         </v-btn>
@@ -216,6 +215,7 @@ import Detail from "@/assets/icons/eye.svg";
 import AccountService from "@/network/accountService";
 
 export default {
+  name: "insurance_detail",
   data() {
     return {
       login_user: AccountService.getProfile(),
@@ -304,8 +304,16 @@ export default {
       this.fileSelected = true;
     },
 
-    openAttachment(item) {
-      window.open(this.domain + item.attachment, "_blank").focus();
+    downloadAttachment(item) {
+      // window.open(this.domain + item.attachment, "_blank").focus();
+      var link = document.createElement("a");
+      link.setAttribute("download", "Attachment.pdf");
+      link.href = this.domain + item.attachment;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      this.loadData();
     },
 
     async updte() {

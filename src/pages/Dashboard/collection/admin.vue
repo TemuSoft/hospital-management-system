@@ -32,8 +32,9 @@
 
     <v-layout row class="pa-5" justify-center>
       <v-card elevation="5" class="ma-2" width="48%">
-        <v-toolbar color="" elevation="0" class="pa-2">
-          <h6 class="">OPD Detail</h6>
+        <v-toolbar color="green" dense elevation="0" class="pa-2">
+          <h3 style="margin-top: -3%">OPD Detail</h3>
+          <v-spacer />
           <v-autocomplete
             :items="OPDStaffList"
             dense
@@ -43,7 +44,7 @@
             v-model="OPDStaffSelected"
             @change="loadOPDInfo()"
           />
-          <!-- <v-spacer /> -->
+          <v-spacer />
           <v-dialog
             ref="dialogOPD"
             v-model="modalOPD"
@@ -106,8 +107,9 @@
       </v-card>
 
       <v-card elevation="5" class="ma-2" width="48%">
-        <v-toolbar color="" elevation="0" dense class="pa-2">
-        <h6 class="">Nurse Detail</h6>
+        <v-toolbar color="green" elevation="0" dense class="pa-2">
+          <h3 style="margin-top: -3%">Nurse Detail</h3>
+          <v-spacer />
           <v-autocomplete
             :items="nurseStaffList"
             dense
@@ -150,7 +152,7 @@
             </v-date-picker>
           </v-dialog>
         </v-toolbar>
-          <v-divider />
+        <v-divider />
 
         <v-card-text>
           <v-layout>
@@ -184,8 +186,9 @@
       </v-card>
 
       <v-card elevation="5" class="ma-2" width="48%">
-        <v-toolbar color="" dense class="pa-3">
-        <h6 class="">Hospital Patient Informations</h6>
+        <v-toolbar color="green" dense class="pa-3">
+          <h3 style="margin-top: -3%">Hospital Patient Info.</h3>
+          <v-spacer />
           <v-dialog
             ref="dialog"
             v-model="modalOne"
@@ -255,23 +258,9 @@
       </v-card>
 
       <v-card elevation="5" class="ma-2" width="48%">
-        <v-layout class="">
-          <h3>Cashier Detail</h3>
+        <v-toolbar color="green" dense class="pa-3">
+          <h3 style="margin-top: -3%">Cashier</h3>
           <v-spacer />
-          <v-spacer />
-          <h5 class="mt-2">Cash : {{ cashierDoneInfo.amount }} ETB</h5>
-          <v-spacer />
-
-          <v-btn
-            small
-            class="text-capitalize white"
-            @click="cashierDetailView = !cashierDetailView"
-          >
-            Detail
-          </v-btn>
-        </v-layout>
-
-        <v-toolbar color="" dense class="pa-3">
           <v-autocomplete
             :items="cashierStaffList"
             dense
@@ -315,6 +304,15 @@
               </v-btn>
             </v-date-picker>
           </v-dialog>
+          <v-spacer />
+
+          <v-btn
+            small
+            class="mb-5 text-capitalize white"
+            @click="cashierDetailView = !cashierDetailView"
+          >
+            {{ cashierDoneInfo.amount }} ETB
+          </v-btn>
         </v-toolbar>
 
         <v-card-text>
@@ -339,10 +337,10 @@
       <v-card elevation="5" class="chartDis ma-2" width="48%">
         <v-toolbar dense color="green">
           <v-spacer />
-          <p class="mt-3" v-if="!dailyMonthlyPatient">
+          <h3 class="mt-3" v-if="!dailyMonthlyPatient">
             Patient Daily statistical view
-          </p>
-          <p class="mt-3" v-else>Patient Monthly statistical view</p>
+          </h3>
+          <h3 class="mt-3" v-else>Patient Monthly statistical view</h3>
           <v-spacer />
           <v-spacer />
 
@@ -361,10 +359,10 @@
       <v-card elevation="5" class="chartDis ma-3" width="48%">
         <v-toolbar dense color="green">
           <v-spacer />
-          <p class="mt-3" v-if="!dailyMonthlyMoney">
+          <h3 class="mt-3" v-if="!dailyMonthlyMoney">
             Money Daily statistical view
-          </p>
-          <p class="mt-3" v-else>Money Monthly statistical view</p>
+          </h3>
+          <h3 class="mt-3" v-else>Money Monthly statistical view</h3>
           <v-spacer />
           <v-spacer />
 
@@ -605,6 +603,7 @@ export default {
   computed: {
     ...mapState("dashboard", [
       "receptionDashboardLiceChart",
+      "cashierDashboardLiceChart",
       "nurseStaffList",
       "OPDStaffList",
       "cashierStaffList",
@@ -620,6 +619,7 @@ export default {
   methods: {
     ...mapActions("dashboard", [
       "getReceptionDashboardLiceChart",
+      "getCashierDashboardLiceChart",
       "getStaffListByRole",
       "getPiechartLaboratory",
       "getPiechartLaboratoryVistors",
@@ -646,6 +646,7 @@ export default {
 
       await this.getReceptionDashboardLiceChart();
       await this.drawChartPatient();
+      await this.getCashierDashboardLiceChart();
       await this.drawChartMoney();
     },
 
@@ -729,7 +730,7 @@ export default {
       // Add data
 
       //MM-DD-YYYY format
-      chart.data = this.receptionDashboardLiceChart;
+      chart.data = this.cashierDashboardLiceChart;
       // Create axes
       let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
       dateAxis.renderer.minGridDistance = 50;
@@ -737,7 +738,7 @@ export default {
       valueAxis.renderer.minGridDistance = 35;
       // Create series
       let series = chart.series.push(new am4charts.LineSeries());
-      series.dataFields.valueY = "totalPatient";
+      series.dataFields.valueY = "amount";
       series.dataFields.dateX = "date";
       series.strokeWidth = 2;
       series.minBulletDistance = 10;

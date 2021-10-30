@@ -51,6 +51,7 @@ const path = {
   medical_history_list: "/patient/medical_history",
   medical_history_patient_id: "/patient/read_medical_history_history",
   send_material_request: "/nurse/material_request",
+  material_request_service_id: "/nurse/material_request_data",
 
   room: "/admin/room",
   update_room: "/admin/room_detail",
@@ -92,9 +93,12 @@ const path = {
   surgical_order_data: "/nurse/surgical_order_data",
 
   insurance: "/insurance/insurance",
+  insurance_single: "/insurance/insurance_data",
+  insurance_member: "/insurance/insurance_members",
 
   reception_dashboard_card: "/reception/patient_data_with_all_state",
   reception_dashboard_linechart: "/reception/new_patients_in_this_year",
+  cashier_dashboard_linechart: "/cashier/yearly_money_generated",
 
   piechart_lab_testcase_wise_dashboard: "/admin/lab_test_case_percentage",
   piechart_lab_vistor_wise_dashboard: "/admin/lab_percentage_per_visitor",

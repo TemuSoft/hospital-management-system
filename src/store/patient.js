@@ -7,6 +7,7 @@ export default {
   state: {
     registeredPatient: false,
     patients: [],
+    patientsInsurance: [],
     patientsNewFive: [],
     updateResponse: false,
     singlePatient: [],
@@ -18,6 +19,10 @@ export default {
 
     setPatientList(state, payload) {
       state.patients = payload;
+    },
+
+    setPatientListInsurance(state, payload) {
+      state.patientsInsurance = payload;
     },
 
     setPatientListNewFive(state, payload) {
@@ -42,6 +47,19 @@ export default {
     async getPatientList({ commit }) {
       let res = await api.getAll(path.patient);
       commit("setPatientList", res.data);
+    },
+
+    async getPatientListInsurance({ commit }) {
+      let res = (await api.getAll(path.patient)).data;
+      for (let i = 0; i < res.length; i++) {
+        if (res[i].patient_type != 3) {
+          let fi = res[i].first_name + " ";
+          let fa = res[i].fathers_name + " ";
+          let ca = res[i].card_number;
+          res[i].full_name = fi + fa + ca;
+        } else res.splice(i, 1);
+      }
+      commit("setPatientListInsurance", res);
     },
 
     async getPatientListNewFive({ commit }) {

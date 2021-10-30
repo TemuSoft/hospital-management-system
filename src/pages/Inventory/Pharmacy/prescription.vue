@@ -28,6 +28,7 @@
 <script>
 import Detail from "@/assets/icons/eye.svg";
 import { mapActions, mapState } from "vuex";
+import PrintPdf from "@/print";
 
 export default {
   data() {

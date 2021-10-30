@@ -24,59 +24,58 @@
     </v-layout>
     <br />
 
-    <v-layout>
-      <v-card outlined class="chartDis">
-        <v-layout>
-          <v-spacer />
-          <p class="mt-2 green--text" v-if="!dailyMonthly">
+    <v-layout row justify-center>
+      <v-card elevation="5" class="ma-2" width="48%">
+        <v-toolbar dense color="green">
+          <h3 class="mt-1 ml-15" v-if="!dailyMonthly">
             Daily statistical view
-          </p>
-          <p class="mt-2 green--text" v-else>Monthly statistical view</p>
-          <v-spacer />
+          </h3>
+          <h3 class="mt-1 ml-15" v-else>Monthly statistical view</h3>
           <v-spacer />
 
           <v-checkbox
             dense
-            color="green"
+            class="mt-5"
             v-model="dailyMonthly"
             label="Monthly View"
           />
-          <v-spacer />
-        </v-layout>
+        </v-toolbar>
         <v-divider />
         <div id="chartPatient"></div>
       </v-card>
-      <v-card outlined class="chartDisRight">
-        <v-layout>
-          <v-spacer />
-          <p class="mt-2 green--text">New Laboratory and Imaging Request</p>
-          <v-spacer />
+
+      <v-card elevation="5" class="ma-2" width="48%">
+        <v-toolbar dense color="green">
+          <h3 class="mt-2 ml-15">New Laboratory and Imaging Request</h3>
           <v-spacer />
 
           <v-btn
             outlined
             small
-            color="green"
             class="mt-2 text-capitalize"
-            @click="$router.push({ name: 'patinets' })"
+            @click="$router.push({ name: 'laboratoryResult' })"
           >
             Detail
           </v-btn>
-          <v-spacer />
-        </v-layout>
+        </v-toolbar>
         <v-divider />
         <v-data-table
-          :items="paitentToday"
-          :headers="paitentHeaders"
-          :items-per-page="5"
-        />
+          :items="labratoryRequests"
+          :headers="labRequestHeaders"
+          :search="search"
+        >
+          <template v-slot:item.patient="{ item }">
+            {{ item.patient.first_name }} {{ item.patient.fathers_name }}
+          </template>
+        </v-data-table>
       </v-card>
-      <div></div>
     </v-layout>
+    <br />
 
     <v-card elevation="5" class="ma-3">
-      <h3 class="blue">Laboratory Technician Detail</h3>
       <v-toolbar color="green" dense class="pa-3">
+        <h3 class="mb-5">Laboratory Technician Detail</h3>
+        <v-spacer />
         <v-autocomplete
           :items="laboratoryTechStaffList"
           dense
@@ -234,46 +233,6 @@ export default {
         },
       ],
 
-      paitentToday: [
-        {
-          card_number: "C-001",
-          fullName: "Patient 1",
-          test_case_type: "Test Case 1",
-        },
-        {
-          card_number: "C-002",
-          fullName: "Patient 2",
-          test_case_type: "Test Case 2",
-        },
-        {
-          card_number: "C-003",
-          fullName: "Patient 3",
-          test_case_type: "Test Case 3",
-        },
-        {
-          card_number: "C-004",
-          fullName: "Patient 4",
-          test_case_type: "Test Case 4",
-        },
-        {
-          card_number: "C-005",
-          fullName: "Patient 5",
-          test_case_type: "Test Case 5",
-        },
-        {
-          card_number: "C-006",
-          fullName: "Patient 6",
-          test_case_type: "Test Case 6",
-        },
-      ],
-
-      paitentHeaders: [
-        { text: "Card Number", value: "card_number" },
-        { text: "Full Name", value: "fullName" },
-        { text: "Test Case Type", value: "test_case_type" },
-        { text: "Action", value: "action" },
-      ],
-
       labHeDetail: {},
       labHeadHeader: [
         { text: "Date", value: "date" },
@@ -283,11 +242,10 @@ export default {
         { text: "Action", value: "action" },
       ],
 
-      labHeDetailHeader: [
-        { text: "Full Name", value: "patient_name" },
-        { text: "Card Number", value: "card_number" },
-        { text: "Test Cases", value: "case_name" },
-        { text: "Price", value: "payed_price" },
+      labRequestHeaders: [
+        { text: "Card Number", value: ".patient.card_number" },
+        { text: "Full Name", value: "patient" },
+        { text: "Who Sent Request", value: "opd_user" },
       ],
     };
   },
@@ -306,6 +264,8 @@ export default {
       "generalViewLaboratoryHead",
       "laboratoryTechStaffList",
     ]),
+
+    ...mapState("medicalService", ["labratoryRequests"]),
   },
 
   methods: {
@@ -314,8 +274,11 @@ export default {
       "getStaffListByRole",
     ]),
 
+    ...mapActions("medicalService", ["getLabrtoryRequest"]),
+
     async loadData() {
       await this.getStaffListByRole("laboratory");
+      await this.getLabrtoryRequest();
       this.loadlaboratoryTechInfo();
 
       await this.drawChartPatient();

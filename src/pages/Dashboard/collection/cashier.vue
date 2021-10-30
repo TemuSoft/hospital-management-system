@@ -25,53 +25,46 @@
     <br />
     <br />
 
-    <v-layout>
-      <v-card outlined class="chartDis">
-        <v-layout>
+    <v-layout row justify-center>
+      <v-card elevation="5" class="chartDis ma-3" width="48%">
+        <v-toolbar dense color="green">
           <v-spacer />
-          <p class="mt-2 green--text" v-if="!dailyMonthly">
-            Daily Trasnsaction view
-          </p>
-
-          <p class="mt-2 green--text" v-else>Monthly Trasnsaction view</p>
+          <h3 class="mt-2" v-if="!dailyMonthlyMoney">
+            Money Daily statistical view
+          </h3>
+          <h3 class="mt-2" v-else>Money Monthly statistical view</h3>
           <v-spacer />
           <v-spacer />
 
           <v-checkbox
             dense
-            color="green"
-            v-model="dailyMonthly"
+            class="mt-3"
+            v-model="dailyMonthlyMoney"
             label="Monthly View"
-            @change="drawChart"
           />
           <v-spacer />
-        </v-layout>
+        </v-toolbar>
         <v-divider />
-
-        <div id="chartDisDailyTrans" v-show="!dailyMonthly"></div>
-        <div id="chartDisMonth" v-show="dailyMonthly"></div>
+        <div id="chartMoney"></div>
       </v-card>
-      <v-card outlined class="chartDis">
-        <v-layout>
-          <v-spacer />
-          <p class="mt-2 green--text">New Payment</p>
-          <v-spacer />
+
+      <v-card elevation="5" class="ma-2" width="48%">
+        <v-toolbar dense color="green">
+          <h3 class="mt-2 ml-15">New Payment</h3>
           <v-spacer />
 
           <v-btn
             outlined
             small
-            color="green"
             class="mt-2 text-capitalize"
             @click="$router.push({ name: 'payment' })"
           >
             Detail
           </v-btn>
-          <v-spacer />
-        </v-layout>
+        </v-toolbar>
         <v-divider />
         <v-data-table
-          :items="paymentToday"
+          :items="paymnetRequest"
           :headers="paymentHeaders"
           :items-per-page="5"
         />
@@ -86,6 +79,7 @@
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { mapActions, mapState } from "vuex";
 
 export default {
   data() {
@@ -134,45 +128,15 @@ export default {
         },
       ],
 
-      paymentToday: [
-        {
-          card_number: "C-001",
-          fullName: "Patient 1",
-          reason: "Card Renewal",
-          amount: 100,
-        },
-        {
-          card_number: "C-002",
-          fullName: "Patient 2",
-          reason: "Imaging",
-          amount: 200,
-        },
-        {
-          card_number: "C-003",
-          fullName: "Patient 3",
-          reason: "Laboratory",
-          amount: 300,
-        },
-        {
-          card_number: "C-004",
-          fullName: "Patient 4",
-          reason: "New Card",
-          amount: 400,
-        },
-        {
-          card_number: "C-005",
-          fullName: "Patient 5",
-          reason: "Imaging",
-          amount: 500,
-        },
+      paymentHeaders: [
+        { text: "Card No", value: "patient.card_number" },
+        { text: "Full Name", value: "patient.name" },
+        { text: "Guardian", value: "patient.guardian_name" },
+        { text: "Reason", value: "reason" },
+        { text: "Price", value: "amount" },
       ],
 
-      paymentHeaders: [
-        { text: "Card Number", value: "card_number" },
-        { text: "Full Name", value: "fullName" },
-        { text: "Reason", value: "reason" },
-        { text: "Amount", value: "amount" },
-      ],
+      dailyMonthlyMoney: false,
     };
   },
 
@@ -186,9 +150,20 @@ export default {
     // Icon,
   },
 
+  computed: {
+    ...mapState("cashier", ["paymnetRequest"]),
+    ...mapState("dashboard", ["cashierDashboardLiceChart"]),
+  },
+
   methods: {
+    ...mapActions("cashier", ["getPaymentRequest"]),
+    ...mapActions("dashboard", ["getCashierDashboardLiceChart"]),
+
     async loadData() {
-      this.drawChart(this.dailyMonthly);
+      await this.getPaymentRequest();
+
+      await this.getCashierDashboardLiceChart();
+      await this.drawChartMoney();
     },
 
     async drawChart(val) {
@@ -196,21 +171,14 @@ export default {
       else this.draChartTransactionMonthly();
     },
 
-    async draChartTransaction() {
+    async drawChartMoney() {
       am4core.useTheme(am4themes_animated);
       // Create chart instance
-      let chart = am4core.create("chartDisDailyTrans", am4charts.XYChart);
+      let chart = am4core.create("chartMoney", am4charts.XYChart);
       // Add data
 
       //MM-DD-YYYY format
-      chart.data = [
-        { totalPatient: 15, date: "04-25-2021" },
-        { totalPatient: 22, date: "05-20-2021" },
-        { totalPatient: 45, date: "06-15-2021" },
-        { totalPatient: 35, date: "07-10-2021" },
-        { totalPatient: 25, date: "08-05-2021" },
-        { totalPatient: 50, date: "09-29-2021" },
-      ];
+      chart.data = this.cashierDashboardLiceChart;
       // Create axes
       let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
       dateAxis.renderer.minGridDistance = 50;
@@ -218,7 +186,7 @@ export default {
       valueAxis.renderer.minGridDistance = 35;
       // Create series
       let series = chart.series.push(new am4charts.LineSeries());
-      series.dataFields.valueY = "totalPatient";
+      series.dataFields.valueY = "amount";
       series.dataFields.dateX = "date";
       series.strokeWidth = 2;
       series.minBulletDistance = 10;
@@ -339,8 +307,6 @@ export default {
 }
 
 .chartDis {
-  width: 49%;
-  margin: 0.5%;
   height: 400px;
 }
 
@@ -354,6 +320,13 @@ export default {
 #chartDisMonth {
   width: 100%;
   height: 380px;
+  margin-left: 0;
+  /* height: 100%; */
+}
+
+#chartMoney {
+  width: 100%;
+  height: 350px;
   margin-left: 0;
   /* height: 100%; */
 }

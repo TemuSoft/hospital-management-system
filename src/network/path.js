@@ -106,6 +106,7 @@ const path = {
   nurse_done_dashboard: "/admin/nurse_user_general_info",
   opd_done_dashboard: "/admin/opd_user_general_info",
   cashier_done_dashboard: "/admin/cashier_general_info_for_one_user",
+  pharmacy_done_dashboard: "/pharmacy/user_transactions_per_data_range",
 
   general_info_laboratory_head: "/lab/data_laboratory_for_head",
 

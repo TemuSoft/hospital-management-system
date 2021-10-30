@@ -215,18 +215,18 @@ export default {
     async loadData() {
       await this.getPrepaymentAmount(this.selectedPatinet.patinet_id);
       // await this.getTestCaseList(this.selectedPatinet.service_id);
-      // alert(true);
 
       this.testListPayment = this.selectedPatinet.test_cases;
       this.totalPriceInService = 0;
       for (let i = 0; i < this.testListPayment.length; i++)
-        this.totalPriceInService += this.testListPayment[i].price;
+        if (this.testListPayment[i].verified)
+          this.totalPriceInService += parseFloat(this.testListPayment[i].price);
 
       this.calculatePayment();
     },
 
-    async paymentDoneCard() {
-      if (this.$refs.paymentDoneCard.validate()) {
+    async paymentDone() {
+      if (this.$refs.paymentDone.validate()) {
         let data = {};
         data.reason_id = this.selectedPatinet.reason_id;
         data.amount = this.selectedPatinet.amount;
@@ -255,7 +255,8 @@ export default {
       this.totalPayment = 0;
       for (let i = 0; i < this.testListPayment.length; i++) {
         let cu = this.checkboxWhole[this.testListPayment[i].id];
-        if (cu === true) this.totalPayment += this.testListPayment[i].price;
+        if (cu === true)
+          this.totalPayment += parseFloat(this.testListPayment[i].price);
       }
     },
 

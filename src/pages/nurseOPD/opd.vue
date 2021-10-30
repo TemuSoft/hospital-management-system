@@ -3,28 +3,27 @@
     <h3>OPD</h3>
     <br />
     <v-card flat v-if="canAssignOPD">
-      <v-layout>
-        <v-spacer />
-        <v-btn small class="text-capitalize green" @click="assignOPD()">
-          Assign
-        </v-btn>
+      <v-card v-if="assignedOPDVisable" class="ma-10 pa-5">
+        <v-layout>
+          Assigned By : {{ assignedOPD.opd_assigned_by }}
+          <br />
+          OPD Name : {{ assignedOPD.opd_name }}
+          <br />
+          Is Emeregency ? : {{ assignedOPD.is_emergency }}
 
-        <!-- <v-spacer />
-      <v-btn small class="text-capitalize green" @click="reAssignOPD()">
-        Assign
-      </v-btn> -->
-      </v-layout>
+          <v-spacer />
 
-      <v-data-table :items="assignedOPD" :headers="assignedOPDHeader">
-      </v-data-table>
-      <br />
+          Start Time : {{ assignedOPD.request_datetime }}
+          <br />
+          End Time : {{ served_datetime }}
+          <br />
+          Status : {{ assignedOPD.served_status }}
+        </v-layout>
+        <br />
+        <v-btn small outlined class="green">Re-Assign</v-btn>
+      </v-card>
 
-      <v-form
-        @submit.prevent="saveAssignOPD"
-        ref="saveAssignOPD"
-        v-show="assignedOPDVisable"
-      >
-        {{ assignedOPD }}
+      <v-form @submit.prevent="saveAssignOPD" ref="saveAssignOPD" v-else>
         <v-layout>
           <v-autocomplete
             :items="OPDStaffList"
@@ -77,15 +76,7 @@ export default {
       login_user: AccountService.getProfile(),
       inputRules: [(v) => !!v || "This field is required!!!"],
       assignOPDInfo: {},
-      assignedOPDVisable: true,
-
-      assignedOPDHeader: [
-        { text: "Name", vlaue: "full_name" },
-        { text: "Start Time", vlaue: "start_time" },
-        { text: "End Time", vlaue: "end_time" },
-        { text: "Status", vlaue: "status" },
-        { text: "Action", vlaue: "action" },
-      ],
+      assignedOPDVisable: false,
 
       canAssignOPD: false,
     };
@@ -116,9 +107,10 @@ export default {
       await this.getPatientVitalSigns(this.service_id);
       if (this.patientVitalSigns.length > 0) this.canAssignOPD = true;
 
-      await this.getStaffListByRole("opd");
       await this.getAssignedOPD(this.service_id);
-      if (this.getAssignedOPD.length > 0) this.assignedOPDVisable = false;
+      if (this.assignedOPD.id != undefined) this.assignedOPDVisable = true;
+
+      await this.getStaffListByRole("opd");
     },
 
     async saveAssignOPD() {

@@ -17,9 +17,9 @@ import measurmentUnitPharamcy from "../pages/Inventory/Pharmacy/measurmentUnitPh
 import prescription from "../pages/Inventory/Pharmacy/prescription.vue";
 import prescriptionDetail from "../pages/Inventory/Pharmacy/prescriptionDetail.vue";
 
-import labratoryTest from "../pages/MedicalService/labratory/labratoryTest.vue";
-import labratoryReport from "../pages/MedicalService/labratory/labratoryReport.vue";
-import labratoryResult from "../pages/MedicalService/labratory/labratoryResult.vue";
+import laboratoryTest from "../pages/MedicalService/labratory/labratoryTest.vue";
+import laboratoryReport from "../pages/MedicalService/labratory/labratoryReport.vue";
+import laboratoryResult from "../pages/MedicalService/labratory/labratoryResult.vue";
 
 import imagingTest from "../pages/MedicalService/imaging/imagingTest.vue";
 import imagingReport from "../pages/MedicalService/imaging/imagingReport.vue";
@@ -158,9 +158,9 @@ const routes = [
     meta: {},
   },
   {
-    path: "/labratoryTest",
-    name: "labratoryTest",
-    component: labratoryTest,
+    path: "/laboratoryTest",
+    name: "laboratoryTest",
+    component: laboratoryTest,
     meta: {},
   },
   {
@@ -176,15 +176,15 @@ const routes = [
     meta: {},
   },
   {
-    path: "/patinet/labratoryResult",
-    name: "labratoryResult",
-    component: labratoryResult,
+    path: "/patinet/laboratoryResult",
+    name: "laboratoryResult",
+    component: laboratoryResult,
     meta: {},
   },
   {
-    path: "/labratoryReport",
-    name: "labratoryReport",
-    component: labratoryReport,
+    path: "/laboratoryReport",
+    name: "laboratoryReport",
+    component: laboratoryReport,
     meta: {},
   },
   {

@@ -72,7 +72,7 @@
           {{ pharmacyDoneInfo.amount }} ETB
         </v-btn>
       </v-toolbar>
-
+      {{ pharmacyDoneInfo }}
       <v-card-text v-if="pharmacyDetailView">
         <v-simple-table dense>
           <thead>
@@ -265,7 +265,7 @@ export default {
         { text: "Remark", value: "remark" },
       ],
 
-      getPharmacyDoneInfo: false,
+      pharmacyDetailView: false,
       modalPharmacy: false,
       datePharmacy: [
         new Date().toISOString().substr(0, 10),
@@ -295,9 +295,10 @@ export default {
     async loadPharmacyInfo() {
       if (this.datePharmacy.length === 1)
         this.datePharmacy[1] = this.datePharmacy[0];
+
       await this.getPharmacyDoneInfo({
         date: this.datePharmacy,
-        cashier_id: this.login_user.id,
+        pharmacy_id: this.login_user.id,
       });
     },
 

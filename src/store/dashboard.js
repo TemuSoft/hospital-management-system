@@ -20,6 +20,7 @@ export default {
     nurseDoneInfo: [],
     OPDDoneInfo: [],
     cashierDoneInfo: [],
+    pharmacyDoneInfo: [],
 
     generalViewLaboratoryHead: [],
   },
@@ -75,6 +76,10 @@ export default {
 
     setCashierDoneInfo(state, payload) {
       state.cashierDoneInfo = payload;
+    },
+
+    setPharmacyDoneInfo(state, payload) {
+      state.pharmacyDoneInfo = payload;
     },
 
     setGeneralViewLaboratoryHead(state, payload) {
@@ -177,6 +182,16 @@ export default {
       };
       let res = await api.create(path.cashier_done_dashboard, filter);
       commit("setCashierDoneInfo", res.data);
+    },
+
+    async getPharmacyDoneInfo({ commit }, data) {
+      let filter = {
+        d1: data.date[0],
+        d2: data.date[1],
+        pharmacy_id: data.pharmacy_id,
+      };
+      let res = await api.create(path.pharmacy_done_dashboard, filter);
+      commit("setPharmacyDoneInfo", res.data);
     },
 
     async getGeneralViewLaboratoryHead({ commit }, data) {

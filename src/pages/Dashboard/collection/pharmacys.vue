@@ -25,55 +25,144 @@
     <br />
     <br />
 
-    <v-layout>
-      <v-card outlined class="chartDis">
-        <v-layout>
-          <v-spacer />
-          <p class="mt-2 green--text">Medicine Request</p>
-          <v-spacer />
-          <v-spacer />
+    <v-card elevation="5" outlined>
+      <v-toolbar color="green" dense class="pa-3">
+        <h3 style="margin-top: -2%">Personal Income</h3>
+        <v-spacer />
 
-          <v-btn outlined small color="green" class="mt-2 text-capitalize">
-            Detail
-          </v-btn>
-          <v-spacer />
-        </v-layout>
-        <v-divider />
-        <v-data-table
-          :items="medicineToday"
-          :headers="medicineHeaders"
-          :items-per-page="5"
-        />
-      </v-card>
-      <v-card outlined class="chartDis">
-        <v-layout>
-          <v-spacer />
-          <p class="mt-2 green--text">Medicine will expired this Month</p>
-          <v-spacer />
-          <v-spacer />
+        <v-dialog
+          ref="dialogPharmacy"
+          v-model="modalPharmacy"
+          :return-value.sync="datePharmacy"
+          persistent
+          width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="datePharmacy"
+              rounded
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="datePharmacy" scrollable range>
+            <v-spacer></v-spacer>
+            <v-btn text color="red" @click="modalPharmacy = false">
+              Cancel
+            </v-btn>
+            <v-btn
+              text
+              color="green"
+              @click="
+                $refs.dialogPharmacy.save(datePharmacy), loadPharmacyInfo()
+              "
+            >
+              OK
+            </v-btn>
+          </v-date-picker>
+        </v-dialog>
+        <v-spacer />
 
-          <v-btn outlined small color="green" class="mt-2 text-capitalize">
-            Detail
-          </v-btn>
-          <v-spacer />
-        </v-layout>
-        <v-divider />
-        <v-data-table
-          :items="medicineExpired"
-          :headers="medicineExpiredHeaders"
-          :items-per-page="5"
-        />
-      </v-card>
-    </v-layout>
+        <v-btn
+          small
+          class="mb-5 text-capitalize white"
+          @click="pharmacyDetailView = !pharmacyDetailView"
+        >
+          {{ pharmacyDoneInfo.amount }} ETB
+        </v-btn>
+      </v-toolbar>
+
+      <v-card-text v-if="pharmacyDetailView">
+        <v-simple-table dense>
+          <thead>
+            <tr>
+              <th class="blue lighten-5">Full Name</th>
+              <th class="blue lighten-5">Card Number</th>
+              <th class="blue lighten-5">Medicine Name</th>
+              <th class="blue lighten-5">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="item in pharmacyDoneInfo.detail">
+              <tr v-for="(subitem, i) in item.cases" :key="i">
+                <td v-if="i === 0" :rowspan="item.cases.length">
+                  {{ item.patient_name }}
+                </td>
+                <td v-if="i === 0" :rowspan="item.cases.length">
+                  {{ item.card_number }}
+                </td>
+
+                <td>{{ subitem.medicine_name }}</td>
+                <td>{{ subitem.payed_price }}</td>
+              </tr>
+            </template>
+          </tbody>
+        </v-simple-table>
+      </v-card-text>
+    </v-card>
+    <br />
+
+    <v-card outlined elevation="5">
+      <v-toolbar dense color="green">
+        <p class="mt-2">Medicine Request</p>
+        <v-spacer />
+
+        <v-btn
+          outlined
+          small
+          class="mt-2 text-capitalize"
+          @click="$router.push({ name: 'prescription' })"
+        >
+          Detail
+        </v-btn>
+      </v-toolbar>
+      <v-divider />
+      <v-data-table
+        :items="prescriptionList"
+        :headers="headers"
+        :items-per-page="3"
+      >
+        <template v-slot:item.dateT="{ item }">
+          {{ getDateTimeFormat(item.dateT) }}
+        </template>
+
+        <template v-slot:item.status="{ item }">
+          <v-chip v-if="item.status === 0" color="yellow">Pendding</v-chip>
+          <v-chip v-else color="yellow">Something</v-chip>
+        </template>
+      </v-data-table>
+    </v-card>
+    <br />
+
+    <v-card outlined elevation="5">
+      <v-toolbar dense color="green">
+        <p class="mt-2">Medicine will expired this Month</p>
+        <v-spacer />
+
+        <v-btn outlined small class="mt-2 text-capitalize"> Detail </v-btn>
+      </v-toolbar>
+      <v-divider />
+      <v-data-table
+        :items="medicineExpired"
+        :headers="medicineExpiredHeaders"
+        :items-per-page="3"
+      >
+      </v-data-table>
+    </v-card>
   </div>
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 // import Icon from "@/assets/icons/patient.svg";
+import AccountService from "@/network/accountService";
 
 export default {
   data() {
     return {
+      login_user: AccountService.getProfile(),
+
       dailyMonthly: false,
       topHeaders: [
         {
@@ -123,38 +212,12 @@ export default {
         },
       ],
 
-      medicineToday: [
-        {
-          card_number: "Card No 01",
-          full_name: "Full name 1",
-          total: 76,
-        },
-        {
-          card_number: "Card No 02",
-          full_name: "Full name 2",
-          total: 46,
-        },
-        {
-          card_number: "Card No 03",
-          full_name: "Full name 3",
-          total: 96,
-        },
-        {
-          card_number: "Card No 04",
-          full_name: "Full name 4",
-          total: 78,
-        },
-        {
-          card_number: "Card No 05",
-          full_name: "Full name 5",
-          total: 8,
-        },
-      ],
-      medicineHeaders: [
-        { text: "Card NUmber", value: "card_number" },
-        { text: "Full Name", value: "full_name" },
-        { text: "Total", value: "total" },
-        { text: "Action", value: "action" },
+      headers: [
+        { text: "Date", value: "dateT" },
+        { text: "Full Name", value: "patient_name" },
+        { text: "Card Number", value: "card_number" },
+        { text: "From", value: "ordered_by" },
+        { text: "Status", value: "status" },
       ],
 
       medicineExpired: [
@@ -187,24 +250,62 @@ export default {
       medicineExpiredHeaders: [
         { text: "Name", value: "name", align: "left" },
         { text: "Category", value: "category" },
+        { text: "QTY Store", value: "quantity_store" },
+        { text: "QTY Dispensary", value: "quantity_dispensary" },
+        { text: "Unit", value: "unit_of_measurment" },
         { text: "Expire Date", value: "expire_date" },
         { text: "Actions", value: "actions" },
       ],
+
+      medicineTrasnHeaders: [
+        { text: "Date", value: "date" },
+        { text: "User", value: "user" },
+        { text: "Quantity", value: "quantity" },
+        { text: "Unit", value: "unit_of_measurment" },
+        { text: "Remark", value: "remark" },
+      ],
+
+      getPharmacyDoneInfo: false,
+      modalPharmacy: false,
+      datePharmacy: [
+        new Date().toISOString().substr(0, 10),
+        new Date().toISOString().substr(0, 10),
+      ],
     };
   },
-
-  mounted() {},
 
   created() {
     this.loadData();
   },
 
-  components: {
-    // Icon,
+  computed: {
+    ...mapState("prescription", ["prescriptionList"]),
+    ...mapState("dashboard", ["pharmacyDoneInfo"]),
   },
 
   methods: {
-    async loadData() {},
+    ...mapActions("prescription", ["getPrescriptionList"]),
+    ...mapActions("dashboard", ["getPharmacyDoneInfo"]),
+
+    async loadData() {
+      await this.getPrescriptionList();
+      this.loadPharmacyInfo();
+    },
+
+    async loadPharmacyInfo() {
+      if (this.datePharmacy.length === 1)
+        this.datePharmacy[1] = this.datePharmacy[0];
+      await this.getPharmacyDoneInfo({
+        date: this.datePharmacy,
+        cashier_id: this.login_user.id,
+      });
+    },
+
+    getDateTimeFormat(input) {
+      let date = new Date(input).toDateString();
+      let time = new Date(input).toTimeString().substr(0, 5);
+      return date + " " + time;
+    },
   },
 };
 </script>

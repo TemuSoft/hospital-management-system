@@ -59,9 +59,10 @@
 
         <template v-slot:item.status="{ item }">
           <v-chip v-if="item.status === 'active'" color="green">Active</v-chip>
-          <v-chip v-else-if="item.status === 'not-active'" color="red"
-            >Not-Active</v-chip
-          >
+          <v-chip v-else-if="item.status === 'not-active'" color="blue">
+            Not-Active
+          </v-chip>
+          <v-chip v-else color="red">Deleted</v-chip>
         </template>
 
         <template v-slot:item.attachment="{ item }">
@@ -83,35 +84,39 @@
         </template>
 
         <template v-slot:item.action="{ item }">
-          <Detial class="icon mt-3" @click="insuranceMemeberDetail(item.id)" />
-          <v-btn
-            v-if="item.status === 'active'"
-            class="icon ml-5 mb-2 text-capitalize blue--text"
-            @click="insuranceMemebeSuspend(item.id)"
-            small
-            text
-          >
-            Suspend
-          </v-btn>
+          <v-layout row justify-center>
+            <Detial class="icon" @click="insuranceMemeberDetail(item.id)" />
+            <template v-if="item.status != 'deleted'">
+              <v-btn
+                v-if="item.status === 'active'"
+                class="text-capitalize blue--text"
+                @click="insuranceMemebeSuspend(item.id)"
+                small
+                text
+              >
+                Suspend
+              </v-btn>
 
-          <v-btn
-            v-else-if="item.status === 'not-active'"
-            class="icon ml-5 mb-2 text-capitalize green--text"
-            @click="insuranceMemebeActivate(item.id)"
-            small
-            text
-          >
-            Activate
-          </v-btn>
+              <v-btn
+                v-else-if="item.status === 'not-active'"
+                class="text-capitalize green--text"
+                @click="insuranceMemebeActivate(item.id)"
+                small
+                text
+              >
+                Activate
+              </v-btn>
 
-          <v-btn
-            class="icon ml-5 mb-2 text-capitalize red--text"
-            @click="insuranceMemeberRemove(item.id)"
-            small
-            text
-          >
-            Remove
-          </v-btn>
+              <v-btn
+                class="text-capitalize red--text"
+                @click="insuranceMemeberRemove(item.id)"
+                small
+                text
+              >
+                Remove
+              </v-btn>
+            </template>
+          </v-layout>
         </template>
       </v-data-table>
     </v-card>

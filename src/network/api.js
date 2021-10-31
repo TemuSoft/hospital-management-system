@@ -31,7 +31,7 @@ class api {
   }
 
   delete(path, id) {
-    return http.delete(`${path}/${id}`);
+    return http.delete(`${path}/${id}/`);
   }
 
   deleteAll(path) {

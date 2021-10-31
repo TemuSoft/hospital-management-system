@@ -62,7 +62,6 @@
       />
     </v-dialog>
 
-    {{ appointmentUpdateInfo }}
     <v-dialog v-model="updateAppoDialog" persistent width=" 700px">
       <v-card>
         <v-toolbar dense color="green" dark>
@@ -81,6 +80,7 @@
                   outlined
                   dense
                   item-text="card_number"
+                  readonly
                   item-value="id"
                   label="Patient"
                   v-model="appointmentUpdateInfo.patient_id"
@@ -93,6 +93,7 @@
                   dense
                   item-text="name"
                   item-value="id"
+                  readonly
                   :rules="inputRules"
                   :items="departments"
                   label="Department"
@@ -133,6 +134,7 @@
                   dense
                   item-text="first_name"
                   item-value="id"
+                  readonly
                   :items="staffInDepartent"
                   label="Staff"
                   v-model="appointmentUpdateInfo.setted_to_user"
@@ -146,6 +148,7 @@
                   label="Reason / Description"
                   dense
                   outlined
+                  readonly
                   :rules="inputRules"
                   v-model="appointmentUpdateInfo.description"
                 />
@@ -211,21 +214,46 @@ export default {
   },
 
   computed: {
-    ...mapState("appointment", ["appointmentLists", "singleAppointment"]),
+    ...mapState("appointment", [
+      "updatedAppointment",
+      "appointmentLists",
+      "singleAppointment",
+    ]),
     ...mapState("department", ["departments", "staffInDepartent"]),
+    ...mapState("patient", ["patients"]),
   },
 
   methods: {
     ...mapActions("appointment", [
+      "updateAppointment",
       "getAppointmentList",
       "getSingleAppointment",
     ]),
     ...mapActions("department", ["getDepartmentList", "getStaffsInDepartment"]),
+    ...mapActions("patient", ["getPatientList"]),
 
     async loadData() {
       // await this.getAppointmentList();
+      await this.getPatientList();
       await this.getDepartmentList();
       await this.getSingleAppointment(this.login_user.id);
+    },
+
+    async update() {
+      if (this.$refs.update.validate()) {
+        this.appointmentUpdateInfo.user_id = this.login_user.id;
+        await this.updateAppointment(this.appointmentInfo);
+
+        if (this.updatedAppointment.st == true) {
+          this.dialogControl();
+        } else
+          this.$fire({
+            title: "Update Appointment!",
+            text: this.updatedAppointment.msg,
+            type: "error",
+            timer: 7000,
+          });
+      }
     },
 
     async editAppointment(item) {

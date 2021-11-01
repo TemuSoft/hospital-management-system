@@ -15,7 +15,8 @@ export default {
     clearedPatientInfo: [],
 
     registeredAssignedOPD: {},
-    assignedOPD: [],
+    assignedOPD: {},
+    reassignededOPD: {},
 
     registeredSurgicalOrder: [],
     surgicalOrderList: [],
@@ -48,6 +49,10 @@ export default {
 
     setAssignedOPD(state, payload) {
       state.assignedOPD = payload;
+    },
+
+    setReassignedOPD(state, payload) {
+      state.reassignededOPD = payload;
     },
 
     setRegisterSurgicalOrder(state, payload) {
@@ -98,6 +103,11 @@ export default {
     async getAssignedOPD({ commit }, service_id) {
       let res = await api.get(path.update_nurse_patient_assigned, service_id);
       commit("setAssignedOPD", res.data);
+    },
+
+    async reassignedOPD({ commit }, data) {
+      let res = await api.update(path.reassign_opd, data.id, data);
+      commit("setReassignedOPD", res.data);
     },
 
     async registerSurgicalOrder({ commit }, data) {

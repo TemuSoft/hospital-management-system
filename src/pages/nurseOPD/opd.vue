@@ -20,7 +20,13 @@
           Status : {{ assignedOPD.served_status }}
         </v-layout>
         <br />
-        <v-btn small outlined class="green">Re-Assign</v-btn>
+        <v-btn
+          small
+          outlined
+          class="green text-capitalize"
+          @click="(reassignOPDInfo = assignedOPD), (reassignOPDView = true)"
+          >Re-Assign</v-btn
+        >
       </v-card>
 
       <v-form @submit.prevent="saveAssignOPD" ref="saveAssignOPD" v-else>
@@ -55,6 +61,47 @@
           <v-spacer />
         </v-layout>
       </v-form>
+
+      <v-form
+        @submit.prevent="saveReAssignOPD"
+        ref="saveReAssignOPD"
+        v-if="reassignOPDView"
+      >
+        <v-layout>
+          <v-autocomplete
+            :items="OPDStaffList"
+            v-model="reassignOPDInfo.opd_user_id"
+            item-text="full_name"
+            item-value="id"
+            label="OPD"
+            dense
+            outlined
+          />
+          <v-spacer />
+
+          <v-text-field
+            v-model="reassignOPDInfo.note"
+            label="Note"
+            outlined
+            dense
+          />
+        </v-layout>
+        <v-layout>
+          <v-btn
+            small
+            class="text-capitalize red"
+            @click="reassignOPDView = false"
+          >
+            Cancel
+          </v-btn>
+          <v-spacer />
+
+          <v-btn small class="text-capitalize green" @click="saveReAssignOPD()">
+            Re-Assign
+          </v-btn>
+          <v-spacer />
+        </v-layout>
+      </v-form>
     </v-card>
 
     <v-card flat v-else>
@@ -76,7 +123,9 @@ export default {
       login_user: AccountService.getProfile(),
       inputRules: [(v) => !!v || "This field is required!!!"],
       assignOPDInfo: {},
+      reassignOPDInfo: {},
       assignedOPDVisable: false,
+      reassignOPDView: false,
 
       canAssignOPD: false,
     };
@@ -89,6 +138,7 @@ export default {
   computed: {
     ...mapState("mainPatientInfoManager", [
       "registeredAssignedOPD",
+      "reassignededOPD",
       "assignedOPD",
     ]),
     ...mapState("dashboard", ["OPDStaffList"]),
@@ -98,6 +148,7 @@ export default {
   methods: {
     ...mapActions("mainPatientInfoManager", [
       "registerAssignedOPD",
+      "reassignedOPD",
       "getAssignedOPD",
     ]),
     ...mapActions("dashboard", ["getStaffListByRole"]),
@@ -127,6 +178,24 @@ export default {
           this.$fire({
             title: "Assign OPD Registeration",
             text: this.registeredAssignedOPD.msg,
+            type: "error",
+            timer: 7000,
+          });
+      }
+    },
+
+    async saveReAssignOPD() {
+      if (this.$refs.saveReAssignOPD.validate()) {
+        this.reassignOPDInfo.user_id = this.login_user.id;
+        await this.reassignedOPD(this.reassignOPDInfo);
+
+        if (this.reassignededOPD.st === true) {
+          this.reassignOPDInfo = {};
+          this.loadData();
+        } else
+          this.$fire({
+            title: "Assign OPD Registeration",
+            text: this.reassignededOPD.msg,
             type: "error",
             timer: 7000,
           });

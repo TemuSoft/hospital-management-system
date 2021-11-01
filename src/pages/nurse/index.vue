@@ -49,6 +49,7 @@
           :items="nursePatientList"
           :headers="headers"
           :search="search"
+          :item-class="rowBackgroundColor"
         >
           <template v-slot:item.action="{ item }">
             <Detail @click="nursePatientDetail(item)" class="icon" />
@@ -164,6 +165,10 @@ export default {
         service_id: item.service_id,
       });
       await this.loadData();
+    },
+
+    rowBackgroundColor(item) {
+      if (item.is_emergency === 1) return "red";
     },
   },
 };

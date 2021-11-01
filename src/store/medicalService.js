@@ -6,6 +6,8 @@ export default {
   namespaced: true,
   state: {
     registeredLab: false,
+    updatedLab: false,
+
     registeredLabGroup: false,
     labratoryGroup: [],
     registeredImaging: false,
@@ -31,6 +33,10 @@ export default {
   mutations: {
     setRegisterLab(state, payload) {
       state.registeredLab = payload;
+    },
+
+    setUpdateLab(state, payload) {
+      state.updatedLab = payload;
     },
 
     setRegisterLabGroup(state, payload) {
@@ -106,6 +112,11 @@ export default {
     async registerLab({ commit }, data) {
       let res = await api.create(path.register_lab_case, data);
       commit("setRegisterLab", res.data);
+    },
+
+    async updateLab({ commit }, data) {
+      let res = await api.update(path.update_lab_test_case, data.id, data);
+      commit("setUpdateLab", res.data);
     },
 
     async getLabTestList({ commit }) {

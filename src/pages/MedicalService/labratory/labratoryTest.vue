@@ -4,15 +4,31 @@
     <v-card flat>
       <v-layout>
         <v-spacer></v-spacer>
-        <v-btn small @click="registerLabDialog = true" outlined>Add New</v-btn>
+        <v-btn
+          v-show="isHead"
+          class="green text-capitalize"
+          small
+          @click="registerLabDialog = true"
+          outlined
+        >
+          Add New
+        </v-btn>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <v-btn small @click="registerLabGroupDialog = true" outlined
-          >Register Test Group</v-btn
+        <v-btn
+          v-show="isHead"
+          small
+          class="green text-capitalize"
+          @click="registerLabGroupDialog = true"
+          outlined
+        >
+          Add Test Group</v-btn
         >
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <v-btn
+          v-show="isHead"
           outlined
           small
+          class="green text-capitalize"
           @click="$router.push({ name: 'labratoryReport' })"
         >
           Labratory Report
@@ -28,92 +44,144 @@
 
       <v-dialog v-model="registerLabDialog" persistent width="700px">
         <v-card>
-          <v-toolbar dense color="green" dark
-            >Add New Labratory Test
+          <v-toolbar dense color="green">
+            Add New Labratory Test
+            <v-spacer />
+            <Close @click="registerLabDialog = false" class="icon" />
           </v-toolbar>
           <br />
           <v-card-text>
-            <v-form @submit.prevent="save" ref="form">
+            <v-form @submit.prevent="save" ref="save">
               <v-layout>
-                <v-flex xs12 sm1> </v-flex>
-                <v-flex xs12 sm3> Group</v-flex>
-                <v-flex xs12 sm8>
-                  <v-autocomplete
-                    dense
-                    :items="labratoryGroup"
-                    outlined
-                    item-text="title"
-                    item-value="id"
-                    :rules="inputRules"
-                    v-model="testInfo.group_id"
-                  ></v-autocomplete>
-                </v-flex>
-              </v-layout>
-
-              <v-layout>
-                <v-flex xs12 sm1> </v-flex>
-                <v-flex xs12 sm3> Type</v-flex>
-                <v-flex xs12 sm8>
-                  <v-text-field
-                    dense
-                    outlined
-                    :rules="inputRules"
-                    v-model="testInfo.title"
-                  ></v-text-field>
-                </v-flex>
-              </v-layout>
-
-              <v-layout>
-                <v-flex xs12 sm1> </v-flex>
-                <v-flex xs12 sm3> Cost</v-flex>
-                <v-flex xs12 sm8>
-                  <v-text-field
-                    type="number"
-                    dense
-                    outlined
-                    v-model="testInfo.price"
-                  ></v-text-field>
-                </v-flex>
-              </v-layout>
-
-              <v-layout>
-                <v-flex xs12 sm1> </v-flex>
-                <v-flex xs12 sm3> Status</v-flex>
-                <v-flex xs12 sm8>
-                  <v-autocomplete
-                    dense
-                    :items="statusList"
-                    item-text="text"
-                    item-value="value"
-                    outlined
-                    v-model="testInfo.status"
-                  ></v-autocomplete>
-                </v-flex>
-              </v-layout>
-
-              <v-layout>
-                <v-flex xs12 sm1> </v-flex>
-                <v-flex xs12 sm3> Description</v-flex>
-                <v-flex xs12 sm8>
-                  <v-text-field
-                    dense
-                    outlined
-                    v-model="testInfo.description"
-                  ></v-text-field>
-                </v-flex>
-              </v-layout>
-
-              <v-layout>
-                <v-spacer></v-spacer>
-                <v-btn
-                  small
+                <v-autocomplete
+                  label="Group"
+                  dense
+                  :items="labratoryGroup"
                   outlined
-                  color="red"
-                  @click="registerLabDialog = false"
-                  >Cancel</v-btn
+                  item-text="title"
+                  item-value="id"
+                  :rules="inputRules"
+                  v-model="testInfo.group_id"
+                  class="mr-5"
+                />
+                <v-spacer />
+
+                <v-autocomplete
+                  label="Stauts"
+                  dense
+                  :items="statusList"
+                  item-text="text"
+                  item-value="value"
+                  outlined
+                  v-model="testInfo.status"
+                  class="ml-5"
+                />
+              </v-layout>
+
+              <v-layout>
+                <v-text-field
+                  label="Type"
+                  dense
+                  outlined
+                  :rules="inputRules"
+                  v-model="testInfo.title"
+                />
+                <v-spacer />
+
+                <v-text-field
+                  label="Cost"
+                  type="number"
+                  dense
+                  outlined
+                  v-model="testInfo.price"
+                />
+              </v-layout>
+
+              <v-text-field
+                label="Description"
+                dense
+                outlined
+                v-model="testInfo.description"
+              />
+
+              <v-layout>
+                <v-spacer />
+                <v-btn small color="green text-capitalize" @click="save()"
+                  >Save</v-btn
                 >
-                <v-spacer></v-spacer>
-                <v-btn small outlined color="green" @click="save()">Save</v-btn>
+              </v-layout>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="updateLabDialog" persistent width="700px">
+        <v-card>
+          <v-toolbar dense color="green">
+            Update Labratory Test
+            <v-spacer />
+            <Close @click="updateLabDialog = false" class="icon" />
+          </v-toolbar>
+          <br />
+          <v-card-text>
+            <v-form @submit.prevent="update" ref="update">
+              <v-layout>
+                <v-autocomplete
+                  label="Group"
+                  dense
+                  :items="labratoryGroup"
+                  outlined
+                  item-text="title"
+                  item-value="id"
+                  :rules="inputRules"
+                  v-model="updateTestInfo.group_id"
+                  class="mr-5"
+                />
+                <v-spacer />
+
+                <v-autocomplete
+                  label="Stauts"
+                  dense
+                  :items="statusList"
+                  item-text="text"
+                  item-value="value"
+                  outlined
+                  v-model="updateTestInfo.status"
+                  class="ml-5"
+                />
+              </v-layout>
+
+              <v-layout>
+                <v-text-field
+                  label="Type"
+                  dense
+                  outlined
+                  :rules="inputRules"
+                  v-model="updateTestInfo.title"
+                />
+                <v-spacer />
+
+                <v-text-field
+                  label="Cost"
+                  type="number"
+                  dense
+                  outlined
+                  v-model="updateTestInfo.price"
+                />
+              </v-layout>
+
+              <v-text-field
+                label="Description"
+                dense
+                outlined
+                v-model="updateTestInfo.description"
+              />
+
+              <v-layout>
+                <v-spacer />
+                <v-btn small color="green text-capitalize" @click="update()"
+                  >Update</v-btn
+                >
               </v-layout>
             </v-form>
           </v-card-text>
@@ -180,13 +248,17 @@ export default {
   data() {
     return {
       login_user: AccountService.getProfile(),
+      role: AccountService.getRole(),
+      isHead: false,
       registerLabDialog: false,
+      updateLabDialog: false,
       registerLabGroupDialog: false,
       statusList: [
         { text: "Active", value: 1 },
         { text: "Not Active", value: 0 },
       ],
       testInfo: {},
+      updateTestInfo: {},
       labgroupInfo: {},
       inputRules: [(v) => !!v || "This field is required"],
 
@@ -196,7 +268,6 @@ export default {
         { text: "Status", value: "status" },
         { text: "Description", value: "description" },
         { text: "Group", value: "group.title" },
-        { text: "Action", value: "action" },
       ],
 
       labGroupHeader: [
@@ -208,6 +279,10 @@ export default {
   },
 
   created() {
+    if (this.role === "laboratory_head") {
+      this.isHead = true;
+      this.headers.push({ text: "Action", value: "action" });
+    }
     this.loadData();
   },
 
@@ -220,6 +295,7 @@ export default {
     ...mapState("medicalService", [
       "registeredLabGroup",
       "registeredLab",
+      "updatedLab",
       "labratoryGroup",
       "labTestList",
     ]),
@@ -229,6 +305,7 @@ export default {
     ...mapActions("medicalService", [
       "registerLabGroup",
       "registerLab",
+      "updateLab",
       "getLabratoryGroup",
       "getLabTestList",
     ]),
@@ -239,7 +316,7 @@ export default {
     },
 
     async save() {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.save.validate()) {
         this.testInfo.registered_by = this.login_user.id;
         await this.registerLab(this.testInfo);
 
@@ -248,7 +325,25 @@ export default {
           this.loadData();
         } else
           this.$fire({
-            title: "Lab Text Case Registeration",
+            title: "Lab Test Case Registeration",
+            text: "Something wrong please try again!!!",
+            type: "error",
+            timer: 7000,
+          });
+      }
+    },
+
+    async update() {
+      if (this.$refs.update.validate()) {
+        this.updateTestInfo.registered_by = this.login_user.id;
+        await this.updateLab(this.updateTestInfo);
+
+        if (this.updatedLab === true) {
+          this.updateLabDialog = false;
+          this.loadData();
+        } else
+          this.$fire({
+            title: "Lab Test Case Update",
             text: "Something wrong please try again!!!",
             type: "error",
             timer: 7000,
@@ -273,6 +368,11 @@ export default {
             timer: 7000,
           });
       }
+    },
+
+    async editLabTestCase(item) {
+      this.updateTestInfo = item;
+      this.updateLabDialog = true;
     },
   },
 };

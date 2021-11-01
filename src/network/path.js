@@ -22,12 +22,12 @@ const path = {
   register_imaging: "/imaging/imaging_test_case",
   register_lab_group: "/lab/lab_test_group",
   register_lab_case: "/lab/lab_test_case",
+  update_lab_test_case: "/lab/update_lab_test_case",
   get_lab_case_by_group: "/lab/lab_test_case_in_group",
   update_lab_group: "/lab/update_lab_test_group",
   lab_group: "/lab_group",
   lab_test_case: "/lab/lab_test_case",
   lab_test_case_by_gruop: "/lab/lab_test_case_in_group",
-  update_lab_test_case: "/lab/update_lab_test_case",
   patient_test_case: "/lab/lab_test_request",
   verification_test_case: "/lab/varify_outsource_lab_test",
   get_patient_test_case: "/lab/lab_test_history_data",
@@ -71,7 +71,7 @@ const path = {
   patient_vital_sign_read: "/nurse/patient_vital_sign_read",
 
   make_appointment: "/common/appointment",
-  update_appointment: "/common/update_/////////",
+  update_appointment: "/common/update_appointment",
   single_make_appointment: "/common/read_user_appointment",
 
   reception_card_renewal: "/reception/write_card_renewal",
@@ -123,6 +123,8 @@ const path = {
   work_permission_unseen: "/common/read_waiting_work_permmisions",
   work_permission_single: "/common/read_my_permmision_history",
   imaging_test_case: "/imaging_test",
+
+  sampling: "/Samplings",
 };
 
 export default path;

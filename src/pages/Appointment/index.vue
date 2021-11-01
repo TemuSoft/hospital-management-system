@@ -179,6 +179,7 @@ export default {
   data() {
     return {
       login_user: AccountService.getProfile(),
+      inputRules: [(v) => !!v || "This field is required"],
       registerAppoDialog: false,
       search: "",
       appointmentInfo: {},
@@ -242,14 +243,13 @@ export default {
     async update() {
       if (this.$refs.update.validate()) {
         this.appointmentUpdateInfo.user_id = this.login_user.id;
-        await this.updateAppointment(this.appointmentInfo);
+        await this.updateAppointment(this.appointmentUpdateInfo);
 
-        if (this.updatedAppointment.st == true) {
-          this.dialogControl();
-        } else
+        if (this.updatedAppointment == true) this.dialogControl();
+        else
           this.$fire({
             title: "Update Appointment!",
-            text: this.updatedAppointment.msg,
+            text: "Something rwong try agai please",
             type: "error",
             timer: 7000,
           });
@@ -272,6 +272,7 @@ export default {
 
     dialogControl(registerAppoDialog) {
       this.registerAppoDialog = registerAppoDialog;
+      this.updateAppoDialog = false;
       this.loadData();
     },
   },

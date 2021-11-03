@@ -20,6 +20,9 @@ export default {
 
     registeredSurgicalOrder: [],
     surgicalOrderList: [],
+
+    registeredRefferal: {},
+    refferalData: {},
   },
 
   mutations: {
@@ -61,6 +64,14 @@ export default {
 
     setSurgicalOrderList(state, payload) {
       state.surgicalOrderList = payload;
+    },
+
+    setRegisterRefferal(state, payload) {
+      state.registeredRefferal = payload;
+    },
+
+    setRefferalData(state, payload) {
+      state.refferalData = payload;
     },
   },
 
@@ -118,6 +129,16 @@ export default {
     async getSurgicalOrderList({ commit }, service_id) {
       let res = await api.get(path.surgical_orders_service, service_id);
       commit("setSurgicalOrderList", res.data);
+    },
+
+    async registerRefferal({ commit }, data) {
+      let res = await api.create(path.refferal, data);
+      commit("setRegisterRefferal", res.data);
+    },
+
+    async getRefferalData({ commit }, service_id) {
+      let res = await api.get(path.read_refferal, service_id);
+      commit("setRefferalData", res.data);
     },
   },
 };

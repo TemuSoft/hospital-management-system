@@ -166,6 +166,7 @@
 import Close from "@/assets/icons/close.svg";
 import Checked from "@/assets/icons/checked.svg";
 import Unchecked from "@/assets/icons/unchecked.svg";
+import AccountService from "@/network/accountService";
 
 import { mapActions, mapState } from "vuex";
 
@@ -174,6 +175,7 @@ export default {
 
   data() {
     return {
+      login_user: AccountService.getProfile(),
       inputRules: [(v) => !!v || "This field is required"],
 
       who_payed: "",
@@ -227,33 +229,37 @@ export default {
     async paymentDone() {
       if (this.$refs.paymentDone.validate()) {
         let data = {};
+        data.cashier_id = this.login_user.id;
         data.patient_id = this.selectedPatinet.patient_id;
         data.reason_id = this.selectedPatinet.reason_id;
         data.amount = this.selectedPatinet.amount;
-        data.cash = this.totalPayment - this.prepaymentAmount;
+        data.payed_by = this.who_payed;
+        data.payed_from = this.selectedPatinet.patient.patient_type;
+        // data.cash = this.totalPayment - this.prepaymentAmount;
         if (data.cash < 0) {
           data.cash = 0;
           data.prepayment = this.totalPayment;
         }
-        data.credit = 0;
-        data.insurance = 0;
+        // data.credit = 0;
+        // data.insurance = 0;
         data.test_cases_id = [];
         for (let i = 0; i < this.testListPayment.length; i++) {
           let cu = this.checkboxWhole[this.testListPayment[i].id];
           if (cu === true)
             data.test_cases_id.push({
               id: this.testListPayment[i].id,
-              payed_price: this.testListPayment[i].payed_price,
+              payed_price: this.testListPayment[i].price,
             });
         }
 
-        await this.testCasePaymentRegister(data);
-        if (this.testCasePaymentDone === true)
+        await this.testCasePaymentRegister([data, this.selectedPatinet.id]);
+        if (this.testCasePaymentDone.st === true) {
           this.paymentDialogRegular = false;
-        else
+          this.closeDialog();
+        } else
           this.$fire({
             title: "Test Case Payment",
-            text: "Something wrong please try again!!!",
+            text: this.testCasePaymentDone.msg,
             type: "error",
             timer: 7000,
           });

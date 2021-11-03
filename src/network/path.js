@@ -77,6 +77,7 @@ const path = {
   reception_card_renewal: "/reception/write_card_renewal",
   cashier_payment_request: "/cashier/payment_request",
   card_renewal_payment: "/cashier/payment_approval",
+  test_case_payment_done: "/cashier/payment_approval",
   single_prepayment_load: "/cashier/patient_prepayment_read",
 
   register_prepayment: "/cashier/patient_prepayment_write",
@@ -115,6 +116,9 @@ const path = {
 
   assign_opd: "/nurse/send_to_opd",
   assigned_opd_list: "/nurse/",
+
+  refferal: "/nurse/referal",
+  read_refferal: "/nurse/read_referal",
 
   logout: "/user/logout",
   login: "/user/login",

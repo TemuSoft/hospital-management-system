@@ -74,8 +74,11 @@ export default {
     },
 
     async testCasePaymentRegister({ commit }, data) {
-      console.log(data);
-      let res = await api.create(path.test_case_payment_done, data);
+      let res = await api.createById(
+        path.test_case_payment_done,
+        data[1],
+        data[0]
+      );
       commit("setTestCasePaymentRegister", res.data);
     },
 

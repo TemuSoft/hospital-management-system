@@ -25,8 +25,11 @@
           outlined
           class="green text-capitalize"
           @click="(reassignOPDInfo = assignedOPD), (reassignOPDView = true)"
-          >Re-Assign</v-btn
         >
+          Re-Assign
+        </v-btn>
+
+        {{ reassignOPDInfo }}
       </v-card>
 
       <v-form @submit.prevent="saveAssignOPD" ref="saveAssignOPD" v-else>

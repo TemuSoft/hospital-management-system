@@ -66,6 +66,12 @@
               :patientId="patientId"
             />
 
+            <Referral
+              v-else-if="selectedTab === 8"
+              :service_id="service_id"
+              :patient_id="patientId"
+            />
+
             <OPD
               v-else-if="selectedTab === 11"
               :service_id="service_id"
@@ -205,6 +211,7 @@ import VitalSign from "../nurseOPD/vitalSign.vue";
 import Prescription from "../nurseOPD/prescription.vue";
 import MaterialRequest from "../nurseOPD/materialRequest.vue";
 import MedicalHistory from "../nurseOPD/medicalHistory.vue";
+import Referral from "../nurseOPD/referral.vue";
 
 import OPD from "../nurseOPD/opd.vue";
 import SurgicalOrder from "../nurseOPD/surgicalOrder.vue";
@@ -258,6 +265,7 @@ export default {
     Prescription,
     MaterialRequest,
     MedicalHistory,
+    Referral,
     OPD,
     SurgicalOrder,
     ClearPatient,

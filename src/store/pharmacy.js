@@ -114,6 +114,7 @@ export default {
     },
 
     async confirmDispensaryRequest({ commit }, data) {
+      console.log(data);
       let res = await api.updateWithoutId(
         path.dispensary_request_confirm,
         data

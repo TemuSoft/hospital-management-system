@@ -84,7 +84,6 @@
                 multiple
                 chips
                 return-object
-                @change="medicineSleceted"
               />
 
               <v-spacer />

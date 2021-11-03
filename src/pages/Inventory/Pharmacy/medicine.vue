@@ -1,7 +1,6 @@
 <template>
   <div class="main">
     <h3>Medicines</h3>
-    {{ medicineList }}
     <v-data-table :headers="headers" :items="medicineList" :search="search">
       <template v-slot:item.category_id="{ item }">
         <div v-for="cc in medicineCategoryList" :key="cc">

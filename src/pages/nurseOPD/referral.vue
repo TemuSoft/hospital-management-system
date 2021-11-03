@@ -3,9 +3,10 @@
     <h3>Refferal</h3>
     <br />
 
-    {{ registeredRefferal }}
-
-    {{ refferalData }}
+    <h3 v-if="haveRefferal" class="green--text">
+      Date : {{ new Date(this.refferalData.datetime).toDateString() }}
+    </h3>
+    <br />
     <v-form @submit.prevent="save" ref="save">
       <v-textarea
         outlined
@@ -13,6 +14,7 @@
         v-model="refferalInfo.history_physical_finding"
         label="History Physical Finding"
         :rules="inputRules"
+        :readonly="haveRefferal"
       />
       <v-textarea
         outlined
@@ -20,6 +22,7 @@
         v-model="refferalInfo.working_diagnosis"
         label="Working Diagnosis"
         :rules="inputRules"
+        :readonly="haveRefferal"
       />
       <v-textarea
         outlined
@@ -27,6 +30,7 @@
         v-model="refferalInfo.investigation_done"
         label="Investigation Done"
         :rules="inputRules"
+        :readonly="haveRefferal"
       />
       <v-textarea
         outlined
@@ -34,6 +38,7 @@
         v-model="refferalInfo.referal_differential_diagnosis"
         label="Differntial Diagnosis"
         :rules="inputRules"
+        :readonly="haveRefferal"
       />
       <v-textarea
         outlined
@@ -41,6 +46,7 @@
         v-model="refferalInfo.reason_for_referal"
         label="Reason"
         :rules="inputRules"
+        :readonly="haveRefferal"
       />
       <v-textarea
         outlined
@@ -48,9 +54,10 @@
         v-model="refferalInfo.feedback"
         label="Feedback"
         :rules="inputRules"
+        :readonly="haveRefferal"
       />
 
-      <v-layout v-if="refferalData.id === undefined">
+      <v-layout v-show="!haveRefferal">
         <v-btn small class="green text-capitalize" @click="save()">
           Save
         </v-btn>
@@ -78,6 +85,7 @@ export default {
       inputRules: [(v) => !!v || "This field is required!!!"],
 
       refferalInfo: {},
+      haveRefferal: false,
     };
   },
 
@@ -100,11 +108,15 @@ export default {
 
     async loadData() {
       await this.getRefferalData(this.service_id);
+      if (this.refferalData.id != undefined) {
+        this.refferalInfo = this.refferalData;
+        this.haveRefferal = true;
+      }
     },
 
     async save() {
       if (this.$refs.save.validate()) {
-        this.refferalInfo.user_id = this.login_user.idl;
+        this.refferalInfo.user_id = this.login_user.id;
         this.refferalInfo.service_id = this.service_id;
         await this.registerRefferal(this.refferalInfo);
 

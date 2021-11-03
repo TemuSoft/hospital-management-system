@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <h2>Payment Request</h2>
+
     <v-data-table :items="paymnetRequest" :headers="headers">
       <template v-slot:top>
         <br />
@@ -58,13 +59,12 @@
     />
 
     <RegularPayment
-      v-if="paymentDialogRegular"
       :selectedPatinet="selectedPatinet"
       :paymentDialogRegular="paymentDialogRegular"
       @testCasePaymentControl="closeDialog($event)"
     />
 
-    <InsurancePayment
+    <!-- <InsurancePayment
       v-if="paymentDialogInsurance"
       :selectedPatinet="selectedPatinet"
       :paymentDialogInsurance="paymentDialogInsurance"
@@ -76,7 +76,7 @@
       :selectedPatinet="selectedPatinet"
       :paymentDialogCredit="paymentDialogCredit"
       @testCasePaymentControl="closeDialog($event)"
-    />
+    /> -->
   </div>
 </template>
 
@@ -85,16 +85,16 @@ import { mapActions, mapState } from "vuex";
 
 import CardRelatedPayment from "./paymentDialog/cardRelatedPayment.vue";
 import RegularPayment from "./paymentDialog/RegularPayment.vue";
-import InsurancePayment from "./paymentDialog/InsurancePayment.vue";
-import CreditPayment from "./paymentDialog/CreditPayment.vue";
+// import InsurancePayment from "./paymentDialog/InsurancePayment.vue";
+// import CreditPayment from "./paymentDialog/CreditPayment.vue";
 
 export default {
   data() {
     return {
       paymentDialogCard: false,
       paymentDialogRegular: false,
-      paymentDialogInsurance: false,
-      paymentDialogCredit: false,
+      // paymentDialogInsurance: false,
+      // paymentDialogCredit: false,
       selectedPatinet: {},
 
       search: "",
@@ -116,8 +116,8 @@ export default {
   components: {
     CardRelatedPayment,
     RegularPayment,
-    InsurancePayment,
-    CreditPayment,
+    // InsurancePayment,
+    // CreditPayment,
   },
 
   computed: {
@@ -134,22 +134,23 @@ export default {
     async closeDialog() {
       this.paymentDialogCard = false;
       this.paymentDialogRegular = false;
-      this.paymentDialogInsurance = false;
-      this.paymentDialogCredit = false;
+      // this.paymentDialogInsurance = false;
+      // this.paymentDialogCredit = false;
       this.loadData();
     },
 
     async paymentDialogProcess(item) {
       // item.reason_id = 2;
       // item.patient.patient_type = 3;
-      let pt = item.patient.patient_type;
+      // let pt = item.patient.patient_type;
 
       if (item.reason_id === 0 || item.reason_id === 1)
         this.paymentDialogCard = true;
       else {
-        if (pt === 1 || pt === 4) this.paymentDialogRegular = true;
-        else if (pt === 3) this.paymentDialogInsurance = true;
-        else this.paymentDialogCredit = true;
+        this.paymentDialogRegular = true;
+        // if (pt === 1 || pt === 4) this.paymentDialogRegular = true;
+        // else if (pt === 3) this.paymentDialogInsurance = true;
+        // else this.paymentDialogCredit = true;
       }
 
       this.selectedPatinet = item;

@@ -58,23 +58,30 @@
           <br />
 
           <label class="titleHead">Category : </label>
-          <label class="titleCont">{{ selectedDispensary.name }} </label>
-          <br />
-
-          <label class="titleHead">Unit Of Measurment : </label>
-          <label class="titleCont">{{ selectedDispensary.name }} </label>
+          <label class="titleCont"
+            >{{ selectedDispensary.category_name }}
+          </label>
           <br />
 
           <v-layout>
-            <label class="titleHead">Total Avaliable : </label>
-            <label class="titleCont"
-              >{{ selectedDispensary.balance_in_store }}
+            <label class="titleHead">Avaliable : </label>
+            <label class="titleCont">
+              {{ selectedDispensary.balance_in_store }}
+              ({{
+                getMeasurementPharmacyName(
+                  selectedDispensary.unit_of_measurement
+                )
+              }}),
+
+              {{ selectedDispensary.balance_in_requested_unit }}
+              ({{ getMeasurementPharmacyName(selectedDispensary.unit) }})
             </label>
             <v-spacer />
 
-            <label class="titleHead">Total Requested : </label>
+            <label class="titleHead">Requested : </label>
             <label class="titleCont">
               {{ selectedDispensary.quantity_requested }}
+              ({{ getMeasurementPharmacyName(selectedDispensary.unit) }})
             </label>
             <v-spacer />
 
@@ -83,6 +90,7 @@
               type="number"
               v-model="selectedDispensary.quantity_accepted"
               dense
+              @mouseleave="validateAcceptedInput()"
               rounded
             />
           </v-layout>
@@ -172,7 +180,7 @@ export default {
         { text: "Buying Price", value: "buying_price" },
         { text: "Selling Price", value: "selling_price" },
         { text: "Expire Date", value: "expire_date" },
-        { text: "Quantity", value: "quantity" },
+        { text: "Quantity", value: "balance_in_requested_unit" },
         { text: "Approved", value: "approved" },
       ],
     };
@@ -192,16 +200,20 @@ export default {
   },
 
   computed: {
+    ...mapState("measurement", ["measurementsPharmacy"]),
+
     ...mapState("pharmacy", ["dispensarySingle", "confirmedDispensaryRequest"]),
   },
 
   methods: {
+    ...mapActions("measurement", ["getMeasurementListPharmacy"]),
     ...mapActions("pharmacy", [
       "getDispensarySingle",
       "confirmDispensaryRequest",
     ]),
 
     async loadData() {
+      await this.getMeasurementListPharmacy();
       await this.getDispensarySingle(this.dispensary_id);
     },
 
@@ -226,6 +238,8 @@ export default {
           id: dd[i].id,
           medicine_id: dd[i].medicine_id,
           quantity_accepted: dd[i].quantity_accepted,
+          unit_of_measurement: dd[i].unit_of_measurement,
+          unit: dd[i].unit,
           from: [],
         });
 
@@ -255,7 +269,7 @@ export default {
         item.approved = 0;
         this.selectedDispensary.medicine_detail[i] = item;
       } else {
-        let av = parseFloat(item.quantity);
+        let av = parseFloat(item.balance_in_requested_unit);
         let app = parseFloat(item.approved);
 
         if (app > av) {
@@ -263,6 +277,19 @@ export default {
           this.selectedDispensary.medicine_detail[i] = item;
         }
       }
+    },
+
+    validateAcceptedInput() {
+      if (this.selectedDispensary.quantity_accepted === "")
+        this.selectedDispensary.quantity_accepted = 0;
+
+      let data = this.selectedDispensary;
+      let totalReq = parseFloat(data.quantity_requested);
+      let totalAva = parseFloat(data.balance_in_requested_unit);
+      let totalAcc = parseFloat(data.quantity_accepted);
+
+      if (totalAcc > totalAva || totalAcc > totalReq || totalAcc < 0)
+        this.selectedDispensary.quantity_accepted = 0;
     },
 
     back() {
@@ -280,16 +307,15 @@ export default {
     },
 
     async approvedRequest() {
-      let dd = this.selectedDispensary.medicine_detail;
-      let totalReq = parseFloat(this.selectedDispensary.quantity_requested);
-      let totalAva = parseFloat(this.selectedDispensary.balance_in_store);
-      let totalAcc = parseFloat(this.selectedDispensary.quantity_accepted);
+      let data = this.selectedDispensary;
+      let dd = data.medicine_detail;
+      let totalAcc = parseFloat(data.quantity_accepted);
       let totalInput = 0;
 
       for (let i = 0; i < dd.length; i++)
         totalInput += parseFloat(dd[i].approved);
 
-      if (totalAcc != totalInput || totalAcc > totalAva || totalAcc > totalReq)
+      if (totalAcc != totalInput)
         this.$fire({
           title: "Medicine Dispensary",
           text: "Input value id not valid",
@@ -302,6 +328,17 @@ export default {
     async dispensaryApproval(data) {
       this.dispensaryApprovalDialog = true;
       this.selectedDispensary = data;
+    },
+
+    getMeasurementPharmacyName(id) {
+      let res = "";
+      for (let i = 0; i < this.measurementsPharmacy.length; i++)
+        if (id === this.measurementsPharmacy[i].id) {
+          res = this.measurementsPharmacy[i].unit;
+          break;
+        }
+
+      return res;
     },
   },
 };

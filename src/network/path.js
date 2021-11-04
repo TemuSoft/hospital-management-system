@@ -90,6 +90,7 @@ const path = {
   prescription: "/pharmacy/prescription",
   prescription_unseen: "/pharmacy/read_waiting_prescription",
   prescription_persenal: "/pharmacy/prescription_info_with_service",
+  prescription_payment: "/pharmacy/approve_prescription",
 
   surgical_order: "/nurse/surgical_order",
   surgical_orders_service: "/nurse/surgical_orders_service",
@@ -128,7 +129,7 @@ const path = {
   work_permission_single: "/common/read_my_permmision_history",
   imaging_test_case: "/imaging_test",
 
-  sampling: "/Samplings",
+  update_password: "/user/update_password",
 };
 
 export default path;

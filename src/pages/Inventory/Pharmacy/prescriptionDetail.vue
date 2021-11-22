@@ -38,7 +38,11 @@
 
         <template v-if="prescriptionsSingle.status === 0">
           Amount : {{ totalAmount }} ETB
-          <v-btn small class="text-capitalize green ml-3">
+          <v-btn
+            small
+            class="text-capitalize green ml-3"
+            @click="confirmPayment()"
+          >
             Confirm Payment
           </v-btn>
         </template>
@@ -54,12 +58,35 @@
       </v-toolbar>
       <v-divider />
 
+      {{ prescriptionsSingle }}
       <v-data-table
         :items="prescriptionsSingle.data"
         :headers="prescriptionPenddingHeaders"
       >
         <template v-slot:item="props">
           <tr :style="getBackgroundColor(props.item)">
+            <td>
+              <template
+                v-if="props.item.medicine_id != -1 && props.item.status === 0"
+              >
+                <Checked
+                  class="icon"
+                  v-if="props.item.checkbox"
+                  @click="
+                    (props.item.checkbox = false),
+                      (props.item.price = 0),
+                      validateInputPrice(props.item)
+                  "
+                />
+                <Unchecked
+                  class="icon"
+                  v-else
+                  @click="
+                    (props.item.checkbox = true), validateInputPrice(props.item)
+                  "
+                />
+              </template>
+            </td>
             <td>
               {{ props.item.medicine }}
             </td>
@@ -84,7 +111,9 @@
 
             <td>
               <v-edit-dialog
-                v-if="props.item.medicine_id != -1"
+                v-if="
+                  props.item.medicine_id != -1 && props.item.checkbox === true
+                "
                 :return-value.sync="props.item.price"
                 @save="save"
                 @cancel="cancel"
@@ -104,9 +133,15 @@
                 </template>
               </v-edit-dialog>
 
-              <label v-else class="text-capitalize red--text">
-                Not Exist!!!
-              </label>
+              <v-chip
+                v-else-if="props.item.pay_status === 0"
+                class="text-capitalize red"
+              >
+                Not Payable
+              </v-chip>
+              <v-chip v-else x-small class="text-capitalize green">
+                Done
+              </v-chip>
             </td>
           </tr>
         </template>
@@ -118,6 +153,8 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import PrintPdf from "@/print";
+import Checked from "@/assets/icons/checked.svg";
+import Unchecked from "@/assets/icons/unchecked.svg";
 import AccountService from "@/network/accountService";
 
 export default {
@@ -128,6 +165,7 @@ export default {
       service_id: {},
 
       prescriptionPenddingHeaders: [
+        { text: "Is Payable ?", value: "checkbox" },
         { text: "Medicine", value: "medicine" },
         { text: "Unit Of Measurment", value: "unit_of_measurment" },
         { text: "Quantity", value: "quantity" },
@@ -146,12 +184,23 @@ export default {
     this.loadData();
   },
 
+  components: {
+    Checked,
+    Unchecked,
+  },
+
   computed: {
-    ...mapState("mainPatientInfoManager", ["prescriptionsSingle"]),
+    ...mapState("mainPatientInfoManager", [
+      "prescriptionsSingle",
+      "prescriptionPayment",
+    ]),
   },
 
   methods: {
-    ...mapActions("mainPatientInfoManager", ["getPrescriptionsSingle"]),
+    ...mapActions("mainPatientInfoManager", [
+      "getPrescriptionsSingle",
+      "prescriptionPaymentDone",
+    ]),
 
     async loadData() {
       await this.getPrescriptionsSingle(this.service_id);
@@ -159,14 +208,45 @@ export default {
       this.caluleteTotalAmount();
     },
 
+    async confirmPayment() {
+      let data = this.prescriptionsSingle.data;
+      let confirm = {
+        id: this.prescriptionsSingle.id,
+        service_id: this.prescriptionsSingle.service_id,
+        user_id: this.login_user.id,
+        detail: [],
+      };
+
+      for (let i = 0; i < data.length; i++)
+        if (data[i].checkbox === true)
+          confirm.detail.push({
+            id: data[i].id,
+            medicine_id: data[i].medicine_id,
+            quantity: parseFloat(data[i].quantity),
+            unit_of_measurment: data[i].unit_of_measurment,
+            price: data[i].price,
+          });
+
+      await this.prescriptionPaymentDone(confirm);
+      if (this.prescriptionPayment.st === true) {
+        this.loadData();
+      } else
+        this.$fire({
+          title: "Test Case Payment",
+          text: this.prescriptionPayment.msg,
+          type: "error",
+          timer: 7000,
+        });
+    },
+
     validateInputPrice(item) {
       let index = this.prescriptionsSingle.data.indexOf(item);
       if (
-        parseFloat(item.price) < 0 ||
+        parseFloat(item.price) <= 0 ||
         item.price === "" ||
         item.medicine_id === -1
       )
-        item.price = 0;
+        item.price = 1;
       this.prescriptionsSingle.data[index] = item;
 
       this.caluleteTotalAmount();

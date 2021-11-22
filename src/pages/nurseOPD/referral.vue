@@ -75,6 +75,7 @@
 <script>
 import AccountService from "@/network/accountService";
 import { mapActions, mapState } from "vuex";
+import PrintPdf from "@/print";
 
 export default {
   props: ["service_id", "patient_id"],
@@ -94,6 +95,7 @@ export default {
       "registeredRefferal",
       "refferalData",
     ]),
+    ...mapState("patient", ["singlePatient"]),
   },
 
   created() {
@@ -105,8 +107,10 @@ export default {
       "registerRefferal",
       "getRefferalData",
     ]),
+    ...mapActions("patient", ["singlePatientInfo"]),
 
     async loadData() {
+      await this.singlePatientInfo(this.patient_id);
       await this.getRefferalData(this.service_id);
       if (this.refferalData.id != undefined) {
         this.refferalInfo = this.refferalData;
@@ -121,6 +125,11 @@ export default {
         await this.registerRefferal(this.refferalInfo);
 
         if (this.registeredRefferal.st === true) {
+          let data = {
+            singlePatient: this.singlePatient[0],
+            refferalInfo: this.refferalInfo,
+          };
+          PrintPdf.refferalPrinting(data);
           this.refferalInfo = {};
           this.loadData();
         } else

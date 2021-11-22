@@ -23,6 +23,8 @@ export default {
 
     registeredRefferal: {},
     refferalData: {},
+
+    prescriptionPayment: {},
   },
 
   mutations: {
@@ -32,6 +34,10 @@ export default {
 
     setPrescriptionsSingle(state, payload) {
       state.prescriptionsSingle = payload;
+    },
+
+    setPrescriptionPaymentDone(state, payload) {
+      state.prescriptionPayment = payload;
     },
 
     setRegisterPrescription(state, payload) {
@@ -88,7 +94,14 @@ export default {
 
     async getPrescriptionsSingle({ commit }, service_id) {
       let res = await api.get(path.prescription_persenal, service_id);
+      for (let i = 0; i < res.data.data.length; i++)
+        res.data.data[i].checkbox = false;
       commit("setPrescriptionsSingle", res.data);
+    },
+
+    async prescriptionPaymentDone({ commit }, data) {
+      let res = await api.create(path.prescription_payment, data);
+      commit("setPrescriptionPaymentDone", res.data);
     },
 
     async registerPrescription({ commit }, data) {

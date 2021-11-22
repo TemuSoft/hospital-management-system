@@ -109,6 +109,108 @@ const Print = {
 
   outsourcePdfMaker() {},
 
+  refferalPrinting(data) {
+    let singlePatient = data.singlePatient;
+    let refferalInfo = data.refferalInfo;
+
+    let xin = 2;
+    let yin = 2;
+    let tab = 0.5;
+    let minspa = 0.7;
+    let minimspa = 0.2;
+    // let midimspa = 0.4;
+    let maxspa = 1;
+
+    let x = xin;
+    let y = yin;
+
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "cm",
+      format: "a4",
+    });
+
+    let xy = this.headerFooter(
+      doc,
+      x,
+      y,
+      minspa,
+      minimspa,
+      tab,
+      xin,
+      "refferal"
+    );
+    x = xy.x;
+    y = xy.y;
+
+    x = xin;
+    y = y + minspa;
+    y = y + minspa;
+
+    doc.setFont("Georgia", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Refferal to : " + refferalInfo.refferal_to, x, y);
+
+    y = y + maxspa;
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.setFont();
+
+    let name = singlePatient.first_name + " " + singlePatient.fathers_name;
+    name = name + "(" + singlePatient.gender + ")";
+
+    doc.text("1. Name Of Patient : " + name, x, y);
+    y = y + minspa;
+    doc.text("2. Card Number : " + singlePatient.card_number, x, y);
+    y = y + minspa;
+    doc.text("3. Birthdate : " + singlePatient.birthdate, x, y);
+    y = y + minspa;
+    doc.text("4. Address : " + singlePatient.zone, x, y);
+    y = y + minspa;
+    y = y + minspa;
+
+    doc.text(
+      "5. History & physical finding : " +
+        refferalInfo.history_physical_finding,
+      x,
+      y
+    );
+    y = y + 1;
+    doc.text("6 Working Diagnosis : " + refferalInfo.working_diagnosis, x, y);
+    y = y + 1;
+    doc.text(
+      "7. Investigations Done : " + refferalInfo.investigation_done,
+      x,
+      y
+    );
+    y = y + 1;
+    doc.text(
+      "8. Refferal Differntial Diagnosis : " +
+        refferalInfo.referal_differential_diagnosis,
+      x,
+      y
+    );
+    y = y + 1;
+    doc.text("9. Reason : " + refferalInfo.reason_for_referal, x, y);
+    y = y + minspa;
+    doc.text(
+      "10. Feedback for reffering health Instituation : " +
+        refferalInfo.feedback,
+      x,
+      y
+    );
+    y = y + minspa;
+    y = y + minspa;
+    x = x + tab;
+    x = x + tab;
+    doc.text("Physician's Name/Signature : __________________________", x, y);
+    y = y + minspa;
+    doc.text("Date : " + new Date(), x, y);
+
+    doc.save("Refferal for " + name + new Date() + ".pdf");
+  },
+
   referalPdfMaker(data, profile) {
     let xin = 2;
     let yin = 2;

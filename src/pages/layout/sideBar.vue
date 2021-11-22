@@ -36,31 +36,30 @@
             style="background-color: transparent"
           >
             <div v-if="validateRole(menu.allowedRoles) === true">
-              <v-expansion-panel-header
+              <!-- <v-expansion-panel-header
                 v-if="menu.links && validateRole(menu.allowedRoles) === true"
               >
                 <strong class="grey--text">{{ $t(menu.title) }}</strong>
-              </v-expansion-panel-header>
+              </v-expansion-panel-header> -->
 
               <v-list-item
-                v-else
                 :key="menu.title"
                 @click="$router.push({ name: menu.route })"
               >
-                <v-list-item-icon
-                  v-if="validateRole(menu.allowedRoles) === true"
-                >
-                  <v-icon color="red"> </v-icon>
+                <v-list-item-icon>
+                  <Icon />
                   <v-list-item-content>
                     <v-list-item-subtitle>
-                      <strong class="grey--text">{{ $t(menu.title) }}</strong>
+                      <strong class="ml-3 grey--text">{{
+                        $t(menu.title)
+                      }}</strong>
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item-icon>
               </v-list-item>
             </div>
 
-            <v-expansion-panel-content>
+            <!-- <v-expansion-panel-content>
               <template v-for="item in menu.links">
                 <v-list-item
                   v-if="validateRole(item.allowedRoles) === true"
@@ -77,7 +76,7 @@
                   </v-list-item-icon>
                 </v-list-item>
               </template>
-            </v-expansion-panel-content>
+            </v-expansion-panel-content> -->
           </v-expansion-panel>
         </v-expansion-panels>
       </v-list>
@@ -89,6 +88,8 @@
 import { mapState, mapActions } from "vuex";
 import { menusData } from "@/menuData";
 
+import Icon from "@/assets/icons/eye.svg";
+
 import AccountService from "@/network/accountService";
 
 export default {
@@ -97,6 +98,10 @@ export default {
     return {
       menus: [],
     };
+  },
+
+  components: {
+    Icon,
   },
 
   created() {
